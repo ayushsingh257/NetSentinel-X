@@ -9,4 +9,7 @@ import (
 func SetupRoutes(router *gin.Engine) {
 	router.GET("/", handlers.HomeHandler)
 	router.GET("/health", handlers.HealthHandler)
+
+	router.POST("/traffic", handlers.CreateTrafficLog)
+	router.GET("/traffic", handlers.GetTrafficLogs)
 }
