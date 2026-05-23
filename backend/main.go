@@ -5,6 +5,7 @@ import (
 
 	"netsentinel-x-backend/config"
 	"netsentinel-x-backend/routes"
+	"netsentinel-x-backend/packetcapture"
 
 	"github.com/gin-gonic/gin"
 )
@@ -13,6 +14,8 @@ func main() {
 	config.LoadEnv()
 
 	config.ConnectDatabase()
+
+	packetcapture.StartPacketCapture()
 
 	router := gin.Default()
 
