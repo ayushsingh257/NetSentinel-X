@@ -7,7 +7,8 @@ import (
 
 	"netsentinel-x-backend/config"
 	"netsentinel-x-backend/websocket"
-	
+	"netsentinel-x-backend/services"
+
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
 	"github.com/google/gopacket/pcap"
@@ -116,6 +117,33 @@ if err != nil {
 	)
 
 	websocket.BroadcastTraffic(message)
+
+	alertMessage, exists := services.SuspiciousPorts[port]
+
+if exists {
+
+	alertQuery := `
+	INSERT INTO alerts
+	(source_ip, destination_ip, protocol, port, alert_message, severity)
+	VALUES ($1, $2, $3, $4, $5, $6)
+	`
+
+	_, err := config.DB.Exec(
+		alertQuery,
+		ip.SrcIP.String(),
+		ip.DstIP.String(),
+		ip.Protocol.String(),
+		port,
+		alertMessage,
+		"HIGH",
+	)
+
+	if err != nil {
+		log.Println("Alert insert failed:", err)
+	} else {
+		fmt.Println("🚨 ALERT:", alertMessage)
+	}
+}
 
 	// fmt.Println("Traffic log stored in database")
 	// fmt.Println("PORT:", strconv.Itoa(port))
