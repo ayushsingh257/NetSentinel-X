@@ -1,26 +1,24 @@
 package main
 
 import (
-	"net/http"
+	"fmt"
+
+	"netsentinel-x-backend/config"
+	"netsentinel-x-backend/routes"
 
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
+	config.LoadEnv()
+
 	router := gin.Default()
 
-	router.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"message": "NetSentinel-X Backend Running",
-			"status":  "success",
-		})
-	})
+	routes.SetupRoutes(router)
 
-	router.GET("/health", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"server": "healthy",
-		})
-	})
+	port := config.GetEnv("PORT")
 
-	router.Run(":8080")
+	fmt.Println("NetSentinel-X Backend Running On Port:", port)
+
+	router.Run(":" + port)
 }
