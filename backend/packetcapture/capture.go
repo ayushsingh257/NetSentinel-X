@@ -6,6 +6,7 @@ import (
 
 
 	"netsentinel-x-backend/config"
+	"netsentinel-x-backend/websocket"
 	
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
@@ -93,22 +94,33 @@ func StartPacketCapture() {
 		VALUES ($1, $2, $3, $4, $5)
 `
 
-	_, err := config.DB.Exec(
-		query,
-		ip.SrcIP.String(),
-		ip.DstIP.String(),
-		ip.Protocol.String(),
+_, err := config.DB.Exec(
+	query,
+	ip.SrcIP.String(),
+	ip.DstIP.String(),
+	ip.Protocol.String(),
+	port,
+	"captured",
+)
+
+if err != nil {
+	log.Println("Database insert failed:", err)
+} else {
+
+	message := fmt.Sprintf(
+		"SRC: %s -> DST: %s | PROTOCOL: %s | PORT: %d",
+		ip.SrcIP,
+		ip.DstIP,
+		ip.Protocol,
 		port,
-		"captured",
 	)
 
-	if err != nil {
-		log.Println("Database insert failed:", err)
-	} else {
-// fmt.Println("Traffic log stored in database")
-// fmt.Println("PORT:", strconv.Itoa(port))
-// fmt.Println("--------------------------------")
-	}
+	websocket.BroadcastTraffic(message)
+
+	// fmt.Println("Traffic log stored in database")
+	// fmt.Println("PORT:", strconv.Itoa(port))
+	// fmt.Println("--------------------------------")
+}
 		}
 	}
 }
