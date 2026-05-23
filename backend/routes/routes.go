@@ -2,6 +2,7 @@ package routes
 
 import (
 	"netsentinel-x-backend/handlers"
+	"netsentinel-x-backend/websocket"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,4 +13,6 @@ func SetupRoutes(router *gin.Engine) {
 
 	router.POST("/traffic", handlers.CreateTrafficLog)
 	router.GET("/traffic", handlers.GetTrafficLogs)
+
+	router.GET("/ws", websocket.HandleWebSocket)
 }
