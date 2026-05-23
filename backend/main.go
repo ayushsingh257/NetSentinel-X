@@ -15,7 +15,7 @@ func main() {
 
 	config.ConnectDatabase()
 
-	packetcapture.StartPacketCapture()
+	go packetcapture.StartPacketCapture()
 
 	router := gin.Default()
 

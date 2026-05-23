@@ -4,6 +4,9 @@ import (
 	"fmt"
 	"log"
 
+
+	"netsentinel-x-backend/config"
+	
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
 	"github.com/google/gopacket/pcap"
@@ -61,12 +64,51 @@ func StartPacketCapture() {
 		if ipLayer != nil {
 			ip, _ := ipLayer.(*layers.IPv4)
 
-			fmt.Printf(
-				"SRC: %s -> DST: %s | PROTOCOL: %s\n",
-				ip.SrcIP,
-				ip.DstIP,
-				ip.Protocol,
-			)
+	fmt.Printf(
+		"SRC: %s -> DST: %s | PROTOCOL: %s\n",
+		ip.SrcIP,
+		ip.DstIP,
+		ip.Protocol,
+	)
+
+	port := 0
+
+	tcpLayer := packet.Layer(layers.LayerTypeTCP)
+
+	if tcpLayer != nil {
+		tcp, _ := tcpLayer.(*layers.TCP)
+		port = int(tcp.DstPort)
+	}
+
+	udpLayer := packet.Layer(layers.LayerTypeUDP)
+
+	if udpLayer != nil {
+		udp, _ := udpLayer.(*layers.UDP)
+		port = int(udp.DstPort)
+	}
+
+	query := `
+		INSERT INTO traffic_logs
+		(source_ip, destination_ip, protocol, port, status)
+		VALUES ($1, $2, $3, $4, $5)
+`
+
+	_, err := config.DB.Exec(
+		query,
+		ip.SrcIP.String(),
+		ip.DstIP.String(),
+		ip.Protocol.String(),
+		port,
+		"captured",
+	)
+
+	if err != nil {
+		log.Println("Database insert failed:", err)
+	} else {
+// fmt.Println("Traffic log stored in database")
+// fmt.Println("PORT:", strconv.Itoa(port))
+// fmt.Println("--------------------------------")
+	}
 		}
 	}
 }
