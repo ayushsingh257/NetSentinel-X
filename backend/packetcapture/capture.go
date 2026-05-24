@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"log"
 
-
 	"netsentinel-x-backend/config"
-	"netsentinel-x-backend/websocket"
 	"netsentinel-x-backend/services"
+	"netsentinel-x-backend/utils"
+	"netsentinel-x-backend/websocket"
 
 	"github.com/google/gopacket"
 	"github.com/google/gopacket/layers"
@@ -15,6 +15,7 @@ import (
 )
 
 func StartPacketCapture() {
+
 	devices, err := pcap.FindAllDevs()
 
 	if err != nil {
@@ -24,6 +25,7 @@ func StartPacketCapture() {
 	fmt.Println("Available Network Interfaces:")
 
 	for _, device := range devices {
+
 		fmt.Println("--------------------------------")
 		fmt.Println("Name:", device.Name)
 		fmt.Println("Description:", device.Description)
@@ -64,91 +66,106 @@ func StartPacketCapture() {
 		ipLayer := packet.Layer(layers.LayerTypeIPv4)
 
 		if ipLayer != nil {
+
 			ip, _ := ipLayer.(*layers.IPv4)
 
-	fmt.Printf(
-		"SRC: %s -> DST: %s | PROTOCOL: %s\n",
-		ip.SrcIP,
-		ip.DstIP,
-		ip.Protocol,
-	)
+			fmt.Printf(
+				"SRC: %s -> DST: %s | PROTOCOL: %s\n",
+				ip.SrcIP,
+				ip.DstIP,
+				ip.Protocol,
+			)
 
-	port := 0
+			port := 0
 
-	tcpLayer := packet.Layer(layers.LayerTypeTCP)
+			tcpLayer := packet.Layer(layers.LayerTypeTCP)
 
-	if tcpLayer != nil {
-		tcp, _ := tcpLayer.(*layers.TCP)
-		port = int(tcp.DstPort)
-	}
+			if tcpLayer != nil {
 
-	udpLayer := packet.Layer(layers.LayerTypeUDP)
+				tcp, _ := tcpLayer.(*layers.TCP)
 
-	if udpLayer != nil {
-		udp, _ := udpLayer.(*layers.UDP)
-		port = int(udp.DstPort)
-	}
+				port = int(tcp.DstPort)
+			}
 
-	query := `
-		INSERT INTO traffic_logs
-		(source_ip, destination_ip, protocol, port, status)
-		VALUES ($1, $2, $3, $4, $5)
-`
+			udpLayer := packet.Layer(layers.LayerTypeUDP)
 
-_, err := config.DB.Exec(
-	query,
-	ip.SrcIP.String(),
-	ip.DstIP.String(),
-	ip.Protocol.String(),
-	port,
-	"captured",
-)
+			if udpLayer != nil {
 
-if err != nil {
-	log.Println("Database insert failed:", err)
-} else {
+				udp, _ := udpLayer.(*layers.UDP)
 
-	message := fmt.Sprintf(
-		"SRC: %s -> DST: %s | PROTOCOL: %s | PORT: %d",
-		ip.SrcIP,
-		ip.DstIP,
-		ip.Protocol,
-		port,
-	)
+				port = int(udp.DstPort)
+			}
 
-	websocket.BroadcastTraffic(message)
+			query := `
+				INSERT INTO traffic_logs
+				(source_ip, destination_ip, protocol, port, status)
+				VALUES ($1, $2, $3, $4, $5)
+			`
 
-	alertMessage, exists := services.SuspiciousPorts[port]
+			_, err := config.DB.Exec(
+				query,
+				ip.SrcIP.String(),
+				ip.DstIP.String(),
+				ip.Protocol.String(),
+				port,
+				"captured",
+			)
 
-if exists {
+			if err != nil {
 
-	alertQuery := `
-	INSERT INTO alerts
-	(source_ip, destination_ip, protocol, port, alert_message, severity)
-	VALUES ($1, $2, $3, $4, $5, $6)
-	`
+				log.Println("Database insert failed:", err)
 
-	_, err := config.DB.Exec(
-		alertQuery,
-		ip.SrcIP.String(),
-		ip.DstIP.String(),
-		ip.Protocol.String(),
-		port,
-		alertMessage,
-		"HIGH",
-	)
+			} else {
 
-	if err != nil {
-		log.Println("Alert insert failed:", err)
-	} else {
-		fmt.Println("🚨 ALERT:", alertMessage)
-	}
-}
+				geoData, err := utils.GetGeoIP(ip.SrcIP.String())
 
-	// fmt.Println("Traffic log stored in database")
-	// fmt.Println("PORT:", strconv.Itoa(port))
-	// fmt.Println("--------------------------------")
-}
+				country := "Unknown"
+
+				if err == nil {
+					country = geoData.Country
+				}
+
+				message := fmt.Sprintf(
+					"SRC: %s (%s) -> DST: %s | PROTOCOL: %s | PORT: %d",
+					ip.SrcIP,
+					country,
+					ip.DstIP,
+					ip.Protocol,
+					port,
+				)
+
+				websocket.BroadcastTraffic(message)
+
+				alertMessage, exists := services.SuspiciousPorts[port]
+
+				if exists {
+
+					alertQuery := `
+					INSERT INTO alerts
+					(source_ip, destination_ip, protocol, port, alert_message, severity)
+					VALUES ($1, $2, $3, $4, $5, $6)
+					`
+
+					_, err := config.DB.Exec(
+						alertQuery,
+						ip.SrcIP.String(),
+						ip.DstIP.String(),
+						ip.Protocol.String(),
+						port,
+						alertMessage,
+						"HIGH",
+					)
+
+					if err != nil {
+
+						log.Println("Alert insert failed:", err)
+
+					} else {
+
+						fmt.Println("🚨 ALERT:", alertMessage)
+					}
+				}
+			}
 		}
 	}
 }
