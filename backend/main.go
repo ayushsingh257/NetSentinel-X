@@ -8,6 +8,7 @@ import (
 	"netsentinel-x-backend/packetcapture"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-contrib/cors"
 )
 
 func main() {
@@ -18,6 +19,8 @@ func main() {
 	go packetcapture.StartPacketCapture()
 
 	router := gin.Default()
+
+	router.Use(cors.Default())
 
 	routes.SetupRoutes(router)
 
