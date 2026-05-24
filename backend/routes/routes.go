@@ -14,5 +14,7 @@ func SetupRoutes(router *gin.Engine) {
 	router.POST("/traffic", handlers.CreateTrafficLog)
 	router.GET("/traffic", handlers.GetTrafficLogs)
 
+	router.GET("/alerts", handlers.GetAlerts)
+
 	router.GET("/ws", websocket.HandleWebSocket)
 }
