@@ -1,5 +1,5 @@
-import AlertDashboard from "../components/AlertDashboard";
+import SOCDashboard from "../components/SOCDashboard";
 
 export default function Home() {
-  return <AlertDashboard />;
+  return <SOCDashboard />;
 }
