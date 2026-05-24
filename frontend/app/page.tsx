@@ -1,5 +1,5 @@
-import TrafficDashboard from "../components/TrafficDashboard";
+import AlertDashboard from "../components/AlertDashboard";
 
 export default function Home() {
-  return <TrafficDashboard />;
+  return <AlertDashboard />;
 }
