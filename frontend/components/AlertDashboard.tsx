@@ -53,7 +53,7 @@ export default function AlertDashboard() {
         NetSentinel-X Threat Alert Dashboard
       </h1>
 
-      <div className="space-y-4">
+      <div className="space-y-4 max-h-[700px] overflow-y-auto pr-2">
         {alerts.map((alert) => (
           <div
             key={alert.id}
