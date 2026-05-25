@@ -35,7 +35,21 @@ func StartPacketCapture() {
 		}
 	}
 
-	selectedDevice := `\Device\NPF_{C02222A2-3939-43FC-B381-721C0EC551B3}`
+	var selectedDevice string
+
+	for _, device := range devices {
+
+		if len(device.Addresses) > 0 {
+
+			selectedDevice = device.Name
+			break
+		}
+	}
+
+	if selectedDevice == "" {
+
+		log.Fatal("No valid network interface found")
+	}
 
 	fmt.Println("--------------------------------")
 	fmt.Println("Using Interface:", selectedDevice)
