@@ -18,7 +18,13 @@ export default function AlertDashboard() {
 async function fetchAlerts() {
   try {
 
-    const response = await fetch("http://localhost:8080/alerts");
+    const token = localStorage.getItem("token");
+
+    const response = await fetch("http://localhost:8080/alerts", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
 
     if (!response.ok) {
       console.error("Failed response:", response.status);

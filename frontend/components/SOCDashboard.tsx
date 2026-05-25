@@ -3,8 +3,19 @@
 import TrafficDashboard from "./TrafficDashboard";
 import AlertDashboard from "./AlertDashboard";
 import Navbar from "./Navbar";
+import { useEffect } from "react";
 
 export default function SOCDashboard() {
+  useEffect(() => {
+
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+
+    window.location.href = "/login";
+  }
+
+}, []);
 return (
   <div className="min-h-screen bg-black text-white">
 
