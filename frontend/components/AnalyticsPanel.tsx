@@ -6,15 +6,28 @@ import {
   Cell,
   Tooltip,
   ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
 } from "recharts";
 
-const data = [
+
+const protocolData = [
   { name: "TCP", value: 65 },
   { name: "UDP", value: 25 },
   { name: "ICMP", value: 10 },
 ];
 
-const COLORS = ["#06b6d4", "#ef4444", "#22c55e"];
+const COLORS = ["#06b6d4", "#eab308", "#22c55e"];
+
+const attackerData = [
+  { ip: "External IP 1", packets: 120 },
+  { ip: "External IP 2", packets: 95 },
+  { ip: "External IP 3", packets: 80 },
+  { ip: "Local Network", packets: 60 },
+];
 
 export default function AnalyticsPanel() {
   return (
@@ -47,12 +60,12 @@ export default function AnalyticsPanel() {
         <ResponsiveContainer width="100%" height="100%">
           <PieChart>
             <Pie
-              data={data}
+              data={protocolData}
               dataKey="value"
               outerRadius={100}
               label
             >
-              {data.map((entry, index) => (
+              {protocolData.map((entry, index) => (
                 <Cell
                   key={`cell-${index}`}
                   fill={COLORS[index % COLORS.length]}
@@ -63,7 +76,46 @@ export default function AnalyticsPanel() {
             <Tooltip />
           </PieChart>
         </ResponsiveContainer>
-      </div>
+
+        <div className="mt-10">
+
+            <h2 className="text-2xl font-bold text-red-400 mb-4">
+                Top Traffic Sources
+            </h2>
+
+            <div className="h-[300px]">
+
+                <ResponsiveContainer width="100%" height="100%">
+
+                <BarChart data={attackerData}>
+
+                    <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke="#333"
+                    />
+
+                    <XAxis
+                    dataKey="ip"
+                    stroke="#aaa"
+                    />
+
+                    <YAxis stroke="#aaa" />
+
+                    <Tooltip />
+
+                    <Bar
+                    dataKey="packets"
+                    fill="#ef4444"
+                    />
+
+                </BarChart>
+
+                </ResponsiveContainer>
+
+            </div>
+
+            </div>
+        </div>
 
     </div>
   );

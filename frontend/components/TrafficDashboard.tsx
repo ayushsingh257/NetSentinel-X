@@ -7,8 +7,11 @@ export default function TrafficDashboard() {
   const [filter, setFilter] = useState("ALL");
 
   useEffect(() => {
-    const socket = new WebSocket("ws://localhost:8080/ws");
+    const token = localStorage.getItem("token");
 
+    const socket = new WebSocket(
+      `ws://localhost:8080/ws?token=${token}`
+    );
     socket.onmessage = (event) => {
       setMessages((prev) => [event.data, ...prev]);
     };
@@ -67,8 +70,33 @@ export default function TrafficDashboard() {
             .map((message, index) => (
               <div
                 key={index}
-                className="mb-2 border-b border-zinc-700 pb-2"
+                className={`mb-2 border-b border-zinc-700 pb-3 font-mono text-lg ${
+                  message.includes("TCP")
+                    ? "text-cyan-400"
+                    : message.includes("UDP")
+                    ? "text-yellow-400"
+                    : "text-green-400"
+                }`}
               >
+                {message.includes("TCP") && (
+                  <span className="bg-cyan-500/20 text-cyan-300 px-2 py-1 rounded mr-2 text-sm">
+                    TCP
+                  </span>
+                )}
+
+                {message.includes("UDP") && (
+                  <span className="bg-yellow-500/20 text-yellow-300 px-2 py-1 rounded mr-2 text-sm">
+                    UDP
+                  </span>
+                )}
+
+                {!message.includes("TCP") &&
+                  !message.includes("UDP") && (
+                    <span className="bg-green-500/20 text-green-300 px-2 py-1 rounded mr-2 text-sm">
+                      OTHER
+                    </span>
+                  )}
+
                 {message}
               </div>
             ))
