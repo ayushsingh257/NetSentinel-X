@@ -13,9 +13,9 @@ type LoginRequest struct {
 
 func LoginHandler(c *gin.Context) {
 
-	var request LoginRequest
+	var req LoginRequest
 
-	if err := c.BindJSON(&request); err != nil {
+	if err := c.ShouldBindJSON(&req); err != nil {
 
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Invalid request",
@@ -24,8 +24,8 @@ func LoginHandler(c *gin.Context) {
 		return
 	}
 
-	if request.Username == "admin" &&
-		request.Password == "netsentinel123" {
+	// ADMIN LOGIN
+	if req.Username == "admin" && req.Password == "admin" {
 
 		c.JSON(http.StatusOK, gin.H{
 			"token": "admin-token",
@@ -35,8 +35,8 @@ func LoginHandler(c *gin.Context) {
 		return
 	}
 
-	if request.Username == "analyst" &&
-		request.Password == "analyst123" {
+	// ANALYST LOGIN
+	if req.Username == "analyst" && req.Password == "analyst" {
 
 		c.JSON(http.StatusOK, gin.H{
 			"token": "analyst-token",
