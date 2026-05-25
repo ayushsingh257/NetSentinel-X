@@ -62,14 +62,14 @@ async function fetchAlerts() {
   return (
     <div className="min-h-screen bg-black text-white p-6">
       <h1 className="text-4xl font-bold mb-6 text-red-500">
-        NetSentinel-X Threat Alert Dashboard
+        Threat Alerts
       </h1>
 
       <div className="space-y-4 max-h-[700px] overflow-y-auto pr-2">
         {alerts.map((alert) => (
           <div
             key={alert.id}
-            className={`border rounded-xl p-4 bg-zinc-900 ${getSeverityColor(
+            className={`border rounded-xl p-4 bg-zinc-900/80 backdrop-blur-sm shadow-lg hover:shadow-red-500/20 transition-all duration-300 hover:-translate-y-1 ${getSeverityColor(
               alert.severity
             )}`}
           >
