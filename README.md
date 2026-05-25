@@ -1,312 +1,339 @@
 # NetSentinel-X
 
-## Enterprise Realtime Threat Monitoring & SOC Platform
+## 🚀 Enterprise Realtime SOC Monitoring & Threat Intelligence Platform
 
-NetSentinel-X is a next-generation cybersecurity monitoring platform engineered for realtime traffic inspection, packet analysis, threat detection, and Security Operations Center (SOC) visualization.
-
-The platform integrates packet parsing, WebSocket streaming, threat intelligence workflows, PostgreSQL logging, and enterprise-grade dashboarding into a unified monitoring ecosystem designed for cybersecurity analysts, blue teams, and defensive security environments.
-
-Built using Golang, PostgreSQL, Docker, WebSockets, and Next.js, NetSentinel-X simulates the architecture and operational flow of modern enterprise SOC infrastructure.
+> Enterprise-grade cybersecurity monitoring platform engineered for realtime packet inspection, threat detection, WebSocket streaming, SOC visualization, and modular security analytics.
 
 ---
 
-# Motivation
+# 🌐 Overview
 
-Modern enterprise environments generate enormous amounts of network telemetry, security events, and suspicious traffic indicators. Traditional monitoring solutions often separate packet analysis, visualization, alerting, and infrastructure management into disconnected systems.
+NetSentinel-X is a modern Security Operations Center (SOC) platform built to simulate the architecture, workflows, and realtime monitoring capabilities used in enterprise defensive security environments.
 
-NetSentinel-X was developed to consolidate these capabilities into a modular, realtime threat monitoring platform capable of:
+The platform combines:
 
-- Live traffic inspection
-- Realtime threat alerting
-- Packet protocol analysis
-- Security visualization
-- Threat monitoring workflows
-- SOC-style operational dashboards
+- 🔍 Realtime Packet Capture
+- ⚡ WebSocket Event Streaming
+- 🚨 Threat Detection Pipelines
+- 🌍 GeoIP Traffic Intelligence
+- 📊 Enterprise SOC Analytics
+- 🛡️ Role-Based Access Control
+- 🗄️ PostgreSQL Logging
+- 🐳 Dockerized Infrastructure
+- 🖥️ Enterprise Dashboard Visualization
 
-The project emphasizes modular backend architecture, scalable monitoring infrastructure, Dockerized deployment, and enterprise-oriented UI/UX principles.
+into a unified monitoring ecosystem designed for:
 
----
-
-# Technical Overview
-
-NetSentinel-X follows a modular enterprise architecture consisting of:
-
-- Golang Gin backend APIs
-- WebSocket realtime infrastructure
-- PostgreSQL event logging
-- Dockerized multi-container deployment
-- Next.js enterprise frontend
-- Threat detection & alert pipelines
-- Realtime SOC dashboard visualization
-
-The system is designed around scalable monitoring workflows where packet traffic, alerts, analytics, and infrastructure components remain isolated yet interconnected through modular service architecture.
+- SOC Analysts
+- Blue Teams
+- Cybersecurity Engineers
+- Threat Hunters
+- Security Researchers
+- Defensive Security Labs
 
 ---
 
-# Current Capabilities (As of Phase 23)
+# 🧠 Enterprise Dashboard Features
 
-## Core Monitoring Features
+## ✅ Realtime Traffic Monitoring
 
-- Realtime network traffic monitoring
-- Packet parsing & protocol analysis
-- TCP/UDP traffic filtering
-- Live WebSocket event streaming
-- Threat detection engine
-- Suspicious port detection
-- Alert generation system
-- Realtime SOC dashboards
-- Enterprise UI/UX design
-- Dockerized infrastructure deployment
+- Live packet inspection
+- TCP / UDP protocol analysis
+- Intelligent network adapter selection
+- Duplicate packet suppression
+- Live packet rendering
+- Timestamped traffic events
 
 ---
 
-# Enterprise Dashboard Features
+## 🚨 Enterprise Threat Detection
 
-NetSentinel-X currently includes:
-
-## Live Traffic Monitoring Panel
-
-- Realtime packet monitoring
-- Protocol-based filtering
-- WebSocket live updates
-- Enterprise traffic display
-
-## Threat Alert Dashboard
-
-- Suspicious traffic alerts
+- Suspicious port monitoring
+- Realtime alert generation
 - Severity-based threat visualization
-- Realtime monitoring status
-- Alert card rendering system
-
-## Enterprise SOC Metrics
-
-- Packet monitoring counters
-- Threat alert counters
+- Threat intelligence workflows
+- Alert dashboard system
 - Live monitoring indicators
-- System health status
-
-## Enterprise UI/UX
-
-- Cybersecurity-inspired interface
-- Responsive dashboard design
-- Glow effects & glassmorphism
-- Animated enterprise dashboard styling
 
 ---
 
-# Tech Stack
+## ⚡ Enterprise WebSocket Infrastructure
 
-## Backend
+- JWT-secured WebSocket authentication
+- Role-aware websocket validation
+- Realtime bidirectional streaming
+- High-frequency event rendering
+- Enterprise event synchronization
+
+---
+
+## 🌍 Traffic Intelligence Engine
+
+- GeoIP enrichment
+- Local network detection
+- Protocol badges
+- Timestamp rendering
+- Traffic categorization
+- Enterprise packet visualization
+
+---
+
+## 📊 SOC Analytics Dashboard
+
+- Protocol distribution graphs
+- Traffic source analytics
+- Realtime monitoring metrics
+- Threat visualization panels
+- Enterprise SOC analytics rendering
+
+---
+
+# 🛠️ Tech Stack
+
+## 🔧 Backend Infrastructure
 
 - Golang
 - Gin Framework
-- WebSockets
+- Gorilla WebSocket
 - GoPacket
+- PostgreSQL
 
-## Frontend
+---
+
+## 🎨 Frontend Infrastructure
 
 - Next.js
 - React
 - TypeScript
 - Tailwind CSS
+- Recharts
 
-## Database
+---
 
-- PostgreSQL
-
-## Infrastructure
+## 🐳 Infrastructure & Deployment
 
 - Docker
 - Docker Compose
+- Multi-container orchestration
+- Modular enterprise architecture
 
 ---
 
-# System Architecture
+# 🏗️ Enterprise Architecture
 
-Frontend (Next.js)
-↓
-Enterprise SOC Dashboard
-↓
-Gin Backend API
-↓
+```text
+Frontend (Next.js SOC Dashboard)
+            ↓
+Realtime WebSocket Layer
+            ↓
+Gin Backend APIs
+            ↓
 Threat Detection Engine
-↓
+            ↓
+Packet Capture Engine
+            ↓
 PostgreSQL Logging System
-↓
-Dockerized Multi-Service Infrastructure
+            ↓
+Dockerized Infrastructure
 
----
+🔥 Current Enterprise Capabilities
+🖥️ Monitoring Systems
 
-# Docker Deployment
+✅ Realtime packet inspection
+✅ TCP / UDP traffic analysis
+✅ WebSocket live streaming
+✅ Threat alert generation
+✅ GeoIP enrichment
+✅ Enterprise traffic visualization
+✅ Intelligent adapter selection
+✅ Packet throttling & optimization
 
-## Build & Run
+🛡️ Security Systems
 
-```bash
-docker compose up --build
+✅ JWT authentication
+✅ Role-based access control
+✅ Secure API routing
+✅ WebSocket authorization
+✅ Threat detection workflows
 
-Stop Containers
-docker compose down
+📈 Analytics Systems
 
-Access Services
-Service	Port
-Frontend	3000
-Backend API	8080
-PostgreSQL	5432
-API Health Check
+✅ Protocol distribution graphs
+✅ Traffic analytics dashboard
+✅ Threat visualization panels
+✅ Realtime counters
+✅ SOC operational metrics
 
-Backend Health Endpoint:
-
-http://localhost:8080/health
-
-Expected Response:
-
-{"server":"healthy"}
-
-Current Development Status
-Completed Phases
-Backend & Infrastructure
-Gin backend architecture
-Modular API routing
-PostgreSQL integration
-Traffic APIs
-Alert APIs
-WebSocket infrastructure
-Traffic Monitoring Engine
-Packet parsing engine
-Realtime traffic monitoring
-Automatic traffic logging
-Threat detection system
-Alert generation workflows
-Frontend & Dashboarding
-Next.js frontend
-Realtime traffic dashboard
-Threat alert dashboard
-Unified SOC dashboard
-Enterprise UI polish
-Responsive enterprise styling
-Security Systems
-Authentication system
-Role-based access control
-Exportable security reports
-GeoIP threat intelligence
-Deployment
-Dockerized frontend
-Dockerized backend
-PostgreSQL containerization
-Docker Compose orchestration
-Multi-container networking
-Temporary Production Stabilization Notes
-
-During Docker deployment stabilization, the following components are temporarily paused for controlled restoration phases:
-
-Production JWT enforcement
-Live host packet sniffing
-Full analytics graph rendering
-
-These systems will be restored in dedicated production restoration phases following the final release.
-
-Official Roadmap Status
-Completed
-
-✅ Backend Infrastructure
-✅ Packet Capture Engine
-✅ Traffic Parsing Engine
-✅ Threat Detection Engine
-✅ WebSocket Infrastructure
-✅ Enterprise SOC Dashboard
-✅ Authentication & RBAC
-✅ Exportable Security Reports
-✅ Dockerized Deployment
-✅ Enterprise UI/UX Polish
-
-Planned Restoration Phases
-Phase 25 — Production JWT Restoration
-
-Restores:
-
-Secure JWT middleware
-Protected monitoring APIs
-Frontend token handling
-Bearer token authentication flow
-Phase 26 — Production Packet Capture Restoration
-
-Restores:
-
-Live packet sniffing
-Host network monitoring
-Production traffic capture workflows
-Phase 27 — Enterprise Analytics Restoration
-
-Restores:
-
-Traffic analytics graphs
-Historical visualizations
-Enterprise SOC metrics
-Realtime analytics rendering
+📡 Live Monitoring Features
+🔍 Traffic Monitor
+Realtime packet streaming
+Protocol filtering
+TCP traffic analysis
+UDP traffic analysis
+GeoIP visualization
+Timestamp rendering
 
 
-Project Structure
-
-backend/
-frontend/
-docker-compose.yml
-README.md
-
-
-Sample Monitoring Output
-Traffic Event
-
-SRC: 192.168.1.5 -> DST: 142.250.183.78 | PROTOCOL: TCP | PORT: 443
+🚨 Threat Dashboard
+Severity-based alerts
+Suspicious traffic monitoring
+Live threat visualization
+Enterprise alert cards
+Alert rendering system
 
 
-Threat Alert
+📊 SOC Metrics
+Dynamic packet counters
+Threat counters
+Monitoring indicators
+System health visualization
 
+📦 Sample Monitoring Output
+📡 Traffic Event
+[TCP] [19:42:39]
+SRC: 10.31.86.229 (LOCAL NETWORK)
+→ DST: 140.82.114.25
+PROTOCOL: TCP
+PORT: 443
+
+🚨 Threat Alert
 🚨 HIGH ALERT
-Message: Suspicious Port Activity Detected
-Source: 10.0.0.12
-Destination: 172.217.167.110
+Message: DNS Traffic Detected
+Source: 10.31.86.229
+Destination: 10.31.86.35
 Protocol: TCP
-Port: 4444
+Port: 53
 
-
-Installation
-Clone Repository
+⚙️ Installation
+📥 Clone Repository
 git clone https://github.com/ayushsingh257/NetSentinel-X.git
 cd NetSentinel-X
 
-
-Backend Setup
-
+🔧 Backend Setup
 cd backend
 go mod tidy
 go run main.go
 
-
-Frontend Setup
-
+🎨 Frontend Setup
 cd frontend
 npm install
 npm run dev
 
-
-Docker Setup
-
+🐳 Docker Deployment
+🚀 Build & Start Containers
 docker compose up --build
 
+🛑 Stop Containers
+docker compose down
 
 
-Licensing & Ethics
+🌐 Service Ports
+Service	Port
+Frontend	3000
+Backend API	8080
+PostgreSQL	5432
+
+❤️ Health Check
+API Endpoint
+http://localhost:8080/health
+Expected Response
+{
+  "server": "healthy"
+}
+
+📁 Project Structure
+backend/
+frontend/
+database/
+docker/
+docs/
+README.md
+docker-compose.yml
+
+🧩 Completed Enterprise Systems
+🔧 Backend & Infrastructure
+
+✅ Modular Gin backend architecture
+✅ PostgreSQL integration
+✅ Enterprise API routing
+✅ Dockerized backend services
+✅ Multi-service architecture
+
+📡 Packet Monitoring Engine
+
+✅ Live packet capture
+✅ Traffic parsing engine
+✅ Duplicate suppression
+✅ Protocol analysis workflows
+✅ Intelligent adapter selection
+
+🚨 Threat Detection Engine
+
+✅ Suspicious port monitoring
+✅ Threat alert generation
+✅ Severity tracking
+✅ Realtime alert rendering
+✅ Threat intelligence workflows
+
+🖥️ Enterprise Dashboarding
+
+✅ Unified SOC dashboard
+✅ Realtime monitoring system
+✅ Traffic analytics visualization
+✅ Enterprise UI rendering
+✅ WebSocket live rendering
+
+🛡️ Security Infrastructure
+
+✅ JWT authentication
+✅ RBAC authorization
+✅ WebSocket authentication
+✅ Secure monitoring workflows
+
+🗺️ Official Roadmap Status
+Phase	Status
+Backend Infrastructure	✅ Complete
+Packet Capture Engine	✅ Complete
+Threat Detection Engine	✅ Complete
+WebSocket Infrastructure	✅ Complete
+Enterprise SOC Dashboard	✅ Complete
+Authentication & RBAC	✅ Complete
+GeoIP Intelligence	✅ Complete
+Enterprise Analytics	✅ Complete
+Docker Infrastructure	✅ Complete
+Enterprise UI/UX	✅ Complete
+Production Deployment	🔄 In Progress
+
+🎯 Future Production Goals
+☁️ Cloud deployment
+🔒 HTTPS / WSS support
+🌐 Reverse proxy integration
+📈 Production scaling
+🔁 CI/CD workflows
+🧠 Advanced SOC analytics
+🛰️ Threat intelligence integrations
+📚 Historical monitoring pipelines
+
+👨‍💻 Author
+Ayush Singh
+
+Cybersecurity Engineer • SOC Platform Developer • Security Researcher
+
+🔗 GitHub
+
+https://github.com/ayushsingh257
+
+⚖️ License & Ethics
 
 NetSentinel-X is released under the MIT License.
 
-The platform is intended strictly for ethical cybersecurity research, defensive monitoring, educational use, and authorized network analysis.
-Unauthorized deployment against third-party infrastructure may violate legal regulations and organizational policies.
+This platform is intended strictly for:
 
+✅ Ethical cybersecurity research
+✅ Defensive monitoring
+✅ Educational purposes
+✅ Authorized network analysis
+✅ SOC simulation environments
 
-Author
+Unauthorized monitoring of third-party infrastructure may violate organizational policies and legal regulations.
 
-Ayush Singh
-Cybersecurity Engineer & SOC Platform Developer
-
-GitHub:
-https://github.com/ayushsingh257
