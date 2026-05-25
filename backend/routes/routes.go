@@ -20,12 +20,20 @@ func SetupRoutes(router *gin.Engine) {
 	authorized.Use(middleware.AuthMiddleware())
 	{
 
-		authorized.POST("/traffic", handlers.CreateTrafficLog)
-
 		authorized.GET("/traffic", handlers.GetTrafficLogs)
 
 		authorized.GET("/alerts", handlers.GetAlerts)
 
 		authorized.GET("/ws", websocket.HandleWebSocket)
+	}
+
+	adminRoutes := router.Group("/")
+	adminRoutes.Use(
+		middleware.AuthMiddleware(),
+		middleware.AdminOnly(),
+	)
+	{
+
+		adminRoutes.POST("/traffic", handlers.CreateTrafficLog)
 	}
 }

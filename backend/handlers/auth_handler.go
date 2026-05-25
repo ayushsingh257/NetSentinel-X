@@ -28,7 +28,19 @@ func LoginHandler(c *gin.Context) {
 		request.Password == "netsentinel123" {
 
 		c.JSON(http.StatusOK, gin.H{
-			"token": "netsentinel-admin-token",
+			"token": "admin-token",
+			"role":  "admin",
+		})
+
+		return
+	}
+
+	if request.Username == "analyst" &&
+		request.Password == "analyst123" {
+
+		c.JSON(http.StatusOK, gin.H{
+			"token": "analyst-token",
+			"role":  "analyst",
 		})
 
 		return
