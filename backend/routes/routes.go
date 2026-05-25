@@ -16,18 +16,14 @@ func SetupRoutes(router *gin.Engine) {
 
 	router.POST("/login", handlers.LoginHandler)
 
-	authorized := router.Group("/")
-	authorized.Use(middleware.AuthMiddleware())
-	{
+router.GET("/traffic", handlers.GetTrafficLogs)
 
-		authorized.GET("/traffic", handlers.GetTrafficLogs)
+router.GET("/alerts", handlers.GetAlerts)
 
-		authorized.GET("/alerts", handlers.GetAlerts)
+router.GET("/export/traffic", handlers.ExportTrafficReport)
 
-		authorized.GET("/export/traffic", handlers.ExportTrafficReport)
+router.GET("/ws", websocket.HandleWebSocket)
 
-		authorized.GET("/ws", websocket.HandleWebSocket)
-	}
 
 	adminRoutes := router.Group("/")
 	adminRoutes.Use(

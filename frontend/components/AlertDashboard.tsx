@@ -15,16 +15,28 @@ interface Alert {
 export default function AlertDashboard() {
   const [alerts, setAlerts] = useState<Alert[]>([]);
 
-  async function fetchAlerts() {
-    try {
-      const response = await fetch("http://localhost:8080/alerts");
-      const data = await response.json();
+async function fetchAlerts() {
+  try {
 
-      setAlerts(data);
-    } catch (error) {
-      console.error("Failed to fetch alerts:", error);
+    const response = await fetch("http://localhost:8080/alerts");
+
+    if (!response.ok) {
+      console.error("Failed response:", response.status);
+      return;
     }
+
+    const data = await response.json();
+
+    if (Array.isArray(data)) {
+      setAlerts(data);
+    } else {
+      console.error("Invalid alerts data");
+    }
+
+  } catch (error) {
+    console.error("Failed to fetch alerts:", error);
   }
+}
 
   useEffect(() => {
     fetchAlerts();
