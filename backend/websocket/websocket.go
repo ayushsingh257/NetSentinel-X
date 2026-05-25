@@ -8,7 +8,12 @@ import (
 	"github.com/gorilla/websocket"
 )
 
-var clients = make(map[*websocket.Conn]bool)
+type Client struct {
+	Connection *websocket.Conn
+	Role       string
+}
+
+var clients = make(map[*Client]bool)
 
 var upgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
@@ -17,6 +22,39 @@ var upgrader = websocket.Upgrader{
 }
 
 func HandleWebSocket(c *gin.Context) {
+
+	authHeader := c.Query("token")
+
+	if authHeader == "" {
+
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error": "Missing token",
+		})
+
+		return
+	}
+
+	token := authHeader
+
+	role := ""
+
+	if token == "admin-token" {
+
+		role = "admin"
+
+	} else if token == "analyst-token" {
+
+		role = "analyst"
+
+	} else {
+
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error": "Invalid token",
+		})
+
+		return
+	}
+
 	conn, err := upgrader.Upgrade(
 		c.Writer,
 		c.Request,
@@ -28,31 +66,43 @@ func HandleWebSocket(c *gin.Context) {
 		return
 	}
 
-	clients[conn] = true
+	client := &Client{
+		Connection: conn,
+		Role:       role,
+	}
 
-	log.Println("New WebSocket Client Connected")
+	clients[client] = true
+
+	log.Println("Secure WebSocket Client Connected:", role)
 
 	for {
+
 		_, _, err := conn.ReadMessage()
 
 		if err != nil {
-			delete(clients, conn)
+
+			delete(clients, client)
+
 			conn.Close()
+
 			break
 		}
 	}
 }
 
 func BroadcastTraffic(message string) {
+
 	for client := range clients {
 
-		err := client.WriteMessage(
+		err := client.Connection.WriteMessage(
 			websocket.TextMessage,
 			[]byte(message),
 		)
 
 		if err != nil {
-			client.Close()
+
+			client.Connection.Close()
+
 			delete(clients, client)
 		}
 	}

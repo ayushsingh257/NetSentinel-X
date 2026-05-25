@@ -3,6 +3,8 @@ package packetcapture
 import (
 	"fmt"
 	"log"
+	"time"
+	"strings"
 
 	"netsentinel-x-backend/config"
 	"netsentinel-x-backend/services"
@@ -13,6 +15,8 @@ import (
 	"github.com/google/gopacket/layers"
 	"github.com/google/gopacket/pcap"
 )
+
+var recentPackets = make(map[string]bool)
 
 func StartPacketCapture() {
 
@@ -39,13 +43,28 @@ func StartPacketCapture() {
 
 	for _, device := range devices {
 
+		description := strings.ToLower(device.Description)
+
+	// SKIP VIRTUAL / LOOPBACK / HYPER-V
+		if strings.Contains(description, "hyper-v") ||
+			strings.Contains(description, "virtual") ||
+			strings.Contains(description, "loopback") ||
+			strings.Contains(description, "npcap") {
+
+			continue
+		}
+
+	// REQUIRE REAL IP
 		if len(device.Addresses) > 0 {
 
 			selectedDevice = device.Name
+
+			fmt.Println("Selected Real Interface:", device.Description)
+
 			break
 		}
 	}
-
+	
 	if selectedDevice == "" {
 
 		log.Fatal("No valid network interface found")
@@ -92,6 +111,8 @@ func StartPacketCapture() {
 
 			port := 0
 
+			ignorePacket := false
+
 			tcpLayer := packet.Layer(layers.LayerTypeTCP)
 
 			if tcpLayer != nil {
@@ -108,7 +129,18 @@ func StartPacketCapture() {
 				udp, _ := udpLayer.(*layers.UDP)
 
 				port = int(udp.DstPort)
+
+				if port == 1900 {
+
+					ignorePacket = true
+
+				}
 			}
+
+				if ignorePacket {
+
+					continue
+				}
 
 			query := `
 				INSERT INTO traffic_logs
@@ -133,14 +165,18 @@ func StartPacketCapture() {
 
 				geoData, err := utils.GetGeoIP(ip.SrcIP.String())
 
-				country := "Unknown"
+				country := "LOCAL NETWORK"
 
-				if err == nil {
+				if err == nil && geoData.Country != "" {
+
 					country = geoData.Country
 				}
 
+				timestamp := time.Now().Format("15:04:05")
+
 				message := fmt.Sprintf(
-					"SRC: %s (%s) -> DST: %s | PROTOCOL: %s | PORT: %d",
+					"[%s] SRC: %s (%s) -> DST: %s | PROTOCOL: %s | PORT: %d",
+					timestamp,
 					ip.SrcIP,
 					country,
 					ip.DstIP,
@@ -148,7 +184,28 @@ func StartPacketCapture() {
 					port,
 				)
 
-				websocket.BroadcastTraffic(message)
+				packetKey := fmt.Sprintf(
+					"%s-%s-%s-%d",
+					ip.SrcIP,
+					ip.DstIP,
+					ip.Protocol,
+					port,
+				)
+
+				if !recentPackets[packetKey] {
+
+					recentPackets[packetKey] = true
+
+					websocket.BroadcastTraffic(message)
+
+					go func(key string) {
+
+						<-time.After(500 * time.Millisecond)
+
+						delete(recentPackets, key)
+
+					}(packetKey)
+				}
 
 				alertMessage, exists := services.SuspiciousPorts[port]
 

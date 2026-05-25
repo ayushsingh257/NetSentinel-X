@@ -14,6 +14,8 @@ func SetupRoutes(router *gin.Engine) {
 
 	router.GET("/health", handlers.HealthHandler)
 
+	router.GET("/analytics", handlers.GetAnalytics)
+
 	router.POST("/login", handlers.LoginHandler)
 
 router.GET("/traffic", handlers.GetTrafficLogs)
