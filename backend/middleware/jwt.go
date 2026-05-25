@@ -25,16 +25,26 @@ func AuthMiddleware() gin.HandlerFunc {
 
 		tokenString := strings.Replace(authHeader, "Bearer ", "", 1)
 
-		if tokenString != "netsentinel-admin-token" {
+		if tokenString == "admin-token" {
 
-			c.JSON(http.StatusUnauthorized, gin.H{
-				"error": "Invalid token",
-			})
+			c.Set("role", "admin")
 
-			c.Abort()
+			c.Next()
 			return
 		}
 
-		c.Next()
+		if tokenString == "analyst-token" {
+
+			c.Set("role", "analyst")
+
+			c.Next()
+			return
+		}
+
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error": "Invalid token",
+		})
+
+		c.Abort()
 	}
 }
