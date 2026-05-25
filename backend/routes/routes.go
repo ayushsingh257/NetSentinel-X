@@ -24,6 +24,8 @@ func SetupRoutes(router *gin.Engine) {
 
 		authorized.GET("/alerts", handlers.GetAlerts)
 
+		authorized.GET("/export/traffic", handlers.ExportTrafficReport)
+
 		authorized.GET("/ws", websocket.HandleWebSocket)
 	}
 
