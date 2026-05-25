@@ -1,59 +1,66 @@
 # NetSentinel-X
 
-## Next-Gen Firewall & Network Traffic Monitoring Platform
+# Enterprise Cybersecurity Monitoring & Threat Detection Platform
 
-NetSentinel-X is an enterprise-style cybersecurity platform focused on:
+NetSentinel-X is a next-generation enterprise SOC-style cybersecurity platform designed for:
 
-- Live network traffic monitoring
+- Realtime network traffic monitoring
+- Threat detection and alert generation
+- SOC dashboard visualization
 - Firewall rule simulation
-- Suspicious connection detection
-- Realtime traffic analytics
-- Security alert generation
-- SOC-style dashboard visualization
+- Security analytics
+- Traffic logging and monitoring
+- Dockerized enterprise deployment
 
 ---
 
-## Tech Stack
+# Features
 
-### Backend
+## Core Security Features
+
+- Live network traffic monitoring
+- Suspicious traffic detection
+- Threat alert dashboard
+- TCP/UDP traffic filtering
+- Realtime SOC dashboard
+- Security analytics panel
+- WebSocket-based realtime updates
+- Exportable traffic reports
+- GeoIP integration
+- Firewall simulation system
+
+---
+
+# Tech Stack
+
+## Backend
+
 - Go (Golang)
 - Gin Framework
+- PostgreSQL
 - WebSockets
 - GoPacket
 
-### Frontend
-- Next.js 15
+## Frontend
+
+- Next.js
+- React
 - TypeScript
 - Tailwind CSS
 
-### Database
-- PostgreSQL
+## Infrastructure
 
-### Infrastructure
 - Docker
 - Docker Compose
 
 ---
 
-## Planned Features
+# Docker Deployment
 
-- Live packet capture
-- Realtime dashboard
-- Threat analytics
-- GeoIP visualization
-- Firewall simulation engine
-- Suspicious port detection
-- Alert management
-- Exportable reports
-- Authentication system
+## Build & Run
 
----
-
-## Project Status
-
-Currently in active development.
-
----
+```bash
+docker compose up --build
 
 ## Author
 

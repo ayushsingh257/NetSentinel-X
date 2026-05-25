@@ -2,7 +2,6 @@
 
 import TrafficDashboard from "./TrafficDashboard";
 import AlertDashboard from "./AlertDashboard";
-import AnalyticsPanel from "./AnalyticsPanel";
 
 export default function SOCDashboard() {
   return (
@@ -18,21 +17,17 @@ export default function SOCDashboard() {
         </p>
       </div>
 
-<div className="grid grid-cols-1 xl:grid-cols-3 gap-4 p-4">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 p-4">
 
-  <div className="xl:col-span-2 border border-cyan-500 rounded-xl overflow-hidden">
-    <TrafficDashboard />
-  </div>
+        <div className="xl:col-span-2 border border-cyan-500 rounded-xl overflow-hidden">
+          <TrafficDashboard />
+        </div>
 
-  <div className="border border-red-500 rounded-xl overflow-hidden">
-    <AlertDashboard />
-  </div>
+        <div className="border border-red-500 rounded-xl overflow-hidden">
+          <AlertDashboard />
+        </div>
 
-  <div className="xl:col-span-3">
-    <AnalyticsPanel />
-  </div>
-
-</div>
+      </div>
     </div>
   );
 }
