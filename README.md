@@ -20,6 +20,10 @@ The platform combines:
 - 🧠 TLS / HTTP / DNS Inspection
 - 📡 Protocol Intelligence Engine
 - 📊 Enterprise SOC Analytics
+- 🚨 Threat Intelligence & IOC Correlation
+- 🧠 Detection Engineering Workflows
+- 📈 Incident Timeline Visualization
+- 🔥 Behavioral Threat Analytics
 - 🗄️ PostgreSQL Event Logging
 - 🧪 Security Testing Infrastructure
 - 🐳 Dockerized Infrastructure
@@ -127,6 +131,37 @@ into a unified monitoring ecosystem designed for:
 
 ---
 
+# 🚨 Threat Intelligence & Detection Engineering
+
+## ✅ Behavioral Threat Detection
+
+- Port scan detection
+- Beaconing detection
+- Suspicious traffic heuristics
+- Threat confidence scoring
+- Severity classification
+- Realtime attack correlation
+
+## ✅ Threat Intelligence Engine
+
+- IOC-style threat matching
+- Threat categorization
+- Threat scoring system
+- Threat severity mapping
+- Malicious traffic workflows
+- Enterprise detection telemetry
+
+## ✅ Enterprise SOC Visualization
+
+- Live Threat Feed
+- Incident Timeline
+- Threat Intelligence Panel
+- IOC metrics dashboard
+- Threat scoring widgets
+- SOC intelligence rendering
+
+---
+
 # 🧪 Enterprise Testing Infrastructure
 
 ## ✅ Backend Security Testing
@@ -220,6 +255,10 @@ Dockerized Infrastructure
 ✅ Secure API routing
 ✅ WebSocket authorization
 ✅ Threat detection workflows
+✅ Behavioral threat analytics
+✅ IOC correlation workflows
+✅ Threat intelligence scoring
+✅ Detection engineering pipelines
 
 📈 Analytics Systems
 
@@ -339,6 +378,12 @@ docker-compose.yml
 ✅ Severity tracking
 ✅ Realtime alert rendering
 ✅ Threat intelligence workflows
+✅ Port scan detection
+✅ Beaconing detection
+✅ Threat confidence scoring
+✅ IOC-style intelligence correlation
+✅ Behavioral anomaly detection
+
 
 🖥️ Enterprise Dashboarding
 
@@ -347,6 +392,10 @@ docker-compose.yml
 ✅ Traffic analytics visualization
 ✅ Enterprise UI rendering
 ✅ WebSocket live rendering
+✅ Live Threat Feed
+✅ Incident Timeline
+✅ Threat Intelligence Panel
+✅ Detection telemetry visualization
 
 🛡️ Security Infrastructure
 
@@ -370,6 +419,9 @@ Enterprise UI/UX	✅ Complete
 Enterprise Security Testing	✅ Complete
 Deep Packet Inspection Engine	✅ Complete
 TLS/HTTP/DNS Intelligence	✅ Complete
+Threat Intelligence Engine	✅ Complete
+Detection Engineering Layer	✅ Complete
+SOC Intelligence Visualization	✅ Complete
 Production Deployment	🔄 In Progress
 
 🎯 Future Production Goals
@@ -380,6 +432,11 @@ Production Deployment	🔄 In Progress
 🔁 CI/CD workflows
 🧠 Advanced SOC analytics
 🧠 ML-based threat detection
+🛰️ Live AbuseIPDB integration
+🛰️ AlienVault OTX integration
+🛰️ VirusTotal IOC enrichment
+🛰️ External CTI feed ingestion
+🛰️ Threat reputation correlation
 📡 Threat intelligence feeds
 🔍 Advanced DPI correlation
 🛰️ IOC enrichment pipelines

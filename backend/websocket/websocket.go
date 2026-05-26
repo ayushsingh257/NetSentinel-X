@@ -3,6 +3,7 @@ package websocket
 import (
 	"log"
 	"net/http"
+	"sync"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
@@ -14,6 +15,8 @@ type Client struct {
 }
 
 var clients = make(map[*Client]bool)
+
+var mutex sync.Mutex
 
 var upgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
@@ -62,7 +65,9 @@ func HandleWebSocket(c *gin.Context) {
 	)
 
 	if err != nil {
-		log.Println(err)
+
+		log.Println("WebSocket upgrade failed:", err)
+
 		return
 	}
 
@@ -71,9 +76,33 @@ func HandleWebSocket(c *gin.Context) {
 		Role:       role,
 	}
 
+	mutex.Lock()
+
 	clients[client] = true
 
-	log.Println("Secure WebSocket Client Connected:", role)
+	mutex.Unlock()
+
+	log.Println("🔌 Secure WebSocket Client Connected:", role)
+
+	// =====================================
+	// INITIAL SOC MESSAGE
+	// =====================================
+
+	welcomeMessage := `
+🚀 NETSENTINEL-X THREAT STREAM ACTIVE
+📡 Real-Time SOC Monitoring Enabled
+🛡 Threat Intelligence Connected
+`
+
+	err = conn.WriteMessage(
+		websocket.TextMessage,
+		[]byte(welcomeMessage),
+	)
+
+	if err != nil {
+
+		log.Println("Welcome message failed:", err)
+	}
 
 	for {
 
@@ -81,9 +110,15 @@ func HandleWebSocket(c *gin.Context) {
 
 		if err != nil {
 
+			mutex.Lock()
+
 			delete(clients, client)
 
+			mutex.Unlock()
+
 			conn.Close()
+
+			log.Println("❌ WebSocket Client Disconnected")
 
 			break
 		}
@@ -92,11 +127,41 @@ func HandleWebSocket(c *gin.Context) {
 
 func BroadcastTraffic(message string) {
 
+	mutex.Lock()
+
+	defer mutex.Unlock()
+
 	for client := range clients {
 
 		err := client.Connection.WriteMessage(
 			websocket.TextMessage,
 			[]byte(message),
+		)
+
+		if err != nil {
+
+			client.Connection.Close()
+
+			delete(clients, client)
+
+			log.Println("⚠️ Removed Dead WebSocket Client")
+		}
+	}
+}
+
+func BroadcastThreat(threat string) {
+
+	mutex.Lock()
+
+	defer mutex.Unlock()
+
+	for client := range clients {
+
+		threatMessage := "🚨 THREAT DETECTED: " + threat
+
+		err := client.Connection.WriteMessage(
+			websocket.TextMessage,
+			[]byte(threatMessage),
 		)
 
 		if err != nil {
