@@ -12,13 +12,16 @@ NetSentinel-X is a modern Security Operations Center (SOC) platform built to sim
 
 The platform combines:
 
-- 🔍 Realtime Packet Capture
-- ⚡ WebSocket Event Streaming
-- 🚨 Threat Detection Pipelines
+- 🔍 Deep Packet Inspection (DPI)
+- ⚡ Realtime WebSocket Event Streaming
+- 🚨 Enterprise Threat Detection Pipelines
 - 🌍 GeoIP Traffic Intelligence
+- 🔐 JWT Authentication & RBAC
+- 🧠 TLS / HTTP / DNS Inspection
+- 📡 Protocol Intelligence Engine
 - 📊 Enterprise SOC Analytics
-- 🛡️ Role-Based Access Control
-- 🗄️ PostgreSQL Logging
+- 🗄️ PostgreSQL Event Logging
+- 🧪 Security Testing Infrastructure
 - 🐳 Dockerized Infrastructure
 - 🖥️ Enterprise Dashboard Visualization
 
@@ -78,15 +81,77 @@ into a unified monitoring ecosystem designed for:
 
 ---
 
+---
+
+## 🧠 Deep Packet Inspection Engine
+
+### ✅ DNS Inspection
+
+- DNS query extraction
+- Domain monitoring
+- DNS traffic intelligence
+- DNS alert workflows
+
+### ✅ HTTP Inspection
+
+- HTTP host extraction
+- HTTP method inspection
+- User-Agent parsing
+- Web traffic visibility
+
+### ✅ TLS Inspection
+
+- TLS SNI extraction
+- HTTPS hostname visibility
+- TLS metadata parsing
+- Encrypted traffic intelligence
+
+### ✅ Packet Intelligence
+
+- Protocol intelligence engine
+- Traffic categorization
+- Service fingerprinting
+- Enterprise packet enrichment
+
 ## 📊 SOC Analytics Dashboard
 
 - Protocol distribution graphs
 - Traffic source analytics
+- DNS analytics
+- HTTP analytics
+- TLS analytics
 - Realtime monitoring metrics
 - Threat visualization panels
 - Enterprise SOC analytics rendering
+- DPI intelligence panels
 
 ---
+
+# 🧪 Enterprise Testing Infrastructure
+
+## ✅ Backend Security Testing
+
+- JWT middleware testing
+- RBAC authorization testing
+- WebSocket authentication testing
+- Database integration testing
+- API validation testing
+
+## ✅ Frontend Testing
+
+- Jest integration
+- React Testing Library
+- Component rendering tests
+- Authentication flow testing
+- SOC workflow validation
+
+## ✅ Enterprise Validation
+
+- Realtime websocket validation
+- Protected route verification
+- Secure dashboard testing
+- Threat workflow validation
+
 
 # 🛠️ Tech Stack
 
@@ -302,6 +367,9 @@ GeoIP Intelligence	✅ Complete
 Enterprise Analytics	✅ Complete
 Docker Infrastructure	✅ Complete
 Enterprise UI/UX	✅ Complete
+Enterprise Security Testing	✅ Complete
+Deep Packet Inspection Engine	✅ Complete
+TLS/HTTP/DNS Intelligence	✅ Complete
 Production Deployment	🔄 In Progress
 
 🎯 Future Production Goals
@@ -311,6 +379,10 @@ Production Deployment	🔄 In Progress
 📈 Production scaling
 🔁 CI/CD workflows
 🧠 Advanced SOC analytics
+🧠 ML-based threat detection
+📡 Threat intelligence feeds
+🔍 Advanced DPI correlation
+🛰️ IOC enrichment pipelines
 🛰️ Threat intelligence integrations
 📚 Historical monitoring pipelines
 
