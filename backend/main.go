@@ -4,8 +4,8 @@ import (
 	"fmt"
 
 	"netsentinel-x-backend/config"
-	"netsentinel-x-backend/routes"
 	"netsentinel-x-backend/packetcapture"
+	"netsentinel-x-backend/routes"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -17,7 +17,9 @@ func main() {
 
 	config.ConnectDatabase()
 
-	go packetcapture.StartPacketCapture()
+	if config.GetEnv("RENDER") != "true" {
+		go packetcapture.StartPacketCapture()
+	}
 
 	router := gin.Default()
 

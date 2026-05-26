@@ -20,7 +20,7 @@ async function fetchAlerts() {
 
     const token = localStorage.getItem("token");
 
-    const response = await fetch("http://localhost:8080/alerts", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/alerts`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

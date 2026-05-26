@@ -31,7 +31,7 @@ export default function SOCDashboard() {
       try {
 
         const response = await fetch(
-          "http://localhost:8080/analytics"
+          `${process.env.NEXT_PUBLIC_API_URL}/analytics`
         );
 
         const data = await response.json();
