@@ -10,6 +10,17 @@ import (
 
 func GetAnalytics(c *gin.Context) {
 
+		if config.DB == nil {
+
+		c.JSON(http.StatusOK, gin.H{
+			"total_packets": 0,
+			"total_alerts":  0,
+			"high_alerts":   0,
+		})
+
+		return
+	}
+
 	var totalPackets int
 	var totalAlerts int
 	var highAlerts int
