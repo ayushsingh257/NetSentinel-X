@@ -4,6 +4,9 @@ import TrafficDashboard from "./TrafficDashboard";
 import AlertDashboard from "./AlertDashboard";
 import AnalyticsPanel from "./AnalyticsPanel";
 import Navbar from "./Navbar";
+import ThreatFeed from "./ThreatFeed";
+import IncidentTimeline from "./IncidentTimeline";
+import ThreatIntelPanel from "./ThreatIntelPanel";
 import { useEffect, useState } from "react";
 
 export default function SOCDashboard() {
@@ -135,8 +138,19 @@ export default function SOCDashboard() {
       </div>
           <div className="p-6">
 
-      <AnalyticsPanel />
-      </div>
+            <AnalyticsPanel />
+
+          </div>
+
+          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 p-6">
+
+            <ThreatFeed />
+
+            <IncidentTimeline />
+
+            <ThreatIntelPanel />
+
+          </div>
 
     </div>
   );

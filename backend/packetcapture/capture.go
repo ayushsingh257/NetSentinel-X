@@ -37,6 +37,7 @@ func StartPacketCapture() {
 		fmt.Println("Description:", device.Description)
 
 		for _, address := range device.Addresses {
+
 			fmt.Println("IP Address:", address.IP)
 		}
 	}
@@ -81,6 +82,7 @@ func StartPacketCapture() {
 	)
 
 	if err != nil {
+
 		log.Fatal(err)
 	}
 
@@ -110,9 +112,55 @@ func StartPacketCapture() {
 
 			trafficCategory := "GENERAL TRAFFIC"
 
-			// =========================
+			threatClassification := "NORMAL"
+
+			severity := "LOW"
+
+			confidence := 10
+
+			sourceIP := ip.SrcIP.String()
+
+			destinationIP := ip.DstIP.String()
+
+			// =====================================
+			// IOC THREAT INTELLIGENCE
+			// =====================================
+
+			if services.IsMaliciousIP(sourceIP) {
+
+				fmt.Println("☠️ MALICIOUS IOC DETECTED:", sourceIP)
+
+				threatClassification = "COMMAND_AND_CONTROL"
+
+				severity = "CRITICAL"
+
+				confidence = 95
+			}
+
+			// =====================================
+			// PORT SCAN DETECTION
+			// =====================================
+
+			services.PortScanTracker[sourceIP] =
+				append(
+					services.PortScanTracker[sourceIP],
+					port,
+				)
+
+			if len(services.PortScanTracker[sourceIP]) > 15 {
+
+				fmt.Println("🚨 PORT SCAN DETECTED:", sourceIP)
+
+				threatClassification = "RECONNAISSANCE"
+
+				severity = "HIGH"
+
+				confidence = 90
+			}
+
+			// =====================================
 			// TCP INSPECTION
-			// =========================
+			// =====================================
 
 			tcpLayer := packet.Layer(layers.LayerTypeTCP)
 
@@ -122,57 +170,95 @@ func StartPacketCapture() {
 
 				port = int(tcp.DstPort)
 
-				// =========================
-				// SERVICE IDENTIFICATION
-				// =========================
-
 				switch port {
 
 				case 80:
+
 					serviceType = "HTTP"
+
 					trafficCategory = "WEB TRAFFIC"
 
 				case 443:
+
 					serviceType = "HTTPS"
+
 					trafficCategory = "SECURE WEB TRAFFIC"
 
 				case 53:
+
 					serviceType = "DNS"
+
 					trafficCategory = "DNS TRAFFIC"
 
 				case 22:
+
 					serviceType = "SSH"
+
 					trafficCategory = "REMOTE ACCESS"
 
 				case 21:
+
 					serviceType = "FTP"
+
 					trafficCategory = "FILE TRANSFER"
 
 				case 25:
+
 					serviceType = "SMTP"
+
 					trafficCategory = "EMAIL TRAFFIC"
 
 				case 3389:
+
 					serviceType = "RDP"
+
 					trafficCategory = "REMOTE DESKTOP"
 
 				default:
+
 					serviceType = "UNKNOWN"
+
 					trafficCategory = "GENERAL TRAFFIC"
 				}
 
 				fmt.Println("📦 TRAFFIC CATEGORY:", trafficCategory)
+
 				fmt.Println("🧠 SERVICE:", serviceType)
 
-				// =========================
-				// TLS / HTTPS INSPECTION
-				// =========================
+				// =====================================
+				// BRUTE FORCE DETECTION
+				// =====================================
+
+				if port == 22 ||
+					port == 21 ||
+					port == 3389 {
+
+					services.BruteForceTracker[sourceIP]++
+
+					if services.BruteForceTracker[sourceIP] > 10 {
+
+						fmt.Println("🚨 BRUTE FORCE DETECTED:", sourceIP)
+
+						threatClassification = "INITIAL_ACCESS"
+
+						severity = "CRITICAL"
+
+						confidence = 92
+					}
+				}
+
+				// =====================================
+				// TLS INSPECTION
+				// =====================================
 
 				if port == 443 {
 
 					fmt.Println("--------------------------------")
+
 					fmt.Println("🔒 TLS HANDSHAKE DETECTED")
+
 					fmt.Println("🌍 HTTPS TRAFFIC IDENTIFIED")
+
 					fmt.Println("🔐 TLS VERSION: TLS 1.2 / TLS 1.3")
 
 					payload := tcp.Payload
@@ -188,17 +274,15 @@ func StartPacketCapture() {
 					}
 				}
 
-				// =========================
-				// HTTP PAYLOAD INSPECTION
-				// =========================
+				// =====================================
+				// HTTP INSPECTION
+				// =====================================
 
 				payload := tcp.Payload
 
 				if len(payload) > 0 {
 
 					payloadString := string(payload)
-
-					// HTTP METHODS
 
 					if strings.HasPrefix(payloadString, "GET") {
 
@@ -220,11 +304,10 @@ func StartPacketCapture() {
 						fmt.Println("❌ HTTP METHOD: DELETE")
 					}
 
-					// HOST + USER AGENT
-
 					if strings.Contains(payloadString, "Host:") {
 
 						fmt.Println("--------------------------------")
+
 						fmt.Println("🌐 HTTP PACKET DETECTED")
 
 						lines := strings.Split(payloadString, "\r\n")
@@ -245,9 +328,9 @@ func StartPacketCapture() {
 				}
 			}
 
-			// =========================
+			// =====================================
 			// UDP INSPECTION
-			// =========================
+			// =====================================
 
 			udpLayer := packet.Layer(layers.LayerTypeUDP)
 
@@ -260,9 +343,11 @@ func StartPacketCapture() {
 				if port == 53 {
 
 					serviceType = "DNS"
+
 					trafficCategory = "DNS TRAFFIC"
 
 					fmt.Println("📦 TRAFFIC CATEGORY:", trafficCategory)
+
 					fmt.Println("🧠 SERVICE:", serviceType)
 				}
 
@@ -272,9 +357,9 @@ func StartPacketCapture() {
 				}
 			}
 
-			// =========================
+			// =====================================
 			// DNS INSPECTION
-			// =========================
+			// =====================================
 
 			dnsLayer := packet.Layer(layers.LayerTypeDNS)
 
@@ -296,9 +381,31 @@ func StartPacketCapture() {
 				continue
 			}
 
-			// =========================
+			// =====================================
+			// BEACON DETECTION
+			// =====================================
+
+			lastSeen, exists := services.BeaconTracker[sourceIP]
+
+			if exists {
+
+				if time.Since(lastSeen) < 5*time.Second {
+
+					fmt.Println("📡 POSSIBLE BEACONING DETECTED")
+
+					threatClassification = "COMMAND_AND_CONTROL"
+
+					severity = "HIGH"
+
+					confidence = 88
+				}
+			}
+
+			services.BeaconTracker[sourceIP] = time.Now()
+
+			// =====================================
 			// DATABASE LOGGING
-			// =========================
+			// =====================================
 
 			query := `
 				INSERT INTO traffic_logs
@@ -308,8 +415,8 @@ func StartPacketCapture() {
 
 			_, err := config.DB.Exec(
 				query,
-				ip.SrcIP.String(),
-				ip.DstIP.String(),
+				sourceIP,
+				destinationIP,
 				ip.Protocol.String(),
 				port,
 				"captured",
@@ -321,7 +428,7 @@ func StartPacketCapture() {
 
 			} else {
 
-				geoData, err := utils.GetGeoIP(ip.SrcIP.String())
+				geoData, err := utils.GetGeoIP(sourceIP)
 
 				country := "LOCAL NETWORK"
 
@@ -333,21 +440,24 @@ func StartPacketCapture() {
 				timestamp := time.Now().Format("15:04:05")
 
 				message := fmt.Sprintf(
-					"[%s] SRC: %s (%s) -> DST: %s | PROTOCOL: %s | PORT: %d | CATEGORY: %s | SERVICE: %s",
+					"[%s] SRC: %s (%s) -> DST: %s | PROTOCOL: %s | PORT: %d | CATEGORY: %s | SERVICE: %s | THREAT: %s | SEVERITY: %s | CONFIDENCE: %d%%",
 					timestamp,
-					ip.SrcIP,
+					sourceIP,
 					country,
-					ip.DstIP,
+					destinationIP,
 					ip.Protocol,
 					port,
 					trafficCategory,
 					serviceType,
+					threatClassification,
+					severity,
+					confidence,
 				)
 
 				packetKey := fmt.Sprintf(
 					"%s-%s-%s-%d",
-					ip.SrcIP,
-					ip.DstIP,
+					sourceIP,
+					destinationIP,
 					ip.Protocol,
 					port,
 				)
@@ -367,9 +477,9 @@ func StartPacketCapture() {
 					}(packetKey)
 				}
 
-				// =========================
-				// THREAT DETECTION
-				// =========================
+				// =====================================
+				// ALERT ENGINE
+				// =====================================
 
 				alertMessage, exists := services.SuspiciousPorts[port]
 
@@ -377,8 +487,8 @@ func StartPacketCapture() {
 
 					alertKey := fmt.Sprintf(
 						"%s-%s-%s-%d",
-						ip.SrcIP.String(),
-						ip.DstIP.String(),
+						sourceIP,
+						destinationIP,
 						ip.Protocol.String(),
 						port,
 					)
@@ -403,12 +513,12 @@ func StartPacketCapture() {
 
 					_, err := config.DB.Exec(
 						alertQuery,
-						ip.SrcIP.String(),
-						ip.DstIP.String(),
+						sourceIP,
+						destinationIP,
 						ip.Protocol.String(),
 						port,
 						alertMessage,
-						"HIGH",
+						severity,
 					)
 
 					if err != nil {
@@ -418,6 +528,10 @@ func StartPacketCapture() {
 					} else {
 
 						fmt.Println("🚨 ALERT:", alertMessage)
+
+						fmt.Println("🧠 CLASSIFICATION:", threatClassification)
+
+						fmt.Println("📊 CONFIDENCE:", confidence)
 					}
 				}
 			}
