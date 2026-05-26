@@ -138,27 +138,6 @@ func StartPacketCapture() {
 			}
 
 			// =====================================
-			// PORT SCAN DETECTION
-			// =====================================
-
-			services.PortScanTracker[sourceIP] =
-				append(
-					services.PortScanTracker[sourceIP],
-					port,
-				)
-
-			if len(services.PortScanTracker[sourceIP]) > 15 {
-
-				fmt.Println("🚨 PORT SCAN DETECTED:", sourceIP)
-
-				threatClassification = "RECONNAISSANCE"
-
-				severity = "HIGH"
-
-				confidence = 90
-			}
-
-			// =====================================
 			// TCP INSPECTION
 			// =====================================
 
@@ -340,6 +319,10 @@ func StartPacketCapture() {
 
 				port = int(udp.DstPort)
 
+				serviceType = "UDP"
+
+				trafficCategory = "UDP TRAFFIC"
+
 				if port == 53 {
 
 					serviceType = "DNS"
@@ -379,6 +362,34 @@ func StartPacketCapture() {
 			if ignorePacket {
 
 				continue
+			}
+
+			// =====================================
+			// PORT SCAN DETECTION
+			// =====================================
+
+			services.PortScanTracker[sourceIP] =
+				append(
+					services.PortScanTracker[sourceIP],
+					port,
+				)
+
+			uniquePorts := make(map[int]bool)
+
+			for _, p := range services.PortScanTracker[sourceIP] {
+
+				uniquePorts[p] = true
+			}
+
+			if len(uniquePorts) > 15 {
+
+				fmt.Println("🚨 PORT SCAN DETECTED:", sourceIP)
+
+				threatClassification = "RECONNAISSANCE"
+
+				severity = "HIGH"
+
+				confidence = 90
 			}
 
 			// =====================================

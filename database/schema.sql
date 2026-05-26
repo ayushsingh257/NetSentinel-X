@@ -10,8 +10,11 @@ CREATE TABLE IF NOT EXISTS traffic_logs (
 
 CREATE TABLE IF NOT EXISTS alerts (
     id SERIAL PRIMARY KEY,
-    alert_type VARCHAR(100),
+    source_ip VARCHAR(50),
+    destination_ip VARCHAR(50),
+    protocol VARCHAR(20),
+    port INTEGER,
+    alert_message TEXT,
     severity VARCHAR(20),
-    message TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

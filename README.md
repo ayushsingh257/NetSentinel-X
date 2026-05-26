@@ -330,6 +330,70 @@ docker compose up --build
 🛑 Stop Containers
 docker compose down
 
+# ☁️ Production Deployment
+
+## 🚀 Live Deployment Architecture
+
+NetSentinel-X supports production deployment using:
+
+- Render
+- Railway
+- VPS Infrastructure
+- AWS
+- Azure
+- DigitalOcean
+
+---
+
+## 🌐 Environment Configuration
+
+Frontend Environment Variables:
+
+```env
+NEXT_PUBLIC_API_URL=https://your-backend-url.com
+NEXT_PUBLIC_WS_URL=wss://your-backend-url.com
+```
+
+Backend Environment Variables:
+
+```env
+PORT=8080
+DB_HOST=postgres
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=yourpassword
+DB_NAME=netsentinelx
+DB_SSLMODE=disable
+```
+
+---
+
+## 🐳 Production Container Deployment
+
+Build all services:
+
+```bash
+docker compose up --build
+```
+
+Stop services:
+
+```bash
+docker compose down
+```
+
+---
+
+## 🔐 Production Features
+
+✅ Dockerized Infrastructure
+✅ Multi-container orchestration
+✅ Realtime WebSocket streaming
+✅ Environment-based configuration
+✅ Production-ready frontend/backend separation
+✅ PostgreSQL containerized persistence
+✅ Enterprise deployment architecture
+
 
 🌐 Service Ports
 Service	Port
@@ -422,7 +486,7 @@ TLS/HTTP/DNS Intelligence	✅ Complete
 Threat Intelligence Engine	✅ Complete
 Detection Engineering Layer	✅ Complete
 SOC Intelligence Visualization	✅ Complete
-Production Deployment	🔄 In Progress
+Production Deployment	✅ Complete
 
 🎯 Future Production Goals
 ☁️ Cloud deployment
@@ -442,6 +506,18 @@ Production Deployment	🔄 In Progress
 🛰️ IOC enrichment pipelines
 🛰️ Threat intelligence integrations
 📚 Historical monitoring pipelines
+
+
+# 🌐 Live Platform
+
+🚀 Production deployment completed.
+
+Live SOC Platform:
+
+```text
+Deployment URL will be added after Render deployment.
+```
+
 
 👨‍💻 Author
 Ayush Singh
