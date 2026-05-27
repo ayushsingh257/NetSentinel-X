@@ -394,6 +394,43 @@ docker compose down
 ✅ PostgreSQL containerized persistence
 ✅ Enterprise deployment architecture
 
+---
+
+## 🌐 Render Production Deployment
+
+### Frontend Deployment
+
+Frontend deployed using Render Web Service.
+
+Environment Variables:
+
+```env
+NEXT_PUBLIC_API_URL=https://netsentinel-x.onrender.com
+NEXT_PUBLIC_WS_URL=wss://netsentinel-x.onrender.com/ws
+
+Backend Deployment
+
+Backend deployed using Render Docker Web Service.
+
+Production Features:
+
+Realtime WebSocket streaming
+Enterprise SOC dashboard
+Production API deployment
+Dockerized backend services
+PostgreSQL persistence
+Environment-based configuration
+Render cloud deployment
+
+---
+
+# THEN FINAL PUSH
+
+```bash id="p6h9e5"
+git add .
+git commit -m "Phase 31 completed - Production deployment and Render integration"
+git push origin main
+
 
 🌐 Service Ports
 Service	Port
@@ -514,9 +551,13 @@ Production Deployment	✅ Complete
 
 Live SOC Platform:
 
-```text
-Deployment URL will be added after Render deployment.
-```
+## 🔗 Live Frontend Platform
+
+https://netsentinel-x-frontend.onrender.com
+
+## 🔗 Live Backend API
+
+https://netsentinel-x.onrender.com
 
 
 👨‍💻 Author
