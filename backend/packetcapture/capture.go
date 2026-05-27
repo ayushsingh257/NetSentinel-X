@@ -195,7 +195,7 @@ func StartPacketCapture() {
 
 				default:
 
-					serviceType = "UNKNOWN"
+					serviceType = "TCP"
 
 					trafficCategory = "GENERAL TRAFFIC"
 				}
@@ -428,7 +428,7 @@ func StartPacketCapture() {
 				query,
 				sourceIP,
 				destinationIP,
-				ip.Protocol.String(),
+				serviceType,
 				port,
 				"captured",
 			)
@@ -456,7 +456,7 @@ func StartPacketCapture() {
 					sourceIP,
 					country,
 					destinationIP,
-					ip.Protocol,
+					serviceType,
 					port,
 					trafficCategory,
 					serviceType,
@@ -469,7 +469,7 @@ func StartPacketCapture() {
 					"%s-%s-%s-%d",
 					sourceIP,
 					destinationIP,
-					ip.Protocol,
+					serviceType,
 					port,
 				)
 
@@ -500,7 +500,7 @@ func StartPacketCapture() {
 						"%s-%s-%s-%d",
 						sourceIP,
 						destinationIP,
-						ip.Protocol.String(),
+						serviceType,
 						port,
 					)
 
@@ -526,7 +526,7 @@ func StartPacketCapture() {
 						alertQuery,
 						sourceIP,
 						destinationIP,
-						ip.Protocol.String(),
+						serviceType,
 						port,
 						alertMessage,
 						severity,
