@@ -10,7 +10,7 @@ export default function TrafficDashboard() {
     const token = localStorage.getItem("token");
 
     const socket = new WebSocket(
-      `${process.env.NEXT_PUBLIC_WS_URL}/ws?token=${token}`
+      `${process.env.NEXT_PUBLIC_WS_URL}?token=${token}`
     );
     socket.onmessage = (event) => {
       setMessages((prev) => [event.data, ...prev]);
