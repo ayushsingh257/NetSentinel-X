@@ -9,8 +9,10 @@ export default function TrafficDashboard() {
   useEffect(() => {
     const token = localStorage.getItem("token");
 
+    const wsUrl = process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:8080/ws";
+
     const socket = new WebSocket(
-      `${process.env.NEXT_PUBLIC_WS_URL}?token=${token}`
+      `${wsUrl}?token=${token}`
     );
     socket.onmessage = (event) => {
       setMessages((prev) => [event.data, ...prev]);

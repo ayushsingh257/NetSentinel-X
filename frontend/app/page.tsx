@@ -1,5 +1,5 @@
-import SOCDashboard from "../components/SOCDashboard";
+import LandingPage from "@/components/LandingPage";
 
 export default function Home() {
-  return <SOCDashboard />;
+  return <LandingPage />;
 }
