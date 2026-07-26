@@ -8,6 +8,7 @@ import ThreatFeed from "./ThreatFeed";
 import IncidentTimeline from "./IncidentTimeline";
 import ThreatIntelPanel from "./ThreatIntelPanel";
 import AICopilot from "./AICopilot";
+import ThreatInvestigation from "./ThreatInvestigation";
 import { useEffect, useState } from "react";
 import { Bot, Sparkles } from "lucide-react";
 
@@ -110,6 +111,11 @@ export default function SOCDashboard() {
 
           <h2 className="text-2xl font-bold text-yellow-400 mt-2">LIVE</h2>
         </div>
+      </div>
+
+      {/* AI Threat Investigation Section */}
+      <div className="p-6">
+        <ThreatInvestigation />
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 p-6">

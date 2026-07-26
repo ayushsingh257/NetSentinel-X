@@ -21,9 +21,9 @@ The core objective is to evolve NetSentinel-X from a real-time monitoring dashbo
 ## Current Project Status
 
 - **Current Version**: NetSentinel-X V2.0 Enterprise
-- **Current Era**: Era 2 — AI Security Copilot
-- **Era 2 Status**: ✅ Completed & Verified
-- **Next Milestone**: Era 3 — AI Threat Investigation Engine
+- **Current Era**: Era 3 — AI Threat Investigation Engine
+- **Era 3 Status**: ✅ Completed & Verified
+- **Next Milestone**: Era 4 — MITRE ATT&CK Mapping & Intelligence Matrix Grid
 - **Stability Status**: Production Checkpoint Verified. GitHub Actions CI/CD Pipeline 🟢 GREEN.
 
 ---
@@ -43,9 +43,10 @@ The core objective is to evolve NetSentinel-X from a real-time monitoring dashbo
 - **Testing**: Frontend Jest component tests, Go backend service/handler unit tests, ESLint & TypeScript verification.
 
 ### Era 3: AI Threat Investigation Engine
-- **Status**: ⏳ Scheduled
+- **Status**: ✅ Completed
 - **Objective**: Automated correlation of packets, alerts, IPs, DNS, TLS, timelines, GeoIP, and IOC matches into threat stories.
-- **Features**: Attack Timeline Builder, Confidence Scoring Engine, Root Cause Analysis, Evidence Collection, and Recommended Actions.
+- **Features**: Threat Story Narrative Generator, Attack Timeline Sequence Builder, Root Cause Analysis, Telemetry Evidence Collection Panel, and Recommended Response Actions (`/api/v2/investigations`).
+- **Testing**: Frontend Jest component tests (`ThreatInvestigation.test.tsx`), Go backend service & handler unit tests, ESLint & TypeScript verification.
 
 ### Era 4: MITRE ATT&CK Mapping & Intelligence Matrix
 - **Status**: ⏳ Scheduled

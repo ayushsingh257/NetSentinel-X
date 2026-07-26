@@ -8,7 +8,7 @@
 
 ## Overview
 
-**NetSentinel-X** is an enterprise-grade AI Security Operations Platform and Network Detection & Response (NDR) engine. Designed for modern SOC environments, NetSentinel-X combines real-time eBPF network telemetry, sub-millisecond Deep Packet Inspection (DPI), autonomous AI threat reasoning, MITRE ATT&CK mapping, and automated incident response workflows into a unified, high-performance web platform.
+**NetSentinel-X** is an enterprise-grade AI Security Operations Platform and Network Detection & Response (NDR) engine. Designed for modern SOC environments, NetSentinel-X combines real-time eBPF network telemetry, sub-millisecond Deep Packet Inspection (DPI), autonomous AI threat reasoning, multi-event threat investigations, MITRE ATT&CK mapping, and automated incident response workflows into a unified, high-performance web platform.
 
 ---
 
@@ -21,6 +21,7 @@
 - **Protocol Inspection**: Deep payload inspection for DNS queries, HTTP headers, and TLS handshake SNI attributes.
 - **SOC Operations Center**: Interactive dashboard featuring real-time packet metrics, threat feeds, alert feeds, and timeline logs.
 - **AI Security Copilot (RAG Powered)**: Autonomous AI assistant providing context-aware threat reasoning, natural language packet explanations, evidence collection, and MITRE mapping.
+- **AI Threat Investigation Engine**: Automated correlation converting individual alerts into full attack stories, visual timeline sequences, root cause analyses, and evidence records.
 
 ---
 
@@ -37,31 +38,33 @@
 - **AI Copilot Service (`backend/services/ai_copilot_service.go`)**: RAG-based context retrieval engine correlating live packets, threat alerts, GeoIP scores, and MITRE tactics.
 - **Copilot V2 REST API (`/api/v2/copilot/query` & `/api/v2/copilot/prompts`)**: Handles natural language queries ("Explain this packet", "Why is this alert suspicious?", "Summarize last 24 hours", "Show affected assets", "Map threat to MITRE").
 - **Copilot UI Drawer Component (`frontend/components/AICopilot.tsx`)**: Interactive chat interface with preset prompt shortcuts, confidence scoring, evidence cards, and recommended response steps.
-- **SOC Dashboard Integration**: Added "Launch AI Copilot" header CTA and floating "Ask AI Copilot" trigger widget.
+
+### Era 3: AI Threat Investigation Engine & Story Generator
+- **Threat Investigation Model & Service (`backend/models/investigation.go` & `backend/services/threat_investigation_service.go`)**: Multi-event correlation engine aggregating alerts, traffic logs, DNS/TLS metadata, GeoIP scoring, and IOC matches into full incident cases.
+- **Investigation REST API (`/api/v2/investigations` & `/api/v2/investigations/generate`)**: Provides case listing, detailed investigation retrieval, and target IP threat story generation.
+- **Threat Investigation Interface (`frontend/components/ThreatInvestigation.tsx`)**: Interactive SOC panel rendering automated threat stories, 4-step correlated attack timelines, telemetry evidence records, root cause analyses, and recommended response actions.
 
 ---
 
-## RAG Architecture & AI Workflow
+## Investigation Workflow & Threat Story Generation
 
 ```
-                                  [ User Query / Preset Prompt ]
-                                                │
-                                                ▼
-                                   [ AICopilotService (Go) ]
-                                                │
-                 ┌──────────────────────────────┼──────────────────────────────┐
-                 ▼                              ▼                              ▼
-        [ Traffic Logs DB ]             [ Alert Database ]          [ MITRE ATT&CK Matrix ]
-                 │                              │                              │
-                 └──────────────────────────────┼──────────────────────────────┘
-                                                ▼
-                                    [ RAG Context Synthesis ]
-                                                │
-                                                ▼
-                                  [ Reasoning & Evidence Generator ]
-                                                │
-                                                ▼
-                                [ Copilot UI Response Cards ]
+ [ Live Packets / DPI Telemetry ]    [ Threat Alerts DB ]    [ GeoIP / IOC Feed ]
+                 │                            │                       │
+                 └────────────────────────────┼───────────────────────┘
+                                              ▼
+                             [ ThreatInvestigationService ]
+                                              │
+                   ┌──────────────────────────┼──────────────────────────┐
+                   ▼                          ▼                          ▼
+        [ Multi-Event Correlation ]  [ Root Cause Engine ]   [ Confidence Evaluator ]
+                   │                          │                          │
+                   └──────────────────────────┼──────────────────────────┘
+                                              ▼
+                           [ AI Threat Story & Visual Timeline ]
+                                              │
+                                              ▼
+                         [ SOC Dashboard Investigation Interface ]
 ```
 
 ---
@@ -83,8 +86,8 @@ NetSentinel-X V2 evolves through 16 structured production Eras:
 
 1. **Era 1 (Completed)**: Enterprise Experience & UI Modernization ✅
 2. **Era 2 (Completed)**: AI Security Copilot (RAG-based threat reasoning over live packets & alerts) ✅
-3. **Era 3 (Next)**: AI Threat Investigation Engine & Attack Story Generator
-4. **Era 4**: MITRE ATT&CK Mapping & Intelligence Matrix Grid
+3. **Era 3 (Completed)**: AI Threat Investigation Engine & Attack Story Generator ✅
+4. **Era 4 (Next)**: MITRE ATT&CK Mapping & Intelligence Matrix Grid
 5. **Era 5**: Detection Engineering Studio (Sigma & YARA Rule Authoring)
 6. **Era 6**: Threat Intelligence Fusion (VirusTotal, OTX, AbuseIPDB, GreyNoise, Shodan)
 7. **Era 7**: UEBA Behaviour Analytics & Anomaly Scoring
@@ -121,6 +124,6 @@ NetSentinel-X enforces a strict 9-step production lifecycle verified via **GitHu
 ## Current Development Status
 
 - **Current Version**: NetSentinel-X V2.0 Enterprise
-- **Current Era**: Era 2 Completed ✅
+- **Current Era**: Era 3 Completed ✅
 - **CI Status**: GitHub Actions Pipeline Verified 🟢
-- **Next Era**: Era 3 — AI Threat Investigation Engine
+- **Next Era**: Era 4 — MITRE ATT&CK Mapping & Intelligence Matrix Grid
