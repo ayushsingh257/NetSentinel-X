@@ -8,7 +8,7 @@
 
 ## Overview
 
-**NetSentinel-X** is an enterprise-grade AI Security Operations Platform and Network Detection & Response (NDR) engine. Designed for modern SOC environments, NetSentinel-X combines real-time eBPF network telemetry, sub-millisecond Deep Packet Inspection (DPI), autonomous AI threat reasoning, multi-event threat investigations, MITRE ATT&CK matrix correlation, custom Sigma/YARA detection engineering, multi-provider threat intelligence fusion, and automated incident response workflows into a unified, high-performance web platform.
+**NetSentinel-X** is an enterprise-grade AI Security Operations Platform and Network Detection & Response (NDR) engine. Designed for modern SOC environments, NetSentinel-X combines real-time eBPF network telemetry, sub-millisecond Deep Packet Inspection (DPI), autonomous AI threat reasoning, multi-event threat investigations, MITRE ATT&CK matrix correlation, custom Sigma/YARA detection engineering, multi-provider threat intelligence fusion, and User & Entity Behaviour Analytics (UEBA) into a unified, high-performance web platform.
 
 ---
 
@@ -25,6 +25,7 @@
 - **Enterprise MITRE ATT&CK Intelligence Engine**: Interactive 12-tactic ATT&CK Matrix grid, real-time Threat Heat Map, automatic multi-protocol technique mapping, AI ATT&CK reasoning, and defensive mitigation knowledge base.
 - **Detection Engineering Studio**: Complete lifecycle for custom Sigma & YARA inspired detection rules, interactive Simulation Sandbox, rule validation, and AI Rule Assistant.
 - **Enterprise Threat Intelligence Fusion Engine**: Multi-provider threat intelligence aggregation across 8 providers (VirusTotal, AlienVault OTX, AbuseIPDB, GreyNoise, Shodan, Censys, IPinfo, WHOIS), composite reputation scoring, and async IOC enrichment.
+- **User & Entity Behaviour Analytics (UEBA)**: Statistical baseline profiling per host/user/IP/domain, anomaly scoring across 6 threat vectors (Beaconing, Port Scanning, Brute Force, Lateral Movement, Data Exfiltration, DNS Tunneling), Entity Risk Leaderboard, and AI Behaviour Deviation Reasoning.
 
 ---
 
@@ -64,21 +65,26 @@
 - **Composite Reputation Scoring**: Unified risk score (0-100), risk levels, confidence ratings, and provider breakdown matrix.
 - **Threat Intelligence Panel (`frontend/components/ThreatIntelFusion.tsx`)**: Interactive IOC search bar, provider matrix grid, AI intelligence reasoning, and recommended response actions.
 
+### Era 7: Enterprise User & Entity Behaviour Analytics (UEBA)
+- **Baseline Profiler & Anomaly Engine (`backend/services/ueba_service.go`)**: Learns baseline connection rates, packet volumes, and protocol maps per host/user. Detects anomalies across Beaconing, Port Scanning, Brute Force, Lateral Movement, Data Exfiltration, and DNS Tunneling.
+- **UEBA REST API (`/api/v2/ueba`, `/api/v2/ueba/entities`, `/api/v2/ueba/anomalies`, `/api/v2/ueba/risk/:entity`, `/api/v2/ueba/history`)**: Provides entity profile management, anomaly history logs, and risk scores.
+- **UEBA Analytics Dashboard (`frontend/components/UEBAAnalytics.tsx`)**: Entity Risk Leaderboard grid, Behaviour Anomaly Timeline, baseline profile inspector, and AI Behaviour Deviation Reasoning.
+
 ---
 
-## Threat Intelligence Fusion Architecture
+## UEBA Architecture & Anomaly Pipeline
 
 ```
-  [ Target Indicator: IP / Domain / Hash ] ──► [ Async Threat Intelligence Engine ]
-                                                               │
-          ┌────────────────────────────────────────────────────┴────────────────────────────────────────────────────┐
-          ▼                                                    ▼                                                    ▼
-  [ 8 External Intelligence Providers ]               [ Composite Risk Scoring Engine ]             [ AI Intelligence Reasoning ]
-  (VT, OTX, AbuseIPDB, GreyNoise, Shodan, etc.)       (Risk 0-100 & Provider Matrix)                 (AI Explanation & Containment)
-          │                                                    │                                                    │
-          └────────────────────────────────────────────────────┼────────────────────────────────────────────────────┘
-                                                               ▼
-                                                [ SOC Dashboard Fusion Panel ]
+  [ Packet Telemetry / Network Sessions ] ──► [ Statistical Baseline Profiler ]
+                                                              │
+           ┌──────────────────────────────────────────────────┴──────────────────────────────────────────────────┐
+           ▼                                                  ▼                                                  ▼
+  [ 6 Anomaly Detectors ]                            [ Entity Risk Scoring Engine ]                    [ AI Behaviour Reasoning ]
+  (Beaconing, Scanning, Exfiltration, etc.)          (Composite Score 0-100 & Leaderboard)             (Deviation Explanation & Mitigation)
+           │                                                  │                                                  │
+           └──────────────────────────────────────────────────┼──────────────────────────────────────────────────┘
+                                                              ▼
+                                               [ SOC Dashboard UEBA Panel ]
 ```
 
 ---
@@ -104,8 +110,8 @@ NetSentinel-X V2 evolves through 16 structured production Eras:
 4. **Era 4 (Completed)**: Enterprise MITRE ATT&CK Intelligence Engine ✅
 5. **Era 5 (Completed)**: Detection Engineering Studio (Sigma/YARA-inspired custom rules) ✅
 6. **Era 6 (Completed)**: Threat Intelligence Fusion (VirusTotal, OTX, AbuseIPDB, GreyNoise, Shodan, Censys, etc.) ✅
-7. **Era 7 (Next)**: UEBA & Behaviour Analytics (Anomaly scoring for host beaconing & lateral movement)
-8. **Era 8**: AI Detection Optimizer (False positive reduction & rule tuning)
+7. **Era 7 (Completed)**: UEBA & Behaviour Analytics (Anomaly scoring for host beaconing & lateral movement) ✅
+8. **Era 8 (Next)**: AI Detection Optimizer (False positive reduction & rule tuning)
 9. **Era 9**: AI Incident Management Desk (End-to-end incident response lifecycle & SLA tracking)
 10. **Era 10**: Executive Reporting & Compliance (SOC 2, ISO 27001, HIPAA automated PDF/HTML/MD reports)
 11. **Era 11**: Interactive Attack Graph (Visual topology canvas & attack chain pathing)
@@ -138,6 +144,6 @@ NetSentinel-X enforces a strict 9-step production lifecycle verified via **GitHu
 ## Current Development Status
 
 - **Current Version**: NetSentinel-X V2.0 Enterprise
-- **Current Era**: Era 6 Completed ✅
+- **Current Era**: Era 7 Completed ✅
 - **CI Status**: GitHub Actions Pipeline Verified 🟢
-- **Next Era**: Era 7 — UEBA & Behaviour Analytics
+- **Next Era**: Era 8 — AI Detection Optimizer

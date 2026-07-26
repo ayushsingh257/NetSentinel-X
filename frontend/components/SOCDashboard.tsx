@@ -12,6 +12,7 @@ import ThreatInvestigation from "./ThreatInvestigation";
 import MITREIntelligence from "./MITREIntelligence";
 import DetectionStudio from "./DetectionStudio";
 import ThreatIntelFusion from "./ThreatIntelFusion";
+import UEBAAnalytics from "./UEBAAnalytics";
 import { useEffect, useState } from "react";
 import { Bot, Sparkles } from "lucide-react";
 
@@ -134,6 +135,11 @@ export default function SOCDashboard() {
       {/* Enterprise Threat Intelligence Fusion Engine Section */}
       <div className="p-6">
         <ThreatIntelFusion />
+      </div>
+
+      {/* Enterprise User & Entity Behaviour Analytics (UEBA) Section */}
+      <div className="p-6">
+        <UEBAAnalytics />
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 p-6">

@@ -22,9 +22,9 @@ The core objective is to evolve NetSentinel-X from a real-time monitoring dashbo
 ## Current Project Status
 
 - **Current Version**: NetSentinel-X V2.0 Enterprise
-- **Current Era**: Era 6 — Enterprise Threat Intelligence Fusion Engine
-- **Era 6 Status**: ✅ Completed & Verified
-- **Next Milestone**: Era 7 — UEBA & Behaviour Analytics
+- **Current Era**: Era 7 — Enterprise User & Entity Behaviour Analytics (UEBA) Engine
+- **Era 7 Status**: ✅ Completed & Verified
+- **Next Milestone**: Era 8 — AI Detection Optimizer
 - **Stability Status**: Production Checkpoint Verified. GitHub Actions CI/CD Pipeline 🟢 GREEN.
 
 ---
@@ -67,10 +67,11 @@ The core objective is to evolve NetSentinel-X from a real-time monitoring dashbo
 - **Features**: IOC search & lookup, composite risk scoring (0-100), provider matrix breakdown, AI IOC reasoning, recommended response actions (`/api/v2/intelligence/*`).
 - **Testing**: Frontend Jest component tests (`ThreatIntelFusion.test.tsx`), Go backend service & handler unit tests (`threat_intelligence_fusion_service_test.go`, `v2_intelligence_handler_test.go`), ESLint & TypeScript verification.
 
-### Era 7: UEBA & Behaviour Analytics
-- **Status**: ⏳ Scheduled
-- **Objective**: Behavioural anomaly detection for user entities and host assets.
-- **Features**: Anomaly scoring for beaconing, port scanning, brute force, lateral movement, protocol abuse, data exfiltration, and rare destination connections.
+### Era 7: Enterprise User & Entity Behaviour Analytics (UEBA) Engine
+- **Status**: ✅ Completed
+- **Objective**: Behavioural anomaly detection for user entities and host assets across 6 key attack vectors (Beaconing, Port Scanning, Brute Force, Lateral Movement, Data Exfiltration, DNS Tunneling).
+- **Features**: Entity Risk Leaderboard, Anomaly Timeline, baseline profile inspector, AI Behaviour Deviation Reasoning, entity risk scoring (`/api/v2/ueba/*`).
+- **Testing**: Frontend Jest component tests (`UEBAAnalytics.test.tsx`), Go backend service & handler unit tests (`ueba_service_test.go`, `v2_ueba_handler_test.go`), ESLint & TypeScript verification.
 
 ### Era 8: AI Detection Optimizer
 - **Status**: ⏳ Scheduled

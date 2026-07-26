@@ -35,6 +35,7 @@ func SetupRoutes(router *gin.Engine) {
 	v2MITREHandler := handlers.NewV2MITREHandler()
 	v2DetectionHandler := handlers.NewV2DetectionHandler()
 	v2IntelligenceHandler := handlers.NewV2IntelligenceHandler()
+	v2UEBAHandler := handlers.NewV2UEBAHandler()
 
 	v2Group := router.Group("/api/v2")
 	{
@@ -74,5 +75,12 @@ func SetupRoutes(router *gin.Engine) {
 		v2Group.GET("/intelligence/ioc/:value", v2IntelligenceHandler.LookupIOC)
 		v2Group.POST("/intelligence/enrich", v2IntelligenceHandler.EnrichIOC)
 		v2Group.GET("/intelligence/history", v2IntelligenceHandler.GetHistory)
+
+		// UEBA & Behaviour Analytics Routes
+		v2Group.GET("/ueba", v2UEBAHandler.GetOverview)
+		v2Group.GET("/ueba/entities", v2UEBAHandler.GetEntities)
+		v2Group.GET("/ueba/anomalies", v2UEBAHandler.GetAnomalies)
+		v2Group.GET("/ueba/risk/:entity", v2UEBAHandler.GetEntityRisk)
+		v2Group.GET("/ueba/history", v2UEBAHandler.GetHistory)
 	}
 }
