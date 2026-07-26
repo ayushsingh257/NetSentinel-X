@@ -1,11 +1,8 @@
 import "@testing-library/jest-dom";
-
 import { render, screen } from "@testing-library/react";
-
 import TrafficDashboard from "./TrafficDashboard";
 
 beforeAll(() => {
-
   Object.defineProperty(window, "localStorage", {
     value: {
       getItem: jest.fn(() => "admin-token"),
@@ -18,18 +15,14 @@ beforeAll(() => {
     send: jest.fn(),
     onmessage: null,
     onerror: null,
-  })) as any;
+  })) as unknown as typeof WebSocket;
 });
 
 describe("WebSocket Dashboard Integration", () => {
-
   test("renders live traffic monitor", () => {
-
     render(<TrafficDashboard />);
 
-    const heading = screen.getByText(
-      /Live Traffic Monitor/i
-    );
+    const heading = screen.getByText(/Live Traffic Monitor/i);
 
     expect(heading).toBeInTheDocument();
   });

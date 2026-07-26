@@ -1,11 +1,8 @@
 import "@testing-library/jest-dom";
-
 import { render, screen } from "@testing-library/react";
-
 import SOCDashboard from "./SOCDashboard";
 
 beforeAll(() => {
-
   Object.defineProperty(window, "localStorage", {
     value: {
       getItem: jest.fn(() => "admin-token"),
@@ -31,21 +28,16 @@ beforeAll(() => {
     send: jest.fn(),
     onmessage: null,
     onerror: null,
-  })) as any;
+  })) as unknown as typeof WebSocket;
 });
 
 describe("SOC Workflow Integration", () => {
-
   test("loads complete SOC dashboard workflow", async () => {
-
     render(<SOCDashboard />);
 
-    const heading = screen.getByRole(
-      "heading",
-      {
-        name: "Security Operations Center",
-      }
-    );
+    const heading = screen.getByRole("heading", {
+      name: "Security Operations Center",
+    });
 
     expect(heading).toBeInTheDocument();
 

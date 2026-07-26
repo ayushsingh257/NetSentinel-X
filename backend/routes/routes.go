@@ -18,14 +18,13 @@ func SetupRoutes(router *gin.Engine) {
 
 	router.POST("/login", handlers.LoginHandler)
 
-router.GET("/traffic", handlers.GetTrafficLogs)
+	router.GET("/traffic", handlers.GetTrafficLogs)
 
-router.GET("/alerts", handlers.GetAlerts)
+	router.GET("/alerts", handlers.GetAlerts)
 
-router.GET("/export/traffic", handlers.ExportTrafficReport)
+	router.GET("/export/traffic", handlers.ExportTrafficReport)
 
-router.GET("/ws", websocket.HandleWebSocket)
-
+	router.GET("/ws", websocket.HandleWebSocket)
 
 	adminRoutes := router.Group("/")
 	adminRoutes.Use(

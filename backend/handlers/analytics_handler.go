@@ -10,7 +10,7 @@ import (
 
 func GetAnalytics(c *gin.Context) {
 
-		if config.DB == nil {
+	if config.DB == nil {
 
 		c.JSON(http.StatusOK, gin.H{
 			"total_packets": 0,

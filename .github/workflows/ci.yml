@@ -1,0 +1,86 @@
+name: NetSentinel-X Enterprise CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  frontend-ci:
+    name: Frontend CI (Next.js & TypeScript)
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: TypeScript Typecheck Validation
+        run: npx tsc --noEmit
+
+      - name: ESLint Code Quality Validation
+        run: npm run lint
+
+      - name: Execute Jest Unit & Integration Tests
+        run: npm test
+
+      - name: Verify Next.js Production Build
+        run: npm run build
+
+      - name: Dependency Security Audit
+        run: npm audit --audit-level=high
+        continue-on-error: true
+
+  backend-ci:
+    name: Backend CI (Go & Gin Engine)
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Go Environment
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.22'
+          cache: true
+          cache-dependency-path: backend/go.sum
+
+      - name: Download Go Dependencies
+        run: go mod download
+
+      - name: Validate Go Code Formatting (gofmt)
+        run: |
+          UNFORMATTED=$(gofmt -s -l .)
+          if [ -n "$UNFORMATTED" ]; then
+            echo "The following Go files are not formatted properly:"
+            echo "$UNFORMATTED"
+            exit 1
+          fi
+
+      - name: Run Go Vet Static Analysis
+        run: go vet ./...
+
+      - name: Execute Go Unit & Handler Tests
+        run: go test -v ./...
+
+      - name: Verify Go Service Compilation
+        run: go build -v ./...

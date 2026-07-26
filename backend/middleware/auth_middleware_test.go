@@ -100,7 +100,7 @@ func TestProtectedRouteWithValidAdminToken(t *testing.T) {
 
 			c.JSON(http.StatusOK, gin.H{
 				"message": "authorized",
-				"role": role,
+				"role":    role,
 			})
 		},
 	)

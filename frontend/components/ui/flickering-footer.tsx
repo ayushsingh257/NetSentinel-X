@@ -3,16 +3,14 @@
 import { ChevronRightIcon } from "@radix-ui/react-icons";
 import { ClassValue, clsx } from "clsx";
 import * as Color from "color-bits";
-import { motion } from "motion/react";
 import Link from "next/link";
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-// Helper function to convert any CSS color to rgba
 export const getRGBA = (
   cssColor: React.CSSProperties["color"],
   fallback: string = "rgba(180, 180, 180)",
@@ -31,7 +29,7 @@ export const getRGBA = (
     }
 
     return Color.formatRGBA(Color.parse(cssColor));
-  } catch (e) {
+  } catch {
     return fallback;
   }
 };
@@ -163,12 +161,10 @@ export function FlickeringFooter({
 
   return (
     <footer ref={containerRef} className="relative w-full overflow-hidden bg-zinc-950 border-t border-cyan-900/40 text-zinc-300">
-      {/* Background canvas flicker */}
       <canvas ref={canvasRef} className="absolute inset-0 pointer-events-none opacity-60" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8 mb-12">
-          {/* Brand Column */}
           <div className="md:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
               <Icons.logo />
@@ -189,7 +185,6 @@ export function FlickeringFooter({
             </div>
           </div>
 
-          {/* Column 1: Navigation */}
           <div>
             <h4 className="text-sm font-semibold text-white tracking-wider uppercase mb-4">Platform</h4>
             <ul className="space-y-2.5 text-sm text-zinc-400">
@@ -201,7 +196,6 @@ export function FlickeringFooter({
             </ul>
           </div>
 
-          {/* Column 2: Architecture & Engines */}
           <div>
             <h4 className="text-sm font-semibold text-white tracking-wider uppercase mb-4">Architecture</h4>
             <ul className="space-y-2.5 text-sm text-zinc-400">
@@ -213,7 +207,6 @@ export function FlickeringFooter({
             </ul>
           </div>
 
-          {/* Column 3: Status & Legal */}
           <div>
             <h4 className="text-sm font-semibold text-white tracking-wider uppercase mb-4">System Status</h4>
             <div className="p-3 rounded-lg bg-zinc-900/90 border border-zinc-800 text-xs space-y-2">
@@ -233,7 +226,6 @@ export function FlickeringFooter({
           </div>
         </div>
 
-        {/* Bottom Bar */}
         <div className="pt-8 border-t border-zinc-800/80 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
           <p>© {new Date().getFullYear()} NetSentinel-X Enterprise AI Platform. All rights reserved.</p>
           <div className="flex items-center gap-6 text-zinc-400">

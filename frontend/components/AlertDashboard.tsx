@@ -15,41 +15,44 @@ interface Alert {
 export default function AlertDashboard() {
   const [alerts, setAlerts] = useState<Alert[]>([]);
 
-async function fetchAlerts() {
-  try {
-
-    const token = localStorage.getItem("token");
-
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/alerts`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-
-    if (!response.ok) {
-      console.error("Failed response:", response.status);
-      return;
-    }
-
-    const data = await response.json();
-
-    if (Array.isArray(data)) {
-      setAlerts(data);
-    } else {
-      console.error("Invalid alerts data");
-    }
-
-  } catch (error) {
-    console.error("Failed to fetch alerts:", error);
-  }
-}
-
   useEffect(() => {
-    fetchAlerts();
+    let isMounted = true;
 
-    const interval = setInterval(fetchAlerts, 3000);
+    async function loadAlerts() {
+      try {
+        const token = localStorage.getItem("token");
 
-    return () => clearInterval(interval);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/alerts`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          console.error("Failed response:", response.status);
+          return;
+        }
+
+        const data = await response.json();
+
+        if (Array.isArray(data) && isMounted) {
+          setAlerts(data);
+        } else if (!Array.isArray(data)) {
+          console.error("Invalid alerts data");
+        }
+      } catch (error) {
+        console.error("Failed to fetch alerts:", error);
+      }
+    }
+
+    loadAlerts();
+
+    const interval = setInterval(loadAlerts, 3000);
+
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
   }, []);
 
   function getSeverityColor(severity: string) {
