@@ -37,6 +37,7 @@ func SetupRoutes(router *gin.Engine) {
 	v2IntelligenceHandler := handlers.NewV2IntelligenceHandler()
 	v2UEBAHandler := handlers.NewV2UEBAHandler()
 	v2OptimizerHandler := handlers.NewV2OptimizerHandler()
+	v2IncidentHandler := handlers.NewV2IncidentHandler()
 
 	v2Group := router.Group("/api/v2")
 	{
@@ -91,5 +92,14 @@ func SetupRoutes(router *gin.Engine) {
 		v2Group.GET("/optimizer/gaps", v2OptimizerHandler.GetGaps)
 		v2Group.POST("/optimizer/feedback", v2OptimizerHandler.SubmitFeedback)
 		v2Group.POST("/optimizer/analyze", v2OptimizerHandler.AnalyzeRule)
+
+		// AI Incident Management Desk Routes
+		v2Group.GET("/incidents", v2IncidentHandler.GetOverview)
+		v2Group.GET("/incidents/list", v2IncidentHandler.GetIncidents)
+		v2Group.GET("/incidents/:id", v2IncidentHandler.GetIncidentByID)
+		v2Group.POST("/incidents/create", v2IncidentHandler.CreateIncident)
+		v2Group.POST("/incidents/:id/evidence", v2IncidentHandler.AddEvidence)
+		v2Group.POST("/incidents/:id/assign", v2IncidentHandler.AssignAnalyst)
+		v2Group.POST("/incidents/:id/close", v2IncidentHandler.CloseIncident)
 	}
 }

@@ -8,7 +8,7 @@
 
 ## Overview
 
-**NetSentinel-X** is an enterprise-grade AI Security Operations Platform and Network Detection & Response (NDR) engine. Designed for modern SOC environments, NetSentinel-X combines real-time eBPF network telemetry, sub-millisecond Deep Packet Inspection (DPI), autonomous AI threat reasoning, multi-event threat investigations, MITRE ATT&CK matrix correlation, custom Sigma/YARA detection engineering, multi-provider threat intelligence fusion, User & Entity Behaviour Analytics (UEBA), and continuous AI Detection Optimization into a unified, high-performance web platform.
+**NetSentinel-X** is an enterprise-grade AI Security Operations Platform and Network Detection & Response (NDR) engine. Designed for modern SOC environments, NetSentinel-X combines real-time eBPF network telemetry, sub-millisecond Deep Packet Inspection (DPI), autonomous AI threat reasoning, multi-event threat investigations, MITRE ATT&CK matrix correlation, custom Sigma/YARA detection engineering, multi-provider threat intelligence fusion, User & Entity Behaviour Analytics (UEBA), continuous AI Detection Optimization, and an Enterprise AI Incident Management Desk into a unified, high-performance web platform.
 
 ---
 
@@ -27,6 +27,7 @@
 - **Enterprise Threat Intelligence Fusion Engine**: Multi-provider threat intelligence aggregation across 8 providers (VirusTotal, AlienVault OTX, AbuseIPDB, GreyNoise, Shodan, Censys, IPinfo, WHOIS), composite reputation scoring, and async IOC enrichment.
 - **User & Entity Behaviour Analytics (UEBA)**: Statistical baseline profiling per host/user/IP/domain, anomaly scoring across 6 threat vectors (Beaconing, Port Scanning, Brute Force, Lateral Movement, Data Exfiltration, DNS Tunneling), Entity Risk Leaderboard, and AI Behaviour Deviation Reasoning.
 - **AI Detection Optimizer & Coverage Studio**: Rule Quality Scoring (0-100), AI False Positive Reduction recommendations, ATT&CK Coverage Gap identification, and Analyst Learning Feedback loop.
+- **AI Incident Management Desk**: End-to-end incident lifecycle management (NEW, TRIAGED, INVESTIGATING, CONTAINMENT, ERADICATION, RECOVERY, CLOSED), evidence locker, response SLA tracking (P1-P4), and resolution workflows.
 
 ---
 
@@ -73,27 +74,16 @@
 
 ### Era 8: Enterprise AI Detection Optimizer & Coverage Studio
 - **Performance Analytics & Tuning (`backend/services/detection_optimizer_service.go`)**: Evaluates rule execution counts, true/false positive ratios, severity accuracy, and response latency into a 0-100 Performance Score.
-- **AI False Positive Reduction Engine**: Analyzes alert history, entity behavior, threat intelligence, and UEBA scores to produce actionable rule tuning recommendations (asset exclusions, threshold adjustments).
+- **AI False Positive Reduction Engine**: Analyzes alert history, entity behavior, threat intelligence, and UEBA scores to produce actionable rule tuning recommendations.
 - **ATT&CK Coverage Gap Identification**: Cross-references active detection rules against MITRE ATT&CK 12 tactics and flags unmonitored technique gaps with recommended rule logic templates.
 - **Analyst Feedback Loop (`/api/v2/optimizer/feedback`)**: Allows analysts to record True Positive / False Positive verdicts to continuously refine AI recommendation accuracy.
 - **Optimizer Dashboard Panel (`frontend/components/AIDetectionOptimizer.tsx`)**: Rule Health Leaderboard, AI Tuning Recommendations cards, ATT&CK Coverage Gaps matrix, and Analyst Feedback Modal.
 
----
-
-## AI Detection Optimizer Architecture
-
-```
-  [ Detection Rules & Alert Stream ] ──► [ Rule Performance Analytics Engine ]
-                                                         │
-           ┌─────────────────────────────────────────────┴─────────────────────────────────────────────┐
-           ▼                                             ▼                                             ▼
-  [ False Positive Engine ]                     [ ATT&CK Gap Identifier ]                    [ Analyst Learning Feedback ]
-  (Asset Exclusions & Threshold Tuning)        (Unmonitored MITRE Techniques)                (Verdict Recording & Score Tuning)
-           │                                             │                                             │
-           └─────────────────────────────────────────────┼─────────────────────────────────────────────┘
-                                                         ▼
-                                          [ Optimizer Dashboard & Studio ]
-```
+### Era 9: Enterprise AI Incident Management Desk
+- **Incident Lifecycle Management (`backend/services/incident_service.go`)**: Tracks complete incident status transitions (NEW, TRIAGED, INVESTIGATING, CONTAINMENT, ERADICATION, RECOVERY, CLOSED), evidence attachments, analyst assignments, and resolution notes.
+- **SLA Tracking Engine (`models/incident.go`)**: Enforces target response and resolution times for P1-P4 severity incidents (15m P1 target vs 60m resolution target).
+- **Incident REST API (`/api/v2/incidents/*`)**: Handles case creation, evidence locker attachments, chronological timeline logs, assignment updates, and resolution closure.
+- **Incident Desk Interface (`frontend/components/AIIncidentDesk.tsx`)**: Filterable incident work queue, Case Inspector timeline viewer, Evidence Locker, New Incident modal, and Resolution Notes modal.
 
 ---
 
@@ -120,8 +110,8 @@ NetSentinel-X V2 evolves through 16 structured production Eras:
 6. **Era 6 (Completed)**: Threat Intelligence Fusion (VirusTotal, OTX, AbuseIPDB, GreyNoise, Shodan, Censys, etc.) ✅
 7. **Era 7 (Completed)**: UEBA & Behaviour Analytics (Anomaly scoring for host beaconing & lateral movement) ✅
 8. **Era 8 (Completed)**: AI Detection Optimizer (False positive reduction, rule tuning & coverage gap analysis) ✅
-9. **Era 9 (Next)**: AI Incident Management Desk (End-to-end incident response lifecycle & SLA tracking)
-10. **Era 10**: Executive Reporting & Compliance (SOC 2, ISO 27001, HIPAA automated PDF/HTML/MD reports)
+9. **Era 9 (Completed)**: AI Incident Management Desk (End-to-end incident response lifecycle & SLA tracking) ✅
+10. **Era 10 (Next)**: Executive Reporting & Compliance (SOC 2, ISO 27001, HIPAA automated PDF/HTML/MD reports)
 11. **Era 11**: Interactive Attack Graph (Visual topology canvas & attack chain pathing)
 12. **Era 12**: Historical Investigation & Threat Hunting (Long-term trend comparison & repeat attack detection)
 13. **Era 13**: AI Workflow Automation (Autonomous SOC incident playbooks)
@@ -152,6 +142,6 @@ NetSentinel-X enforces a strict 9-step production lifecycle verified via **GitHu
 ## Current Development Status
 
 - **Current Version**: NetSentinel-X V2.0 Enterprise
-- **Current Era**: Era 8 Completed ✅
+- **Current Era**: Era 9 Completed ✅
 - **CI Status**: GitHub Actions Pipeline Verified 🟢
-- **Next Era**: Era 9 — AI Incident Management Desk
+- **Next Era**: Era 10 — Executive Reporting & Compliance
