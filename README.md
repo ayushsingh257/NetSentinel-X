@@ -8,7 +8,7 @@
 
 ## Overview
 
-**NetSentinel-X** is an enterprise-grade AI Security Operations Platform and Network Detection & Response (NDR) engine. Designed for modern SOC environments, NetSentinel-X combines real-time eBPF network telemetry, sub-millisecond Deep Packet Inspection (DPI), autonomous AI threat reasoning, multi-event threat investigations, MITRE ATT&CK matrix correlation, custom Sigma/YARA detection engineering, multi-provider threat intelligence fusion, User & Entity Behaviour Analytics (UEBA), continuous AI Detection Optimization, and an Enterprise AI Incident Management Desk into a unified, high-performance web platform.
+**NetSentinel-X** is an enterprise-grade AI Security Operations Platform and Network Detection & Response (NDR) engine. Designed for modern SOC environments, NetSentinel-X combines real-time eBPF network telemetry, sub-millisecond Deep Packet Inspection (DPI), autonomous AI threat reasoning, multi-event threat investigations, MITRE ATT&CK matrix correlation, custom Sigma/YARA detection engineering, multi-provider threat intelligence fusion, User & Entity Behaviour Analytics (UEBA), continuous AI Detection Optimization, an Enterprise AI Incident Management Desk, and AI Executive Reporting & Compliance Intelligence into a unified, high-performance web platform.
 
 ---
 
@@ -28,6 +28,7 @@
 - **User & Entity Behaviour Analytics (UEBA)**: Statistical baseline profiling per host/user/IP/domain, anomaly scoring across 6 threat vectors (Beaconing, Port Scanning, Brute Force, Lateral Movement, Data Exfiltration, DNS Tunneling), Entity Risk Leaderboard, and AI Behaviour Deviation Reasoning.
 - **AI Detection Optimizer & Coverage Studio**: Rule Quality Scoring (0-100), AI False Positive Reduction recommendations, ATT&CK Coverage Gap identification, and Analyst Learning Feedback loop.
 - **AI Incident Management Desk**: End-to-end incident lifecycle management (NEW, TRIAGED, INVESTIGATING, CONTAINMENT, ERADICATION, RECOVERY, CLOSED), evidence locker, response SLA tracking (P1-P4), and resolution workflows.
+- **Executive Reporting & Compliance Intelligence Engine**: CISO-level security summary generation, business impact analysis, SOC 2 / ISO 27001 / HIPAA audit mapping, and one-click PDF/HTML/Markdown/JSON exports.
 
 ---
 
@@ -85,6 +86,12 @@
 - **Incident REST API (`/api/v2/incidents/*`)**: Handles case creation, evidence locker attachments, chronological timeline logs, assignment updates, and resolution closure.
 - **Incident Desk Interface (`frontend/components/AIIncidentDesk.tsx`)**: Filterable incident work queue, Case Inspector timeline viewer, Evidence Locker, New Incident modal, and Resolution Notes modal.
 
+### Era 10: Enterprise Executive Reporting & Compliance Intelligence Engine
+- **Report Generation Engine (`backend/services/report_service.go`)**: Generates Executive Security Summaries, SOC Daily briefs, Incident Reports, Threat Intelligence summaries, and Compliance Audit reports.
+- **Compliance Framework Mapping (`models/report.go`)**: Automatic control auditing and gap detection for SOC 2 Type II, ISO 27001:2022, and HIPAA Security Rule.
+- **Reporting & Compliance REST API (`/api/v2/reports/*` & `/api/v2/compliance/*`)**: Handles dynamic report creation, historical report logs, framework status queries, and HTML/JSON exports.
+- **Executive Reporting Panel (`frontend/components/ExecutiveReporting.tsx`)**: Enterprise Security Posture Dashboard (94/100 score), Compliance Framework Matrix, Report Library, and One-Click Export Toolbar.
+
 ---
 
 ## System Architecture
@@ -111,8 +118,8 @@ NetSentinel-X V2 evolves through 16 structured production Eras:
 7. **Era 7 (Completed)**: UEBA & Behaviour Analytics (Anomaly scoring for host beaconing & lateral movement) ✅
 8. **Era 8 (Completed)**: AI Detection Optimizer (False positive reduction, rule tuning & coverage gap analysis) ✅
 9. **Era 9 (Completed)**: AI Incident Management Desk (End-to-end incident response lifecycle & SLA tracking) ✅
-10. **Era 10 (Next)**: Executive Reporting & Compliance (SOC 2, ISO 27001, HIPAA automated PDF/HTML/MD reports)
-11. **Era 11**: Interactive Attack Graph (Visual topology canvas & attack chain pathing)
+10. **Era 10 (Completed)**: Executive Reporting & Compliance (SOC 2, ISO 27001, HIPAA automated reports & exports) ✅
+11. **Era 11 (Next)**: Interactive Attack Graph (Visual topology canvas & attack chain pathing)
 12. **Era 12**: Historical Investigation & Threat Hunting (Long-term trend comparison & repeat attack detection)
 13. **Era 13**: AI Workflow Automation (Autonomous SOC incident playbooks)
 14. **Era 14**: Enterprise Observability (Audit logs, Prometheus/Grafana metrics, health monitoring)
@@ -142,6 +149,6 @@ NetSentinel-X enforces a strict 9-step production lifecycle verified via **GitHu
 ## Current Development Status
 
 - **Current Version**: NetSentinel-X V2.0 Enterprise
-- **Current Era**: Era 9 Completed ✅
+- **Current Era**: Era 10 Completed ✅
 - **CI Status**: GitHub Actions Pipeline Verified 🟢
-- **Next Era**: Era 10 — Executive Reporting & Compliance
+- **Next Era**: Era 11 — Interactive Attack Graph

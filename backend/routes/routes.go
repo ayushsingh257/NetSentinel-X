@@ -38,6 +38,7 @@ func SetupRoutes(router *gin.Engine) {
 	v2UEBAHandler := handlers.NewV2UEBAHandler()
 	v2OptimizerHandler := handlers.NewV2OptimizerHandler()
 	v2IncidentHandler := handlers.NewV2IncidentHandler()
+	v2ReportHandler := handlers.NewV2ReportHandler()
 
 	v2Group := router.Group("/api/v2")
 	{
@@ -101,5 +102,12 @@ func SetupRoutes(router *gin.Engine) {
 		v2Group.POST("/incidents/:id/evidence", v2IncidentHandler.AddEvidence)
 		v2Group.POST("/incidents/:id/assign", v2IncidentHandler.AssignAnalyst)
 		v2Group.POST("/incidents/:id/close", v2IncidentHandler.CloseIncident)
+
+		// AI Executive Reporting & Compliance Routes
+		v2Group.GET("/reports", v2ReportHandler.GetReports)
+		v2Group.POST("/reports/generate", v2ReportHandler.GenerateReport)
+		v2Group.GET("/reports/export/:id", v2ReportHandler.ExportReport)
+		v2Group.GET("/compliance", v2ReportHandler.GetCompliance)
+		v2Group.GET("/compliance/status", v2ReportHandler.GetComplianceStatus)
 	}
 }

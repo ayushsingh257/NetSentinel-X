@@ -15,6 +15,7 @@ import ThreatIntelFusion from "./ThreatIntelFusion";
 import UEBAAnalytics from "./UEBAAnalytics";
 import AIDetectionOptimizer from "./AIDetectionOptimizer";
 import AIIncidentDesk from "./AIIncidentDesk";
+import ExecutiveReporting from "./ExecutiveReporting";
 import { useEffect, useState } from "react";
 import { Bot, Sparkles } from "lucide-react";
 
@@ -152,6 +153,11 @@ export default function SOCDashboard() {
       {/* Enterprise AI Incident Management Desk Section */}
       <div className="p-6">
         <AIIncidentDesk />
+      </div>
+
+      {/* Enterprise Executive Reporting & Compliance Engine Section */}
+      <div className="p-6">
+        <ExecutiveReporting />
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 p-6">
