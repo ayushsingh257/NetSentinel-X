@@ -10,20 +10,14 @@ import (
 
 func SetupRoutes(router *gin.Engine) {
 
+	// Legacy V1 Routes (Maintained for 100% backward compatibility)
 	router.GET("/", handlers.HomeHandler)
-
 	router.GET("/health", handlers.HealthHandler)
-
 	router.GET("/analytics", handlers.GetAnalytics)
-
 	router.POST("/login", handlers.LoginHandler)
-
 	router.GET("/traffic", handlers.GetTrafficLogs)
-
 	router.GET("/alerts", handlers.GetAlerts)
-
 	router.GET("/export/traffic", handlers.ExportTrafficReport)
-
 	router.GET("/ws", websocket.HandleWebSocket)
 
 	adminRoutes := router.Group("/")
@@ -32,7 +26,14 @@ func SetupRoutes(router *gin.Engine) {
 		middleware.AdminOnly(),
 	)
 	{
-
 		adminRoutes.POST("/traffic", handlers.CreateTrafficLog)
+	}
+
+	// NetSentinel-X V2 Enterprise API Group
+	v2CopilotHandler := handlers.NewV2CopilotHandler()
+	v2Group := router.Group("/api/v2")
+	{
+		v2Group.POST("/copilot/query", v2CopilotHandler.QueryCopilot)
+		v2Group.GET("/copilot/prompts", v2CopilotHandler.GetCopilotPrompts)
 	}
 }

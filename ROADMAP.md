@@ -21,9 +21,9 @@ The core objective is to evolve NetSentinel-X from a real-time monitoring dashbo
 ## Current Project Status
 
 - **Current Version**: NetSentinel-X V2.0 Enterprise
-- **Current Era**: Era 1 — Enterprise Experience & UI Modernization
-- **Era 1 Status**: ✅ Completed & Verified
-- **Next Milestone**: Era 2 — AI Security Copilot
+- **Current Era**: Era 2 — AI Security Copilot
+- **Era 2 Status**: ✅ Completed & Verified
+- **Next Milestone**: Era 3 — AI Threat Investigation Engine
 - **Stability Status**: Production Checkpoint Verified. GitHub Actions CI/CD Pipeline 🟢 GREEN.
 
 ---
@@ -37,9 +37,10 @@ The core objective is to evolve NetSentinel-X from a real-time monitoring dashbo
 - **Testing**: Jest unit tests, TypeScript validation, Turbopack build, Go compiler validation.
 
 ### Era 2: AI Security Copilot
-- **Status**: ⏳ Scheduled
+- **Status**: ✅ Completed
 - **Objective**: Build an enterprise AI assistant trained on live traffic, packets, alerts, and MITRE tactics using RAG reasoning.
-- **Features**: Interactive Copilot Drawer/Widget, natural language packet explanations ("Explain this packet", "Summarize last 24 hours"), alert analysis, and response recommendations.
+- **Features**: Interactive Copilot Drawer/Widget, natural language packet explanations ("Explain this packet", "Summarize last 24 hours"), alert analysis, evidence cards, confidence scoring, and recommended response steps (`/api/v2/copilot/query`).
+- **Testing**: Frontend Jest component tests, Go backend service/handler unit tests, ESLint & TypeScript verification.
 
 ### Era 3: AI Threat Investigation Engine
 - **Status**: ⏳ Scheduled
