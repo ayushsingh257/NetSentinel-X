@@ -46,7 +46,7 @@ jobs:
         continue-on-error: true
 
   backend-ci:
-    name: Backend CI (Go & Gin Engine)
+    name: Backend CI (Go & DPI Engine)
     runs-on: ubuntu-latest
 
     defaults:
@@ -56,6 +56,11 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
+
+      - name: Install System Dependencies (libpcap)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libpcap-dev
 
       - name: Setup Go Environment
         uses: actions/setup-go@v5
