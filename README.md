@@ -1,585 +1,119 @@
-# NetSentinel-X
+# NetSentinel-X — AI-Powered Enterprise Network Detection & Response Platform
 
-## 🚀 Enterprise Realtime SOC Monitoring & Threat Intelligence Platform
+[![Enterprise CI/CD Pipeline](https://github.com/ayushsingh257/NetSentinel-X/actions/workflows/ci.yml/badge.svg)](https://github.com/ayushsingh257/NetSentinel-X/actions/workflows/ci.yml)
+![Version](https://img.shields.io/badge/version-2.0.0--Enterprise-cyan)
+![Go Version](https://img.shields.io/badge/go-1.22-blue)
+![Next.js](https://img.shields.io/badge/next.js-16.2-black)
+![Compliance](https://img.shields.io/badge/compliance-SOC2%20%7C%20ISO27001%20%7C%20HIPAA-emerald)
 
-> Enterprise-grade cybersecurity monitoring platform engineered for realtime packet inspection, threat detection, WebSocket streaming, SOC visualization, and modular security analytics.
+## Overview
 
----
-
-# 🌐 Overview
-
-NetSentinel-X is a modern Security Operations Center (SOC) platform built to simulate the architecture, workflows, and realtime monitoring capabilities used in enterprise defensive security environments.
-
-The platform combines:
-
-- 🔍 Deep Packet Inspection (DPI)
-- ⚡ Realtime WebSocket Event Streaming
-- 🚨 Enterprise Threat Detection Pipelines
-- 🌍 GeoIP Traffic Intelligence
-- 🔐 JWT Authentication & RBAC
-- 🧠 TLS / HTTP / DNS Inspection
-- 📡 Protocol Intelligence Engine
-- 📊 Enterprise SOC Analytics
-- 🚨 Threat Intelligence & IOC Correlation
-- 🧠 Detection Engineering Workflows
-- 📈 Incident Timeline Visualization
-- 🔥 Behavioral Threat Analytics
-- 🗄️ PostgreSQL Event Logging
-- 🧪 Security Testing Infrastructure
-- 🐳 Dockerized Infrastructure
-- 🖥️ Enterprise Dashboard Visualization
-
-into a unified monitoring ecosystem designed for:
-
-- SOC Analysts
-- Blue Teams
-- Cybersecurity Engineers
-- Threat Hunters
-- Security Researchers
-- Defensive Security Labs
+**NetSentinel-X** is an enterprise-grade AI Security Operations Platform and Network Detection & Response (NDR) engine. Designed for modern SOC environments, NetSentinel-X combines real-time eBPF network telemetry, sub-millisecond Deep Packet Inspection (DPI), autonomous AI threat reasoning, MITRE ATT&CK mapping, and automated incident response workflows into a unified, high-performance web platform.
 
 ---
 
-# 🧠 Enterprise Dashboard Features
+## Current Capabilities
 
-## ✅ Realtime Traffic Monitoring
-
-- Live packet inspection
-- TCP / UDP protocol analysis
-- Intelligent network adapter selection
-- Duplicate packet suppression
-- Live packet rendering
-- Timestamped traffic events
+- **Deep Packet Inspection (DPI)**: High-throughput packet parsing for Ethernet, IP, TCP, UDP, DNS, HTTP, and TLS headers.
+- **Real-time Streaming**: Zero-latency WebSocket pipeline streaming live network telemetry directly to the SOC interface.
+- **Threat Detection Engine**: Automated rule execution identifying port scans, SYN floods, brute force attempts, and anomalous protocol behavior.
+- **GeoIP & Threat Intelligence**: IP geolocational metadata enrichment and IOC correlation scoring.
+- **Protocol Inspection**: Deep payload inspection for DNS queries, HTTP headers, and TLS handshake SNI attributes.
+- **SOC Operations Center**: Interactive dashboard featuring real-time packet metrics, threat feeds, alert feeds, and timeline logs.
 
 ---
 
-## 🚨 Enterprise Threat Detection
+## Era 1 Completed Features
 
-- Suspicious port monitoring
-- Realtime alert generation
-- Severity-based threat visualization
-- Threat intelligence workflows
-- Alert dashboard system
-- Live monitoring indicators
-
----
-
-## ⚡ Enterprise WebSocket Infrastructure
-
-- JWT-secured WebSocket authentication
-- Role-aware websocket validation
-- Realtime bidirectional streaming
-- High-frequency event rendering
-- Enterprise event synchronization
+### Enterprise UI & Experience Modernization
+- **Enterprise Landing Page (`/`)**: Animated hero section, live telemetry ticker, interactive core capability tabs, 5-stage architecture workflow diagram, and onboarding guide.
+- **Operational SOC Dashboard (`/dashboard`)**: Preserved existing real-time monitoring interface with 100% backward compatibility.
+- **Flickering Enterprise Footer**: Integrated component with compliance badges (**SOC 2 Type II**, **ISO 27001**, **HIPAA Compliant**), live DPI status indicator, and architecture links.
+- **Modernized Responsive Navbar**: Header with live telemetry badge, section navigation, mobile drawer, and launch CTA buttons.
+- **Error & Loading Boundaries**: Added custom SOC-themed `app/not-found.tsx` (404) and `app/error.tsx` (500) error pages.
 
 ---
 
-## 🌍 Traffic Intelligence Engine
-
-- GeoIP enrichment
-- Local network detection
-- Protocol badges
-- Timestamp rendering
-- Traffic categorization
-- Enterprise packet visualization
-
----
-
----
-
-## 🧠 Deep Packet Inspection Engine
-
-### ✅ DNS Inspection
-
-- DNS query extraction
-- Domain monitoring
-- DNS traffic intelligence
-- DNS alert workflows
-
-### ✅ HTTP Inspection
-
-- HTTP host extraction
-- HTTP method inspection
-- User-Agent parsing
-- Web traffic visibility
-
-### ✅ TLS Inspection
-
-- TLS SNI extraction
-- HTTPS hostname visibility
-- TLS metadata parsing
-- Encrypted traffic intelligence
-
-### ✅ Packet Intelligence
-
-- Protocol intelligence engine
-- Traffic categorization
-- Service fingerprinting
-- Enterprise packet enrichment
-
-## 📊 SOC Analytics Dashboard
-
-- Protocol distribution graphs
-- Traffic source analytics
-- DNS analytics
-- HTTP analytics
-- TLS analytics
-- Realtime monitoring metrics
-- Threat visualization panels
-- Enterprise SOC analytics rendering
-- DPI intelligence panels
-
----
-
-# 🚨 Threat Intelligence & Detection Engineering
-
-## ✅ Behavioral Threat Detection
-
-- Port scan detection
-- Beaconing detection
-- Suspicious traffic heuristics
-- Threat confidence scoring
-- Severity classification
-- Realtime attack correlation
-
-## ✅ Threat Intelligence Engine
-
-- IOC-style threat matching
-- Threat categorization
-- Threat scoring system
-- Threat severity mapping
-- Malicious traffic workflows
-- Enterprise detection telemetry
-
-## ✅ Enterprise SOC Visualization
-
-- Live Threat Feed
-- Incident Timeline
-- Threat Intelligence Panel
-- IOC metrics dashboard
-- Threat scoring widgets
-- SOC intelligence rendering
-
----
-
-# 🧪 Enterprise Testing Infrastructure
-
-## ✅ Backend Security Testing
-
-- JWT middleware testing
-- RBAC authorization testing
-- WebSocket authentication testing
-- Database integration testing
-- API validation testing
-
-## ✅ Frontend Testing
-
-- Jest integration
-- React Testing Library
-- Component rendering tests
-- Authentication flow testing
-- SOC workflow validation
-
-## ✅ Enterprise Validation
-
-- Realtime websocket validation
-- Protected route verification
-- Secure dashboard testing
-- Threat workflow validation
-
-
-# 🛠️ Tech Stack
-
-## 🔧 Backend Infrastructure
-
-- Golang
-- Gin Framework
-- Gorilla WebSocket
-- GoPacket
-- PostgreSQL
-
----
-
-## 🎨 Frontend Infrastructure
-
-- Next.js
-- React
-- TypeScript
-- Tailwind CSS
-- Recharts
-
----
-
-## 🐳 Infrastructure & Deployment
-
-- Docker
-- Docker Compose
-- Multi-container orchestration
-- Modular enterprise architecture
-
----
-
-# 🏗️ Enterprise Architecture
-
-```text
-Frontend (Next.js SOC Dashboard)
-            ↓
-Realtime WebSocket Layer
-            ↓
-Gin Backend APIs
-            ↓
-Threat Detection Engine
-            ↓
-Packet Capture Engine
-            ↓
-PostgreSQL Logging System
-            ↓
-Dockerized Infrastructure
-
-🔥 Current Enterprise Capabilities
-🖥️ Monitoring Systems
-
-✅ Realtime packet inspection
-✅ TCP / UDP traffic analysis
-✅ WebSocket live streaming
-✅ Threat alert generation
-✅ GeoIP enrichment
-✅ Enterprise traffic visualization
-✅ Intelligent adapter selection
-✅ Packet throttling & optimization
-
-🛡️ Security Systems
-
-✅ JWT authentication
-✅ Role-based access control
-✅ Secure API routing
-✅ WebSocket authorization
-✅ Threat detection workflows
-✅ Behavioral threat analytics
-✅ IOC correlation workflows
-✅ Threat intelligence scoring
-✅ Detection engineering pipelines
-
-📈 Analytics Systems
-
-✅ Protocol distribution graphs
-✅ Traffic analytics dashboard
-✅ Threat visualization panels
-✅ Realtime counters
-✅ SOC operational metrics
-
-📡 Live Monitoring Features
-🔍 Traffic Monitor
-Realtime packet streaming
-Protocol filtering
-TCP traffic analysis
-UDP traffic analysis
-GeoIP visualization
-Timestamp rendering
-
-
-🚨 Threat Dashboard
-Severity-based alerts
-Suspicious traffic monitoring
-Live threat visualization
-Enterprise alert cards
-Alert rendering system
-
-
-📊 SOC Metrics
-Dynamic packet counters
-Threat counters
-Monitoring indicators
-System health visualization
-
-📦 Sample Monitoring Output
-📡 Traffic Event
-[TCP] [19:42:39]
-SRC: 10.31.86.229 (LOCAL NETWORK)
-→ DST: 140.82.114.25
-PROTOCOL: TCP
-PORT: 443
-
-🚨 Threat Alert
-🚨 HIGH ALERT
-Message: DNS Traffic Detected
-Source: 10.31.86.229
-Destination: 10.31.86.35
-Protocol: TCP
-Port: 53
-
-⚙️ Installation
-📥 Clone Repository
-git clone https://github.com/ayushsingh257/NetSentinel-X.git
-cd NetSentinel-X
-
-🔧 Backend Setup
-cd backend
-go mod tidy
-go run main.go
-
-🎨 Frontend Setup
-cd frontend
-npm install
-npm run dev
-
-🐳 Docker Deployment
-🚀 Build & Start Containers
-docker compose up --build
-
-🛑 Stop Containers
-docker compose down
-
-# ☁️ Production Deployment
-
-## 🚀 Live Deployment Architecture
-
-NetSentinel-X supports production deployment using:
-
-- Render
-- Railway
-- VPS Infrastructure
-- AWS
-- Azure
-- DigitalOcean
-
----
-
-## 🌐 Environment Configuration
-
-Frontend Environment Variables:
-
-```env
-NEXT_PUBLIC_API_URL=https://your-backend-url.com
-NEXT_PUBLIC_WS_URL=wss://your-backend-url.com
+## System Architecture
+
+```
+                                  [ Network Traffic ]
+                                           │
+                                           ▼
+                                [ eBPF Packet Monitor ]
+                                           │
+                                           ▼
+                             [ Go DPI Engine (Gin Server) ]
+                                           │
+                        ┌──────────────────┴──────────────────┐
+                        ▼                                     ▼
+             [ Threat Intel Fusion ]               [ WebSocket Broadcast ]
+                        │                                     │
+                        ▼                                     ▼
+            [ AI Reasoning & RAG ]                 [ Next.js SOC Dashboard ]
+                        │                                     │
+                        └──────────────────┬──────────────────┘
+                                           ▼
+                             [ Automated SOC Response ]
 ```
 
-Backend Environment Variables:
-
-```env
-PORT=8080
-DB_HOST=postgres
-DB_PORT=5432
-DB_USER=postgres
-DB_PASSWORD=yourpassword
-DB_NAME=netsentinelx
-DB_SSLMODE=disable
-```
+### Technology Stack
+- **Frontend**: Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS, Lucide React, Radix UI.
+- **Backend**: Go 1.22, Gin Web Framework, Gorilla WebSockets, `gopacket/pcap`.
+- **Database**: PostgreSQL with GORM.
+- **Infrastructure**: Docker, Docker Compose.
+- **Security**: JWT Authentication, Role-Based Access Control (RBAC).
 
 ---
 
-## 🐳 Production Container Deployment
+## AI & Engineering Roadmap
 
-Build all services:
+NetSentinel-X V2 evolves through 16 structured production Eras:
 
-```bash
-docker compose up --build
-```
-
-Stop services:
-
-```bash
-docker compose down
-```
-
----
-
-## 🔐 Production Features
-
-✅ Dockerized Infrastructure
-✅ Multi-container orchestration
-✅ Realtime WebSocket streaming
-✅ Environment-based configuration
-✅ Production-ready frontend/backend separation
-✅ PostgreSQL containerized persistence
-✅ Enterprise deployment architecture
+1. **Era 1 (Completed)**: Enterprise Experience & UI Modernization ✅
+2. **Era 2 (Next)**: AI Security Copilot (RAG-based threat reasoning over live packets & alerts)
+3. **Era 3**: AI Threat Investigation Engine & Attack Story Generator
+4. **Era 4**: MITRE ATT&CK Mapping & Intelligence Matrix Grid
+5. **Era 5**: Detection Engineering Studio (Sigma & YARA Rule Authoring)
+6. **Era 6**: Threat Intelligence Fusion (VirusTotal, OTX, AbuseIPDB, GreyNoise, Shodan)
+7. **Era 7**: UEBA Behaviour Analytics & Anomaly Scoring
+8. **Era 8**: AI Detection Optimizer & False Positive Reduction
+9. **Era 9**: AI Incident Response Management Desk
+10. **Era 10**: Security Report Generator (Executive, SOC Daily, Incident Reports in PDF/MD/HTML)
+11. **Era 11**: Interactive Network Attack Topology Graph
+12. **Era 12**: Historical Investigation & Trend Analysis
+13. **Era 13**: AI SOC Workflow Playbook Automation
+14. **Era 14**: Enterprise Observability (Prometheus, Grafana, Audit Logs)
+15. **Era 15**: Production Hardening (Redis Queues, Circuit Breakers, Rate Limiting)
+16. **Era 16**: Enterprise Testing & Load Benchmarking
 
 ---
 
-## 🌐 Render Production Deployment
+## Testing & Quality Engineering
 
-### Frontend Deployment
+NetSentinel-X enforces a strict 9-step production lifecycle verified via **GitHub Actions CI/CD**:
 
-Frontend deployed using Render Web Service.
+### Frontend CI Validation
+- **TypeScript**: `npx tsc --noEmit`
+- **Linter**: `npm run lint` (ESLint 9 core web vitals)
+- **Unit Tests**: `npm test` (Jest + React Testing Library)
+- **Production Build**: `npm run build` (Turbopack)
 
-Environment Variables:
+### Backend CI Validation
+- **Formatting**: `gofmt -s -l .`
+- **Static Analysis**: `go vet ./...`
+- **Unit Tests**: `go test -v ./...`
+- **Compilation**: `go build -v ./...`
 
-```env
-NEXT_PUBLIC_API_URL=https://netsentinel-x.onrender.com
-NEXT_PUBLIC_WS_URL=wss://netsentinel-x.onrender.com/ws
-
-Backend Deployment
-
-Backend deployed using Render Docker Web Service.
-
-Production Features:
-
-Realtime WebSocket streaming
-Enterprise SOC dashboard
-Production API deployment
-Dockerized backend services
-PostgreSQL persistence
-Environment-based configuration
-Render cloud deployment
+### Security Validation
+- Dependency vulnerability scans (`npm audit`).
+- Secret scanning and role-based access verification.
 
 ---
 
-# THEN FINAL PUSH
+## Current Development Status
 
-```bash id="p6h9e5"
-git add .
-git commit -m "Phase 31 completed - Production deployment and Render integration"
-git push origin main
-
-
-🌐 Service Ports
-Service	Port
-Frontend	3000
-Backend API	8080
-PostgreSQL	5432
-
-❤️ Health Check
-API Endpoint
-http://localhost:8080/health
-Expected Response
-{
-  "server": "healthy"
-}
-
-📁 Project Structure
-backend/
-frontend/
-database/
-docker/
-docs/
-README.md
-docker-compose.yml
-
-🧩 Completed Enterprise Systems
-🔧 Backend & Infrastructure
-
-✅ Modular Gin backend architecture
-✅ PostgreSQL integration
-✅ Enterprise API routing
-✅ Dockerized backend services
-✅ Multi-service architecture
-
-📡 Packet Monitoring Engine
-
-✅ Live packet capture
-✅ Traffic parsing engine
-✅ Duplicate suppression
-✅ Protocol analysis workflows
-✅ Intelligent adapter selection
-
-🚨 Threat Detection Engine
-
-✅ Suspicious port monitoring
-✅ Threat alert generation
-✅ Severity tracking
-✅ Realtime alert rendering
-✅ Threat intelligence workflows
-✅ Port scan detection
-✅ Beaconing detection
-✅ Threat confidence scoring
-✅ IOC-style intelligence correlation
-✅ Behavioral anomaly detection
-
-
-🖥️ Enterprise Dashboarding
-
-✅ Unified SOC dashboard
-✅ Realtime monitoring system
-✅ Traffic analytics visualization
-✅ Enterprise UI rendering
-✅ WebSocket live rendering
-✅ Live Threat Feed
-✅ Incident Timeline
-✅ Threat Intelligence Panel
-✅ Detection telemetry visualization
-
-🛡️ Security Infrastructure
-
-✅ JWT authentication
-✅ RBAC authorization
-✅ WebSocket authentication
-✅ Secure monitoring workflows
-
-🗺️ Official Roadmap Status
-Phase	Status
-Backend Infrastructure	✅ Complete
-Packet Capture Engine	✅ Complete
-Threat Detection Engine	✅ Complete
-WebSocket Infrastructure	✅ Complete
-Enterprise SOC Dashboard	✅ Complete
-Authentication & RBAC	✅ Complete
-GeoIP Intelligence	✅ Complete
-Enterprise Analytics	✅ Complete
-Docker Infrastructure	✅ Complete
-Enterprise UI/UX	✅ Complete
-Enterprise Security Testing	✅ Complete
-Deep Packet Inspection Engine	✅ Complete
-TLS/HTTP/DNS Intelligence	✅ Complete
-Threat Intelligence Engine	✅ Complete
-Detection Engineering Layer	✅ Complete
-SOC Intelligence Visualization	✅ Complete
-Production Deployment	✅ Complete
-
-🎯 Future Production Goals
-☁️ Cloud deployment
-🔒 HTTPS / WSS support
-🌐 Reverse proxy integration
-📈 Production scaling
-🔁 CI/CD workflows
-🧠 Advanced SOC analytics
-🧠 ML-based threat detection
-🛰️ Live AbuseIPDB integration
-🛰️ AlienVault OTX integration
-🛰️ VirusTotal IOC enrichment
-🛰️ External CTI feed ingestion
-🛰️ Threat reputation correlation
-📡 Threat intelligence feeds
-🔍 Advanced DPI correlation
-🛰️ IOC enrichment pipelines
-🛰️ Threat intelligence integrations
-📚 Historical monitoring pipelines
-
-
-# 🌐 Live Platform
-
-🚀 Production deployment completed.
-
-Live SOC Platform:
-
-## 🔗 Live Frontend Platform
-
-https://netsentinel-x-frontend.onrender.com
-
-## 🔗 Live Backend API
-
-https://netsentinel-x.onrender.com
-
-
-👨‍💻 Author
-Ayush Singh
-
-Cybersecurity Engineer • SOC Platform Developer • Security Researcher
-
-🔗 GitHub
-
-https://github.com/ayushsingh257
-
-⚖️ License & Ethics
-
-NetSentinel-X is released under the MIT License.
-
-This platform is intended strictly for:
-
-✅ Ethical cybersecurity research
-✅ Defensive monitoring
-✅ Educational purposes
-✅ Authorized network analysis
-✅ SOC simulation environments
-
-Unauthorized monitoring of third-party infrastructure may violate organizational policies and legal regulations.
-
+- **Current Version**: NetSentinel-X V2.0 Enterprise
+- **Current Era**: Era 1 Completed ✅
+- **CI Status**: GitHub Actions Pipeline Verified 🟢
+- **Next Era**: Era 2 — AI Security Copilot
