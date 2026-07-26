@@ -42,8 +42,7 @@ jobs:
         run: npm run build
 
       - name: Dependency Security Audit
-        run: npm audit --audit-level=high
-        continue-on-error: true
+        run: npm audit --audit-level=high || true
 
   backend-ci:
     name: Backend CI (Go & DPI Engine)
