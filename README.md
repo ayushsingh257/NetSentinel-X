@@ -8,7 +8,7 @@
 
 ## Overview
 
-**NetSentinel-X** is an enterprise-grade AI Security Operations Platform and Network Detection & Response (NDR) engine. Designed for modern SOC environments, NetSentinel-X combines real-time eBPF network telemetry, sub-millisecond Deep Packet Inspection (DPI), autonomous AI threat reasoning, multi-event threat investigations, MITRE ATT&CK matrix correlation, and automated incident response workflows into a unified, high-performance web platform.
+**NetSentinel-X** is an enterprise-grade AI Security Operations Platform and Network Detection & Response (NDR) engine. Designed for modern SOC environments, NetSentinel-X combines real-time eBPF network telemetry, sub-millisecond Deep Packet Inspection (DPI), autonomous AI threat reasoning, multi-event threat investigations, MITRE ATT&CK matrix correlation, custom Sigma/YARA detection engineering, and automated incident response workflows into a unified, high-performance web platform.
 
 ---
 
@@ -23,6 +23,7 @@
 - **AI Security Copilot (RAG Powered)**: Autonomous AI assistant providing context-aware threat reasoning, natural language packet explanations, evidence collection, and MITRE mapping.
 - **AI Threat Investigation Engine**: Automated correlation converting individual alerts into full attack stories, visual timeline sequences, root cause analyses, and evidence records.
 - **Enterprise MITRE ATT&CK Intelligence Engine**: Interactive 12-tactic ATT&CK Matrix grid, real-time Threat Heat Map, automatic multi-protocol technique mapping, AI ATT&CK reasoning, and defensive mitigation knowledge base.
+- **Detection Engineering Studio**: Complete lifecycle for custom Sigma & YARA inspired detection rules, interactive Simulation Sandbox, rule validation, and AI Rule Assistant.
 
 ---
 
@@ -50,20 +51,26 @@
 - **MITRE V2 REST API (`/api/v2/mitre/matrix`, `/api/v2/mitre/statistics`, `/api/v2/mitre/heatmap`, `/api/v2/mitre/explain`)**: Provides matrix grid payloads, search endpoints, threat heat map data, and AI technique reasoning.
 - **Enterprise ATT&CK Intelligence Panel (`frontend/components/MITREIntelligence.tsx`)**: Interactive 12-tactic grid, real-time threat heat map, technique modal with AI explanations, affected host lists, risk scores, and mitigation guidance.
 
+### Era 5: Enterprise Detection Engineering Studio (Sigma / YARA)
+- **Rule Lifecycle Engine (`backend/services/detection_engine_service.go`)**: Create, edit, delete, enable/disable, clone, version, test, and deploy custom detection rules.
+- **Simulation Sandbox**: Interactive testing environment evaluating sample telemetry events against custom rule logic with latency benchmarking and confidence scoring.
+- **AI Detection Assistant**: Generates Sigma/YARA rules, optimizes thresholds, reduces false positives, and suggests MITRE ATT&CK technique mappings.
+- **Detection Studio Panel (`frontend/components/DetectionStudio.tsx`)**: Unified rule management table, rule authoring modal, interactive simulation sandbox, and detection analytics banner.
+
 ---
 
-## MITRE ATT&CK Architecture & Heat Map
+## Detection Engineering Architecture
 
 ```
-  [ Packet Telemetry / Alerts / Threat Stories ] ──► [ Automatic ATT&CK Mapping Engine ]
-                                                              │
-                 ┌────────────────────────────────────────────┴────────────────────────────────────────────┐
-                 ▼                                            ▼                                            ▼
-     [ Interactive 12-Tactic Grid ]              [ Real-Time Threat Heat Map ]              [ AI ATT&CK Reasoning & Mitigation KB ]
-                 │                                            │                                            │
-                 └────────────────────────────────────────────┼────────────────────────────────────────────┘
-                                                              ▼
-                                          [ SOC Dashboard ATT&CK Panel ]
+  [ Sample Telemetry / Custom Rule ] ──► [ Detection Engineering Service ]
+                                                       │
+               ┌───────────────────────────────────────┴───────────────────────────────────────┐
+               ▼                                       ▼                                       ▼
+  [ Rule Manager (Sigma/YARA) ]             [ Simulation Sandbox ]                  [ AI Rule Assistant ]
+               │                                       │                                       │
+               └───────────────────────────────────────┼───────────────────────────────────────┘
+                                                       ▼
+                                         [ SOC Dashboard Studio Panel ]
 ```
 
 ---
@@ -87,8 +94,8 @@ NetSentinel-X V2 evolves through 16 structured production Eras:
 2. **Era 2 (Completed)**: AI Security Copilot (RAG-based threat reasoning over live packets & alerts) ✅
 3. **Era 3 (Completed)**: AI Threat Investigation Engine & Attack Story Generator ✅
 4. **Era 4 (Completed)**: Enterprise MITRE ATT&CK Intelligence Engine ✅
-5. **Era 5 (Next)**: Detection Engineering Studio (Sigma/YARA-inspired custom rule authoring & sandbox)
-6. **Era 6**: Threat Intelligence Fusion (VirusTotal, OTX, AbuseIPDB, GreyNoise, Shodan, Censys)
+5. **Era 5 (Completed)**: Detection Engineering Studio (Sigma/YARA-inspired custom rules) ✅
+6. **Era 6 (Next)**: Threat Intelligence Fusion (VirusTotal, OTX, AbuseIPDB, GreyNoise, Shodan, Censys)
 7. **Era 7**: UEBA & Behaviour Analytics (Anomaly scoring for host beaconing & lateral movement)
 8. **Era 8**: AI Detection Optimizer (False positive reduction & rule tuning)
 9. **Era 9**: AI Incident Management Desk (End-to-end incident response lifecycle & SLA tracking)
@@ -123,6 +130,6 @@ NetSentinel-X enforces a strict 9-step production lifecycle verified via **GitHu
 ## Current Development Status
 
 - **Current Version**: NetSentinel-X V2.0 Enterprise
-- **Current Era**: Era 4 Completed ✅
+- **Current Era**: Era 5 Completed ✅
 - **CI Status**: GitHub Actions Pipeline Verified 🟢
-- **Next Era**: Era 5 — Detection Engineering Studio (Sigma/YARA)
+- **Next Era**: Era 6 — Threat Intelligence Fusion (VirusTotal, OTX, AbuseIPDB, GreyNoise, Shodan, Censys)

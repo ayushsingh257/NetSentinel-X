@@ -33,6 +33,7 @@ func SetupRoutes(router *gin.Engine) {
 	v2CopilotHandler := handlers.NewV2CopilotHandler()
 	v2InvestigationHandler := handlers.NewV2InvestigationHandler()
 	v2MITREHandler := handlers.NewV2MITREHandler()
+	v2DetectionHandler := handlers.NewV2DetectionHandler()
 
 	v2Group := router.Group("/api/v2")
 	{
@@ -52,5 +53,17 @@ func SetupRoutes(router *gin.Engine) {
 		v2Group.GET("/mitre/statistics", v2MITREHandler.GetStatistics)
 		v2Group.GET("/mitre/heatmap", v2MITREHandler.GetHeatMap)
 		v2Group.POST("/mitre/explain", v2MITREHandler.ExplainTechnique)
+
+		// Detection Engineering Studio Routes
+		v2Group.GET("/detections/rules", v2DetectionHandler.GetRules)
+		v2Group.POST("/detections/rules", v2DetectionHandler.CreateRule)
+		v2Group.GET("/detections/rules/:id", v2DetectionHandler.GetRuleByID)
+		v2Group.PUT("/detections/rules/:id", v2DetectionHandler.UpdateRule)
+		v2Group.DELETE("/detections/rules/:id", v2DetectionHandler.DeleteRule)
+		v2Group.POST("/detections/rules/:id/toggle", v2DetectionHandler.ToggleRule)
+		v2Group.POST("/detections/test", v2DetectionHandler.TestRule)
+		v2Group.POST("/detections/simulate", v2DetectionHandler.Simulate)
+		v2Group.GET("/detections/analytics", v2DetectionHandler.GetAnalytics)
+		v2Group.POST("/detections/ai-assistant", v2DetectionHandler.AIAssistant)
 	}
 }

@@ -10,6 +10,7 @@ import ThreatIntelPanel from "./ThreatIntelPanel";
 import AICopilot from "./AICopilot";
 import ThreatInvestigation from "./ThreatInvestigation";
 import MITREIntelligence from "./MITREIntelligence";
+import DetectionStudio from "./DetectionStudio";
 import { useEffect, useState } from "react";
 import { Bot, Sparkles } from "lucide-react";
 
@@ -122,6 +123,11 @@ export default function SOCDashboard() {
       {/* Enterprise MITRE ATT&CK Intelligence Matrix & Heatmap */}
       <div className="p-6">
         <MITREIntelligence />
+      </div>
+
+      {/* Detection Engineering Studio Section */}
+      <div className="p-6">
+        <DetectionStudio />
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 p-6">

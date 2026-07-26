@@ -22,9 +22,9 @@ The core objective is to evolve NetSentinel-X from a real-time monitoring dashbo
 ## Current Project Status
 
 - **Current Version**: NetSentinel-X V2.0 Enterprise
-- **Current Era**: Era 4 — Enterprise MITRE ATT&CK Intelligence Engine
-- **Era 4 Status**: ✅ Completed & Verified
-- **Next Milestone**: Era 5 — Detection Engineering Studio (Sigma/YARA)
+- **Current Era**: Era 5 — Detection Engineering Studio (Sigma/YARA)
+- **Era 5 Status**: ✅ Completed & Verified
+- **Next Milestone**: Era 6 — Threat Intelligence Fusion
 - **Stability Status**: Production Checkpoint Verified. GitHub Actions CI/CD Pipeline 🟢 GREEN.
 
 ---
@@ -56,9 +56,10 @@ The core objective is to evolve NetSentinel-X from a real-time monitoring dashbo
 - **Testing**: Frontend Jest component tests (`MITREIntelligence.test.tsx`), Go backend service & handler unit tests (`mitre_service_test.go`, `v2_mitre_handler_test.go`), ESLint & TypeScript verification.
 
 ### Era 5: Detection Engineering Studio (Sigma / YARA)
-- **Status**: ⏳ Scheduled
-- **Objective**: Empower SOC engineers to author, simulate, and test custom detection logic using Sigma and YARA inspired rules.
-- **Features**: Rule authoring studio, syntax validator, threshold rules, protocol/port filters, alert simulation sandbox, rule versioning.
+- **Status**: ✅ Completed
+- **Objective**: Empower SOC engineers to author, simulate, test, and deploy custom detection logic using Sigma and YARA inspired rules.
+- **Features**: Rule management table, rule authoring modal, interactive simulation sandbox, rule versioning, AI Rule Assistant, and detection studio analytics (`/api/v2/detections/*`).
+- **Testing**: Frontend Jest component tests (`DetectionStudio.test.tsx`), Go backend service & handler unit tests (`detection_engine_service_test.go`, `v2_detection_handler_test.go`), ESLint & TypeScript verification.
 
 ### Era 6: Threat Intelligence Fusion
 - **Status**: ⏳ Scheduled
