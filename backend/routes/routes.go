@@ -40,6 +40,7 @@ func SetupRoutes(router *gin.Engine) {
 	v2IncidentHandler := handlers.NewV2IncidentHandler()
 	v2ReportHandler := handlers.NewV2ReportHandler()
 	v2AttackGraphHandler := handlers.NewV2AttackGraphHandler()
+	v2HistoricalHandler := handlers.NewV2HistoricalHandler()
 
 	v2Group := router.Group("/api/v2")
 	{
@@ -117,5 +118,13 @@ func SetupRoutes(router *gin.Engine) {
 		v2Group.GET("/attack-graph/edges", v2AttackGraphHandler.GetEdges)
 		v2Group.GET("/attack-graph/path/:id", v2AttackGraphHandler.GetPathByID)
 		v2Group.POST("/attack-graph/explain", v2AttackGraphHandler.ExplainPath)
+
+		// Historical Investigation & AI Threat Hunting Routes
+		v2Group.GET("/history/search", v2HistoricalHandler.SearchEvents)
+		v2Group.GET("/history/events", v2HistoricalHandler.GetEvents)
+		v2Group.GET("/history/ioc/:value", v2HistoricalHandler.GetIOCHistory)
+		v2Group.GET("/history/replay/:id", v2HistoricalHandler.GetReplayByID)
+		v2Group.POST("/hunting/query", v2HistoricalHandler.RunHuntQuery)
+		v2Group.GET("/hunting/hypothesis", v2HistoricalHandler.GetHuntHypothesis)
 	}
 }

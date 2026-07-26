@@ -8,7 +8,7 @@
 
 ## Overview
 
-**NetSentinel-X** is an enterprise-grade AI Security Operations Platform and Network Detection & Response (NDR) engine. Designed for modern SOC environments, NetSentinel-X combines real-time eBPF network telemetry, sub-millisecond Deep Packet Inspection (DPI), autonomous AI threat reasoning, multi-event threat investigations, MITRE ATT&CK matrix correlation, custom Sigma/YARA detection engineering, multi-provider threat intelligence fusion, User & Entity Behaviour Analytics (UEBA), continuous AI Detection Optimization, an Enterprise AI Incident Management Desk, AI Executive Reporting & Compliance Intelligence, and an Interactive Attack Graph & Threat Path Visualization Engine into a unified, high-performance web platform.
+**NetSentinel-X** is an enterprise-grade AI Security Operations Platform and Network Detection & Response (NDR) engine. Designed for modern SOC environments, NetSentinel-X combines real-time eBPF network telemetry, sub-millisecond Deep Packet Inspection (DPI), autonomous AI threat reasoning, multi-event threat investigations, MITRE ATT&CK matrix correlation, custom Sigma/YARA detection engineering, multi-provider threat intelligence fusion, User & Entity Behaviour Analytics (UEBA), continuous AI Detection Optimization, an Enterprise AI Incident Management Desk, AI Executive Reporting & Compliance Intelligence, an Interactive Attack Graph & Threat Path Visualization Engine, and an AI Threat Hunting & Historical Investigation Engine into a unified, high-performance web platform.
 
 ---
 
@@ -30,6 +30,7 @@
 - **AI Incident Management Desk**: End-to-end incident lifecycle management (NEW, TRIAGED, INVESTIGATING, CONTAINMENT, ERADICATION, RECOVERY, CLOSED), evidence locker, response SLA tracking (P1-P4), and resolution workflows.
 - **Executive Reporting & Compliance Intelligence Engine**: CISO-level security summary generation, business impact analysis, SOC 2 / ISO 27001 / HIPAA audit mapping, and one-click PDF/HTML/Markdown/JSON exports.
 - **Interactive Attack Graph & Threat Path Visualization Engine**: Dynamic graph topology correlating External IPs, Internal Hosts, Domains, Detection Rules, MITRE Techniques, and Incidents into visual attack chains with AI-powered path reasoning and containment recommendations.
+- **Historical Investigation & AI Threat Hunting Engine**: Proactive threat hunting workspace enabling historical security event search, IOC timeline tracking across 4 types (IP, Domain, Hash, URL), natural language AI hunt queries (e.g., "Find all C2 beaconing events"), hypothesis generation with confidence scoring, and interactive Attack Replay timeline for full incident reconstruction.
 
 ---
 
@@ -66,10 +67,43 @@
 - CISO executive summaries, SOC 2 / ISO 27001 / HIPAA compliance audit mapping, and one-click exports.
 
 ### Era 11: Interactive Attack Graph & Threat Path Visualization Engine
-- **Attack Graph Correlation Engine (`backend/services/attack_graph_service.go`)**: Correlates Threat Intelligence IOCs, Detection Rule triggers, UEBA anomalies, MITRE ATT&CK mappings, Incident cases, and Investigation timelines into a unified entity relationship graph.
+- **Attack Graph Correlation Engine**: Correlates Threat Intelligence IOCs, Detection Rule triggers, UEBA anomalies, MITRE ATT&CK mappings, Incident cases, and Investigation timelines into a unified entity relationship graph.
 - **Graph Data Models (`backend/models/attack_graph.go`)**: Defined `AttackNode` (External IP, Internal Host, Domain, Detection Rule, MITRE Technique, Incident), `AttackEdge` (Connected To, Communicated With, Triggered, Detected By, Mapped To, Caused), `AttackPath`, and `AttackGraphPayload`.
 - **Attack Graph REST API (`/api/v2/attack-graph/*`)**: Exposes graph nodes, edges, critical attack paths, and AI path reasoning endpoints.
 - **Interactive Graph UI (`frontend/components/AttackGraph.tsx`)**: Visual Topology Canvas with clickable node inspector, step-by-step attack chain sequence display, AI root cause analysis, attacker objective reasoning, and recommended containment actions.
+
+### Era 12: Historical Investigation & AI Threat Hunting Engine
+- **Historical Event Storage (`backend/models/threat_history.go`)**: Data models for `HistoricalEvent` (6 event types: TRAFFIC, ALERT, IOC_MATCH, UEBA_ANOMALY, DETECTION, INCIDENT), `IOCHistory` (first/last seen, risk trend, related campaigns), `AttackReplayEvent`, and `ThreatHuntResult`.
+- **Historical Investigation Service (`backend/services/historical_investigation_service.go`)**: Full-text search across historical events by IP, domain, MITRE technique, protocol, or event type; IOC history tracking with risk trend analysis; 5-step attack replay chain generation; and AI natural language threat hunt query processing with confidence scoring.
+- **Historical Investigation REST API (`/api/v2/history/*`, `/api/v2/hunting/*`)**: Endpoints for event search, IOC history lookup, attack replay retrieval, AI hunt query execution, and hypothesis generation.
+- **Threat Hunting Workspace UI (`frontend/components/ThreatHuntingWorkspace.tsx`)**: Three-tab workspace — Event History (searchable historical event table), AI Hunt (natural language threat hunting with hypothesis panel, evidence correlation, and investigation steps), and Attack Replay (step-by-step attack chain reconstruction timeline).
+
+---
+
+## API Reference
+
+### Legacy V1 Endpoints
+- `GET /health` — System health check
+- `GET /analytics` — Real-time telemetry statistics
+- `GET /traffic` — Live packet logs
+- `GET /alerts` — Security alert feed
+- `GET /ws` — WebSocket stream
+- `POST /login` — Authentication
+
+### V2 Enterprise Endpoints
+
+**AI Copilot**: `POST /api/v2/copilot/query`  
+**Investigations**: `GET/POST /api/v2/investigations`  
+**MITRE**: `GET /api/v2/mitre/matrix`, `GET /api/v2/mitre/heatmap`  
+**Detections**: `GET/POST /api/v2/detections/rules`, `POST /api/v2/detections/simulate`  
+**Intelligence**: `GET /api/v2/intelligence/ioc/:value`, `POST /api/v2/intelligence/enrich`  
+**UEBA**: `GET /api/v2/ueba`, `GET /api/v2/ueba/entities`  
+**Optimizer**: `GET /api/v2/optimizer`, `POST /api/v2/optimizer/feedback`  
+**Incidents**: `GET /api/v2/incidents/list`, `POST /api/v2/incidents/create`  
+**Reports**: `POST /api/v2/reports/generate`, `GET /api/v2/compliance`  
+**Attack Graph**: `GET /api/v2/attack-graph`, `GET /api/v2/attack-graph/path/:id`  
+**History**: `GET /api/v2/history/search`, `GET /api/v2/history/ioc/:value`, `GET /api/v2/history/replay/:id`  
+**Hunting**: `POST /api/v2/hunting/query`, `GET /api/v2/hunting/hypothesis`
 
 ---
 
@@ -99,8 +133,8 @@ NetSentinel-X V2 evolves through 16 structured production Eras:
 9. **Era 9 (Completed)**: AI Incident Management Desk ✅
 10. **Era 10 (Completed)**: Executive Reporting & Compliance Engine ✅
 11. **Era 11 (Completed)**: Interactive Attack Graph & Threat Path Visualization ✅
-12. **Era 12 (Next)**: Historical Investigation & Threat Hunting
-13. **Era 13**: AI Workflow Automation (Autonomous SOC Playbooks)
+12. **Era 12 (Completed)**: Historical Investigation & AI Threat Hunting Engine ✅
+13. **Era 13 (Next)**: AI Workflow Automation (Autonomous SOC Playbooks)
 14. **Era 14**: Enterprise Observability (Audit logs, Prometheus/Grafana)
 15. **Era 15**: Production Hardening & Scalability (Redis, circuit breakers)
 16. **Era 16**: Enterprise Validation, Benchmarking & Release Candidate
@@ -126,6 +160,6 @@ NetSentinel-X V2 evolves through 16 structured production Eras:
 ## Current Development Status
 
 - **Current Version**: NetSentinel-X V2.0 Enterprise
-- **Current Era**: Era 11 Completed ✅
+- **Current Era**: Era 12 Completed ✅
 - **CI Status**: GitHub Actions Pipeline Verified 🟢
-- **Next Era**: Era 12 — Historical Investigation & Threat Hunting
+- **Next Era**: Era 13 — AI Workflow Automation (Autonomous SOC Playbooks)
