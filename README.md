@@ -8,7 +8,7 @@
 
 ## Overview
 
-**NetSentinel-X** is an enterprise-grade AI Security Operations Platform and Network Detection & Response (NDR) engine. Designed for modern SOC environments, NetSentinel-X combines real-time eBPF network telemetry, sub-millisecond Deep Packet Inspection (DPI), autonomous AI threat reasoning, multi-event threat investigations, MITRE ATT&CK matrix correlation, custom Sigma/YARA detection engineering, multi-provider threat intelligence fusion, User & Entity Behaviour Analytics (UEBA), continuous AI Detection Optimization, an Enterprise AI Incident Management Desk, and AI Executive Reporting & Compliance Intelligence into a unified, high-performance web platform.
+**NetSentinel-X** is an enterprise-grade AI Security Operations Platform and Network Detection & Response (NDR) engine. Designed for modern SOC environments, NetSentinel-X combines real-time eBPF network telemetry, sub-millisecond Deep Packet Inspection (DPI), autonomous AI threat reasoning, multi-event threat investigations, MITRE ATT&CK matrix correlation, custom Sigma/YARA detection engineering, multi-provider threat intelligence fusion, User & Entity Behaviour Analytics (UEBA), continuous AI Detection Optimization, an Enterprise AI Incident Management Desk, AI Executive Reporting & Compliance Intelligence, and an Interactive Attack Graph & Threat Path Visualization Engine into a unified, high-performance web platform.
 
 ---
 
@@ -29,68 +29,47 @@
 - **AI Detection Optimizer & Coverage Studio**: Rule Quality Scoring (0-100), AI False Positive Reduction recommendations, ATT&CK Coverage Gap identification, and Analyst Learning Feedback loop.
 - **AI Incident Management Desk**: End-to-end incident lifecycle management (NEW, TRIAGED, INVESTIGATING, CONTAINMENT, ERADICATION, RECOVERY, CLOSED), evidence locker, response SLA tracking (P1-P4), and resolution workflows.
 - **Executive Reporting & Compliance Intelligence Engine**: CISO-level security summary generation, business impact analysis, SOC 2 / ISO 27001 / HIPAA audit mapping, and one-click PDF/HTML/Markdown/JSON exports.
+- **Interactive Attack Graph & Threat Path Visualization Engine**: Dynamic graph topology correlating External IPs, Internal Hosts, Domains, Detection Rules, MITRE Techniques, and Incidents into visual attack chains with AI-powered path reasoning and containment recommendations.
 
 ---
 
 ## Completed Eras
 
 ### Era 1: Enterprise UI & Experience Modernization
-- **Enterprise Landing Page (`/`)**: Animated hero section, live telemetry ticker, interactive core capability tabs, 5-stage architecture workflow diagram, and onboarding guide.
-- **Operational SOC Dashboard (`/dashboard`)**: Preserved existing real-time monitoring interface with 100% backward compatibility.
-- **Flickering Enterprise Footer**: Integrated component with compliance badges (**SOC 2 Type II**, **ISO 27001**, **HIPAA Compliant**), live DPI status indicator, and architecture links.
-- **Modernized Responsive Navbar**: Header with live telemetry badge, section navigation, mobile drawer, and launch CTA buttons.
-- **Error & Loading Boundaries**: Added custom SOC-themed `app/not-found.tsx` (404) and `app/error.tsx` (500) error pages.
+- Enterprise Landing Page, Flickering Footer with compliance badges, SOC Dashboard, Navbar, error boundaries.
 
 ### Era 2: AI Security Copilot & RAG Reasoning
-- **AI Copilot Service (`backend/services/ai_copilot_service.go`)**: RAG-based context retrieval engine correlating live packets, threat alerts, GeoIP scores, and MITRE tactics.
-- **Copilot V2 REST API (`/api/v2/copilot/query` & `/api/v2/copilot/prompts`)**: Handles natural language queries ("Explain this packet", "Why is this alert suspicious?", "Summarize last 24 hours", "Show affected assets", "Map threat to MITRE").
-- **Copilot UI Drawer Component (`frontend/components/AICopilot.tsx`)**: Interactive chat interface with preset prompt shortcuts, confidence scoring, evidence cards, and recommended response steps.
+- RAG-based context retrieval over live packets, alerts, GeoIP scores, and MITRE tactics. Natural language query interface.
 
 ### Era 3: AI Threat Investigation Engine & Story Generator
-- **Threat Investigation Model & Service (`backend/models/investigation.go` & `backend/services/threat_investigation_service.go`)**: Multi-event correlation engine aggregating alerts, traffic logs, DNS/TLS metadata, GeoIP scoring, and IOC matches into full incident cases.
-- **Investigation REST API (`/api/v2/investigations` & `/api/v2/investigations/generate`)**: Provides case listing, detailed investigation retrieval, and target IP threat story generation.
-- **Threat Investigation Interface (`frontend/components/ThreatInvestigation.tsx`)**: Interactive SOC panel rendering automated threat stories, 4-step correlated attack timelines, telemetry evidence records, root cause analyses, and recommended response actions.
+- Multi-event correlation engine producing full attack narratives, timelines, root cause analysis, and response actions.
 
 ### Era 4: Enterprise MITRE ATT&CK Intelligence & Correlation Engine
-- **MITRE Knowledge Base & Service (`backend/models/mitre.go` & `backend/services/mitre_service.go`)**: Complete coverage across 12 Enterprise ATT&CK Tactics (Initial Access, Execution, Persistence, Privilege Escalation, Defense Evasion, Credential Access, Discovery, Lateral Movement, Collection, Command & Control, Exfiltration, Impact).
-- **MITRE V2 REST API (`/api/v2/mitre/matrix`, `/api/v2/mitre/statistics`, `/api/v2/mitre/heatmap`, `/api/v2/mitre/explain`)**: Provides matrix grid payloads, search endpoints, threat heat map data, and AI technique reasoning.
-- **Enterprise ATT&CK Intelligence Panel (`frontend/components/MITREIntelligence.tsx`)**: Interactive 12-tactic grid, real-time threat heat map, technique modal with AI explanations, affected host lists, risk scores, and mitigation guidance.
+- Complete 12-tactic ATT&CK grid, real-time heat map, AI technique reasoning, and defensive mitigation knowledge base.
 
-### Era 5: Enterprise Detection Engineering Studio (Sigma / YARA)
-- **Rule Lifecycle Engine (`backend/services/detection_engine_service.go`)**: Create, edit, delete, enable/disable, clone, version, test, and deploy custom detection rules.
-- **Simulation Sandbox**: Interactive testing environment evaluating sample telemetry events against custom rule logic with latency benchmarking and confidence scoring.
-- **AI Detection Assistant**: Generates Sigma/YARA rules, optimizes thresholds, reduces false positives, and suggests MITRE ATT&CK technique mappings.
-- **Detection Studio Panel (`frontend/components/DetectionStudio.tsx`)**: Unified rule management table, rule authoring modal, interactive simulation sandbox, and detection analytics banner.
+### Era 5: Detection Engineering Studio (Sigma / YARA)
+- Full rule lifecycle management, interactive simulation sandbox, AI Rule Assistant, and detection analytics.
 
 ### Era 6: Enterprise Threat Intelligence Fusion Engine
-- **Multi-Provider Aggregation (`backend/services/threat_intelligence_fusion_service.go`)**: Modular connectors for VirusTotal, AlienVault OTX, AbuseIPDB, GreyNoise, Shodan, Censys, IPinfo, and WHOIS.
-- **Async IOC Enrichment Engine**: Non-blocking background worker lookups for IP addresses, domains, URLs, hashes, and certificates.
-- **Composite Reputation Scoring**: Unified risk score (0-100), risk levels, confidence ratings, and provider breakdown matrix.
-- **Threat Intelligence Panel (`frontend/components/ThreatIntelFusion.tsx`)**: Interactive IOC search bar, provider matrix grid, AI intelligence reasoning, and recommended response actions.
+- Async IOC enrichment across 8 providers with composite reputation scoring and AI IOC reasoning.
 
 ### Era 7: Enterprise User & Entity Behaviour Analytics (UEBA)
-- **Baseline Profiler & Anomaly Engine (`backend/services/ueba_service.go`)**: Learns baseline connection rates, packet volumes, and protocol maps per host/user. Detects anomalies across Beaconing, Port Scanning, Brute Force, Lateral Movement, Data Exfiltration, and DNS Tunneling.
-- **UEBA REST API (`/api/v2/ueba`, `/api/v2/ueba/entities`, `/api/v2/ueba/anomalies`, `/api/v2/ueba/risk/:entity`, `/api/v2/ueba/history`)**: Provides entity profile management, anomaly history logs, and risk scores.
-- **UEBA Analytics Dashboard (`frontend/components/UEBAAnalytics.tsx`)**: Entity Risk Leaderboard grid, Behaviour Anomaly Timeline, baseline profile inspector, and AI Behaviour Deviation Reasoning.
+- Baseline profiling, 6-vector anomaly detection, Entity Risk Leaderboard, AI Behaviour Deviation Reasoning.
 
 ### Era 8: Enterprise AI Detection Optimizer & Coverage Studio
-- **Performance Analytics & Tuning (`backend/services/detection_optimizer_service.go`)**: Evaluates rule execution counts, true/false positive ratios, severity accuracy, and response latency into a 0-100 Performance Score.
-- **AI False Positive Reduction Engine**: Analyzes alert history, entity behavior, threat intelligence, and UEBA scores to produce actionable rule tuning recommendations.
-- **ATT&CK Coverage Gap Identification**: Cross-references active detection rules against MITRE ATT&CK 12 tactics and flags unmonitored technique gaps with recommended rule logic templates.
-- **Analyst Feedback Loop (`/api/v2/optimizer/feedback`)**: Allows analysts to record True Positive / False Positive verdicts to continuously refine AI recommendation accuracy.
-- **Optimizer Dashboard Panel (`frontend/components/AIDetectionOptimizer.tsx`)**: Rule Health Leaderboard, AI Tuning Recommendations cards, ATT&CK Coverage Gaps matrix, and Analyst Feedback Modal.
+- Rule health scoring, AI false positive tuning, ATT&CK gap analysis, and analyst feedback loop.
 
 ### Era 9: Enterprise AI Incident Management Desk
-- **Incident Lifecycle Management (`backend/services/incident_service.go`)**: Tracks complete incident status transitions (NEW, TRIAGED, INVESTIGATING, CONTAINMENT, ERADICATION, RECOVERY, CLOSED), evidence attachments, analyst assignments, and resolution notes.
-- **SLA Tracking Engine (`models/incident.go`)**: Enforces target response and resolution times for P1-P4 severity incidents (15m P1 target vs 60m resolution target).
-- **Incident REST API (`/api/v2/incidents/*`)**: Handles case creation, evidence locker attachments, chronological timeline logs, assignment updates, and resolution closure.
-- **Incident Desk Interface (`frontend/components/AIIncidentDesk.tsx`)**: Filterable incident work queue, Case Inspector timeline viewer, Evidence Locker, New Incident modal, and Resolution Notes modal.
+- Full 7-state incident lifecycle, evidence locker, P1-P4 SLA tracking, and resolution workflows.
 
 ### Era 10: Enterprise Executive Reporting & Compliance Intelligence Engine
-- **Report Generation Engine (`backend/services/report_service.go`)**: Generates Executive Security Summaries, SOC Daily briefs, Incident Reports, Threat Intelligence summaries, and Compliance Audit reports.
-- **Compliance Framework Mapping (`models/report.go`)**: Automatic control auditing and gap detection for SOC 2 Type II, ISO 27001:2022, and HIPAA Security Rule.
-- **Reporting & Compliance REST API (`/api/v2/reports/*` & `/api/v2/compliance/*`)**: Handles dynamic report creation, historical report logs, framework status queries, and HTML/JSON exports.
-- **Executive Reporting Panel (`frontend/components/ExecutiveReporting.tsx`)**: Enterprise Security Posture Dashboard (94/100 score), Compliance Framework Matrix, Report Library, and One-Click Export Toolbar.
+- CISO executive summaries, SOC 2 / ISO 27001 / HIPAA compliance audit mapping, and one-click exports.
+
+### Era 11: Interactive Attack Graph & Threat Path Visualization Engine
+- **Attack Graph Correlation Engine (`backend/services/attack_graph_service.go`)**: Correlates Threat Intelligence IOCs, Detection Rule triggers, UEBA anomalies, MITRE ATT&CK mappings, Incident cases, and Investigation timelines into a unified entity relationship graph.
+- **Graph Data Models (`backend/models/attack_graph.go`)**: Defined `AttackNode` (External IP, Internal Host, Domain, Detection Rule, MITRE Technique, Incident), `AttackEdge` (Connected To, Communicated With, Triggered, Detected By, Mapped To, Caused), `AttackPath`, and `AttackGraphPayload`.
+- **Attack Graph REST API (`/api/v2/attack-graph/*`)**: Exposes graph nodes, edges, critical attack paths, and AI path reasoning endpoints.
+- **Interactive Graph UI (`frontend/components/AttackGraph.tsx`)**: Visual Topology Canvas with clickable node inspector, step-by-step attack chain sequence display, AI root cause analysis, attacker objective reasoning, and recommended containment actions.
 
 ---
 
@@ -110,31 +89,29 @@
 NetSentinel-X V2 evolves through 16 structured production Eras:
 
 1. **Era 1 (Completed)**: Enterprise Experience & UI Modernization ✅
-2. **Era 2 (Completed)**: AI Security Copilot (RAG-based threat reasoning over live packets & alerts) ✅
-3. **Era 3 (Completed)**: AI Threat Investigation Engine & Attack Story Generator ✅
+2. **Era 2 (Completed)**: AI Security Copilot ✅
+3. **Era 3 (Completed)**: AI Threat Investigation Engine ✅
 4. **Era 4 (Completed)**: Enterprise MITRE ATT&CK Intelligence Engine ✅
-5. **Era 5 (Completed)**: Detection Engineering Studio (Sigma/YARA-inspired custom rules) ✅
-6. **Era 6 (Completed)**: Threat Intelligence Fusion (VirusTotal, OTX, AbuseIPDB, GreyNoise, Shodan, Censys, etc.) ✅
-7. **Era 7 (Completed)**: UEBA & Behaviour Analytics (Anomaly scoring for host beaconing & lateral movement) ✅
-8. **Era 8 (Completed)**: AI Detection Optimizer (False positive reduction, rule tuning & coverage gap analysis) ✅
-9. **Era 9 (Completed)**: AI Incident Management Desk (End-to-end incident response lifecycle & SLA tracking) ✅
-10. **Era 10 (Completed)**: Executive Reporting & Compliance (SOC 2, ISO 27001, HIPAA automated reports & exports) ✅
-11. **Era 11 (Next)**: Interactive Attack Graph (Visual topology canvas & attack chain pathing)
-12. **Era 12**: Historical Investigation & Threat Hunting (Long-term trend comparison & repeat attack detection)
-13. **Era 13**: AI Workflow Automation (Autonomous SOC incident playbooks)
-14. **Era 14**: Enterprise Observability (Audit logs, Prometheus/Grafana metrics, health monitoring)
-15. **Era 15**: Production Hardening & Scalability (Redis task queues, circuit breakers, rate limiting)
-16. **Era 16**: Enterprise Validation, Performance Benchmarking & Release Candidate
+5. **Era 5 (Completed)**: Detection Engineering Studio ✅
+6. **Era 6 (Completed)**: Threat Intelligence Fusion Engine ✅
+7. **Era 7 (Completed)**: UEBA & Behaviour Analytics Engine ✅
+8. **Era 8 (Completed)**: AI Detection Optimizer ✅
+9. **Era 9 (Completed)**: AI Incident Management Desk ✅
+10. **Era 10 (Completed)**: Executive Reporting & Compliance Engine ✅
+11. **Era 11 (Completed)**: Interactive Attack Graph & Threat Path Visualization ✅
+12. **Era 12 (Next)**: Historical Investigation & Threat Hunting
+13. **Era 13**: AI Workflow Automation (Autonomous SOC Playbooks)
+14. **Era 14**: Enterprise Observability (Audit logs, Prometheus/Grafana)
+15. **Era 15**: Production Hardening & Scalability (Redis, circuit breakers)
+16. **Era 16**: Enterprise Validation, Benchmarking & Release Candidate
 
 ---
 
 ## Testing & Quality Engineering
 
-NetSentinel-X enforces a strict 9-step production lifecycle verified via **GitHub Actions CI/CD**:
-
 ### Frontend CI Validation
 - **TypeScript**: `npx tsc --noEmit`
-- **Linter**: `npm run lint` (ESLint 9 core web vitals)
+- **Linter**: `npm run lint`
 - **Unit Tests**: `npm test` (Jest + React Testing Library)
 - **Production Build**: `npm run build` (Turbopack)
 
@@ -149,6 +126,6 @@ NetSentinel-X enforces a strict 9-step production lifecycle verified via **GitHu
 ## Current Development Status
 
 - **Current Version**: NetSentinel-X V2.0 Enterprise
-- **Current Era**: Era 10 Completed ✅
+- **Current Era**: Era 11 Completed ✅
 - **CI Status**: GitHub Actions Pipeline Verified 🟢
-- **Next Era**: Era 11 — Interactive Attack Graph
+- **Next Era**: Era 12 — Historical Investigation & Threat Hunting

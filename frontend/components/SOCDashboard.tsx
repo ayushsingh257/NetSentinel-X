@@ -16,6 +16,7 @@ import UEBAAnalytics from "./UEBAAnalytics";
 import AIDetectionOptimizer from "./AIDetectionOptimizer";
 import AIIncidentDesk from "./AIIncidentDesk";
 import ExecutiveReporting from "./ExecutiveReporting";
+import AttackGraph from "./AttackGraph";
 import { useEffect, useState } from "react";
 import { Bot, Sparkles } from "lucide-react";
 
@@ -118,6 +119,11 @@ export default function SOCDashboard() {
 
           <h2 className="text-2xl font-bold text-yellow-400 mt-2">LIVE</h2>
         </div>
+      </div>
+
+      {/* Interactive Attack Graph & Threat Path Visualization Section */}
+      <div className="p-6">
+        <AttackGraph />
       </div>
 
       {/* AI Threat Investigation Section */}

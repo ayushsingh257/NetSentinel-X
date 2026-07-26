@@ -39,6 +39,7 @@ func SetupRoutes(router *gin.Engine) {
 	v2OptimizerHandler := handlers.NewV2OptimizerHandler()
 	v2IncidentHandler := handlers.NewV2IncidentHandler()
 	v2ReportHandler := handlers.NewV2ReportHandler()
+	v2AttackGraphHandler := handlers.NewV2AttackGraphHandler()
 
 	v2Group := router.Group("/api/v2")
 	{
@@ -109,5 +110,12 @@ func SetupRoutes(router *gin.Engine) {
 		v2Group.GET("/reports/export/:id", v2ReportHandler.ExportReport)
 		v2Group.GET("/compliance", v2ReportHandler.GetCompliance)
 		v2Group.GET("/compliance/status", v2ReportHandler.GetComplianceStatus)
+
+		// Interactive Attack Graph & Threat Path Routes
+		v2Group.GET("/attack-graph", v2AttackGraphHandler.GetGraph)
+		v2Group.GET("/attack-graph/nodes", v2AttackGraphHandler.GetNodes)
+		v2Group.GET("/attack-graph/edges", v2AttackGraphHandler.GetEdges)
+		v2Group.GET("/attack-graph/path/:id", v2AttackGraphHandler.GetPathByID)
+		v2Group.POST("/attack-graph/explain", v2AttackGraphHandler.ExplainPath)
 	}
 }
