@@ -11,7 +11,7 @@ The core objective is to evolve NetSentinel-X from a real-time monitoring dashbo
 - Automated Threat Correlation & Attack Story Generation
 - Interactive Enterprise MITRE ATT&CK Matrix Grid & Real-Time Threat Heat Map
 - Detection Engineering Studio for custom Sigma & YARA rule authoring
-- Threat Intelligence Fusion (VirusTotal, OTX, AbuseIPDB, GreyNoise, Shodan, Censys)
+- Threat Intelligence Fusion (VirusTotal, OTX, AbuseIPDB, GreyNoise, Shodan, Censys, IPinfo, WHOIS)
 - User & Entity Behaviour Analytics (UEBA) Anomaly Scoring
 - End-to-End Incident Response Lifecycle Desk
 - Autonomous SOC Workflow Playbooks
@@ -22,9 +22,9 @@ The core objective is to evolve NetSentinel-X from a real-time monitoring dashbo
 ## Current Project Status
 
 - **Current Version**: NetSentinel-X V2.0 Enterprise
-- **Current Era**: Era 5 — Detection Engineering Studio (Sigma/YARA)
-- **Era 5 Status**: ✅ Completed & Verified
-- **Next Milestone**: Era 6 — Threat Intelligence Fusion
+- **Current Era**: Era 6 — Enterprise Threat Intelligence Fusion Engine
+- **Era 6 Status**: ✅ Completed & Verified
+- **Next Milestone**: Era 7 — UEBA & Behaviour Analytics
 - **Stability Status**: Production Checkpoint Verified. GitHub Actions CI/CD Pipeline 🟢 GREEN.
 
 ---
@@ -61,10 +61,11 @@ The core objective is to evolve NetSentinel-X from a real-time monitoring dashbo
 - **Features**: Rule management table, rule authoring modal, interactive simulation sandbox, rule versioning, AI Rule Assistant, and detection studio analytics (`/api/v2/detections/*`).
 - **Testing**: Frontend Jest component tests (`DetectionStudio.test.tsx`), Go backend service & handler unit tests (`detection_engine_service_test.go`, `v2_detection_handler_test.go`), ESLint & TypeScript verification.
 
-### Era 6: Threat Intelligence Fusion
-- **Status**: ⏳ Scheduled
-- **Objective**: Non-blocking asynchronous enrichment across external threat intelligence providers.
-- **Features**: VirusTotal, AlienVault OTX, AbuseIPDB, GreyNoise, Shodan, Censys, IPinfo, WHOIS integration with background worker caching.
+### Era 6: Enterprise Threat Intelligence Fusion Engine
+- **Status**: ✅ Completed
+- **Objective**: Non-blocking asynchronous enrichment across 8 external threat intelligence providers (VirusTotal, AlienVault OTX, AbuseIPDB, GreyNoise, Shodan, Censys, IPinfo, WHOIS).
+- **Features**: IOC search & lookup, composite risk scoring (0-100), provider matrix breakdown, AI IOC reasoning, recommended response actions (`/api/v2/intelligence/*`).
+- **Testing**: Frontend Jest component tests (`ThreatIntelFusion.test.tsx`), Go backend service & handler unit tests (`threat_intelligence_fusion_service_test.go`, `v2_intelligence_handler_test.go`), ESLint & TypeScript verification.
 
 ### Era 7: UEBA & Behaviour Analytics
 - **Status**: ⏳ Scheduled

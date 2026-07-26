@@ -11,6 +11,7 @@ import AICopilot from "./AICopilot";
 import ThreatInvestigation from "./ThreatInvestigation";
 import MITREIntelligence from "./MITREIntelligence";
 import DetectionStudio from "./DetectionStudio";
+import ThreatIntelFusion from "./ThreatIntelFusion";
 import { useEffect, useState } from "react";
 import { Bot, Sparkles } from "lucide-react";
 
@@ -128,6 +129,11 @@ export default function SOCDashboard() {
       {/* Detection Engineering Studio Section */}
       <div className="p-6">
         <DetectionStudio />
+      </div>
+
+      {/* Enterprise Threat Intelligence Fusion Engine Section */}
+      <div className="p-6">
+        <ThreatIntelFusion />
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 p-6">

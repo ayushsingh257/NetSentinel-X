@@ -34,6 +34,7 @@ func SetupRoutes(router *gin.Engine) {
 	v2InvestigationHandler := handlers.NewV2InvestigationHandler()
 	v2MITREHandler := handlers.NewV2MITREHandler()
 	v2DetectionHandler := handlers.NewV2DetectionHandler()
+	v2IntelligenceHandler := handlers.NewV2IntelligenceHandler()
 
 	v2Group := router.Group("/api/v2")
 	{
@@ -65,5 +66,13 @@ func SetupRoutes(router *gin.Engine) {
 		v2Group.POST("/detections/simulate", v2DetectionHandler.Simulate)
 		v2Group.GET("/detections/analytics", v2DetectionHandler.GetAnalytics)
 		v2Group.POST("/detections/ai-assistant", v2DetectionHandler.AIAssistant)
+
+		// Threat Intelligence Fusion Routes
+		v2Group.GET("/intelligence", v2IntelligenceHandler.GetOverview)
+		v2Group.GET("/intelligence/ip/:value", v2IntelligenceHandler.LookupIP)
+		v2Group.GET("/intelligence/domain/:value", v2IntelligenceHandler.LookupDomain)
+		v2Group.GET("/intelligence/ioc/:value", v2IntelligenceHandler.LookupIOC)
+		v2Group.POST("/intelligence/enrich", v2IntelligenceHandler.EnrichIOC)
+		v2Group.GET("/intelligence/history", v2IntelligenceHandler.GetHistory)
 	}
 }

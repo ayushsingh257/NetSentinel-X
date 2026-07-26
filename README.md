@@ -8,7 +8,7 @@
 
 ## Overview
 
-**NetSentinel-X** is an enterprise-grade AI Security Operations Platform and Network Detection & Response (NDR) engine. Designed for modern SOC environments, NetSentinel-X combines real-time eBPF network telemetry, sub-millisecond Deep Packet Inspection (DPI), autonomous AI threat reasoning, multi-event threat investigations, MITRE ATT&CK matrix correlation, custom Sigma/YARA detection engineering, and automated incident response workflows into a unified, high-performance web platform.
+**NetSentinel-X** is an enterprise-grade AI Security Operations Platform and Network Detection & Response (NDR) engine. Designed for modern SOC environments, NetSentinel-X combines real-time eBPF network telemetry, sub-millisecond Deep Packet Inspection (DPI), autonomous AI threat reasoning, multi-event threat investigations, MITRE ATT&CK matrix correlation, custom Sigma/YARA detection engineering, multi-provider threat intelligence fusion, and automated incident response workflows into a unified, high-performance web platform.
 
 ---
 
@@ -24,6 +24,7 @@
 - **AI Threat Investigation Engine**: Automated correlation converting individual alerts into full attack stories, visual timeline sequences, root cause analyses, and evidence records.
 - **Enterprise MITRE ATT&CK Intelligence Engine**: Interactive 12-tactic ATT&CK Matrix grid, real-time Threat Heat Map, automatic multi-protocol technique mapping, AI ATT&CK reasoning, and defensive mitigation knowledge base.
 - **Detection Engineering Studio**: Complete lifecycle for custom Sigma & YARA inspired detection rules, interactive Simulation Sandbox, rule validation, and AI Rule Assistant.
+- **Enterprise Threat Intelligence Fusion Engine**: Multi-provider threat intelligence aggregation across 8 providers (VirusTotal, AlienVault OTX, AbuseIPDB, GreyNoise, Shodan, Censys, IPinfo, WHOIS), composite reputation scoring, and async IOC enrichment.
 
 ---
 
@@ -57,20 +58,27 @@
 - **AI Detection Assistant**: Generates Sigma/YARA rules, optimizes thresholds, reduces false positives, and suggests MITRE ATT&CK technique mappings.
 - **Detection Studio Panel (`frontend/components/DetectionStudio.tsx`)**: Unified rule management table, rule authoring modal, interactive simulation sandbox, and detection analytics banner.
 
+### Era 6: Enterprise Threat Intelligence Fusion Engine
+- **Multi-Provider Aggregation (`backend/services/threat_intelligence_fusion_service.go`)**: Modular connectors for VirusTotal, AlienVault OTX, AbuseIPDB, GreyNoise, Shodan, Censys, IPinfo, and WHOIS.
+- **Async IOC Enrichment Engine**: Non-blocking background worker lookups for IP addresses, domains, URLs, hashes, and certificates.
+- **Composite Reputation Scoring**: Unified risk score (0-100), risk levels, confidence ratings, and provider breakdown matrix.
+- **Threat Intelligence Panel (`frontend/components/ThreatIntelFusion.tsx`)**: Interactive IOC search bar, provider matrix grid, AI intelligence reasoning, and recommended response actions.
+
 ---
 
-## Detection Engineering Architecture
+## Threat Intelligence Fusion Architecture
 
 ```
-  [ Sample Telemetry / Custom Rule ] ──► [ Detection Engineering Service ]
-                                                       │
-               ┌───────────────────────────────────────┴───────────────────────────────────────┐
-               ▼                                       ▼                                       ▼
-  [ Rule Manager (Sigma/YARA) ]             [ Simulation Sandbox ]                  [ AI Rule Assistant ]
-               │                                       │                                       │
-               └───────────────────────────────────────┼───────────────────────────────────────┘
-                                                       ▼
-                                         [ SOC Dashboard Studio Panel ]
+  [ Target Indicator: IP / Domain / Hash ] ──► [ Async Threat Intelligence Engine ]
+                                                               │
+          ┌────────────────────────────────────────────────────┴────────────────────────────────────────────────────┐
+          ▼                                                    ▼                                                    ▼
+  [ 8 External Intelligence Providers ]               [ Composite Risk Scoring Engine ]             [ AI Intelligence Reasoning ]
+  (VT, OTX, AbuseIPDB, GreyNoise, Shodan, etc.)       (Risk 0-100 & Provider Matrix)                 (AI Explanation & Containment)
+          │                                                    │                                                    │
+          └────────────────────────────────────────────────────┼────────────────────────────────────────────────────┘
+                                                               ▼
+                                                [ SOC Dashboard Fusion Panel ]
 ```
 
 ---
@@ -95,8 +103,8 @@ NetSentinel-X V2 evolves through 16 structured production Eras:
 3. **Era 3 (Completed)**: AI Threat Investigation Engine & Attack Story Generator ✅
 4. **Era 4 (Completed)**: Enterprise MITRE ATT&CK Intelligence Engine ✅
 5. **Era 5 (Completed)**: Detection Engineering Studio (Sigma/YARA-inspired custom rules) ✅
-6. **Era 6 (Next)**: Threat Intelligence Fusion (VirusTotal, OTX, AbuseIPDB, GreyNoise, Shodan, Censys)
-7. **Era 7**: UEBA & Behaviour Analytics (Anomaly scoring for host beaconing & lateral movement)
+6. **Era 6 (Completed)**: Threat Intelligence Fusion (VirusTotal, OTX, AbuseIPDB, GreyNoise, Shodan, Censys, etc.) ✅
+7. **Era 7 (Next)**: UEBA & Behaviour Analytics (Anomaly scoring for host beaconing & lateral movement)
 8. **Era 8**: AI Detection Optimizer (False positive reduction & rule tuning)
 9. **Era 9**: AI Incident Management Desk (End-to-end incident response lifecycle & SLA tracking)
 10. **Era 10**: Executive Reporting & Compliance (SOC 2, ISO 27001, HIPAA automated PDF/HTML/MD reports)
@@ -130,6 +138,6 @@ NetSentinel-X enforces a strict 9-step production lifecycle verified via **GitHu
 ## Current Development Status
 
 - **Current Version**: NetSentinel-X V2.0 Enterprise
-- **Current Era**: Era 5 Completed ✅
+- **Current Era**: Era 6 Completed ✅
 - **CI Status**: GitHub Actions Pipeline Verified 🟢
-- **Next Era**: Era 6 — Threat Intelligence Fusion (VirusTotal, OTX, AbuseIPDB, GreyNoise, Shodan, Censys)
+- **Next Era**: Era 7 — UEBA & Behaviour Analytics
