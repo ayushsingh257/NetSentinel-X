@@ -41,6 +41,7 @@ func SetupRoutes(router *gin.Engine) {
 	v2ReportHandler := handlers.NewV2ReportHandler()
 	v2AttackGraphHandler := handlers.NewV2AttackGraphHandler()
 	v2HistoricalHandler := handlers.NewV2HistoricalHandler()
+	v2WorkflowHandler := handlers.NewV2WorkflowHandler()
 
 	v2Group := router.Group("/api/v2")
 	{
@@ -126,5 +127,16 @@ func SetupRoutes(router *gin.Engine) {
 		v2Group.GET("/history/replay/:id", v2HistoricalHandler.GetReplayByID)
 		v2Group.POST("/hunting/query", v2HistoricalHandler.RunHuntQuery)
 		v2Group.GET("/hunting/hypothesis", v2HistoricalHandler.GetHuntHypothesis)
+
+		// AI Workflow Automation & SOAR Playbook Routes
+		v2Group.GET("/workflows", v2WorkflowHandler.GetWorkflows)
+		v2Group.POST("/workflows", v2WorkflowHandler.CreateWorkflow)
+		v2Group.GET("/workflows/templates", v2WorkflowHandler.GetTemplates)
+		v2Group.POST("/workflows/execute", v2WorkflowHandler.ExecuteWorkflow)
+		v2Group.GET("/workflows/history", v2WorkflowHandler.GetHistory)
+		v2Group.GET("/workflows/status/:id", v2WorkflowHandler.GetExecutionStatus)
+		v2Group.GET("/workflows/approvals", v2WorkflowHandler.GetApprovals)
+		v2Group.POST("/workflows/approvals/decide", v2WorkflowHandler.DecideApproval)
+		v2Group.POST("/workflows/playbooks", v2WorkflowHandler.GeneratePlaybook)
 	}
 }
