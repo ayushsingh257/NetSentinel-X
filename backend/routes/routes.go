@@ -36,6 +36,7 @@ func SetupRoutes(router *gin.Engine) {
 	v2DetectionHandler := handlers.NewV2DetectionHandler()
 	v2IntelligenceHandler := handlers.NewV2IntelligenceHandler()
 	v2UEBAHandler := handlers.NewV2UEBAHandler()
+	v2OptimizerHandler := handlers.NewV2OptimizerHandler()
 
 	v2Group := router.Group("/api/v2")
 	{
@@ -82,5 +83,13 @@ func SetupRoutes(router *gin.Engine) {
 		v2Group.GET("/ueba/anomalies", v2UEBAHandler.GetAnomalies)
 		v2Group.GET("/ueba/risk/:entity", v2UEBAHandler.GetEntityRisk)
 		v2Group.GET("/ueba/history", v2UEBAHandler.GetHistory)
+
+		// AI Detection Optimizer Routes
+		v2Group.GET("/optimizer", v2OptimizerHandler.GetOverview)
+		v2Group.GET("/optimizer/rules", v2OptimizerHandler.GetRules)
+		v2Group.GET("/optimizer/recommendations", v2OptimizerHandler.GetRecommendations)
+		v2Group.GET("/optimizer/gaps", v2OptimizerHandler.GetGaps)
+		v2Group.POST("/optimizer/feedback", v2OptimizerHandler.SubmitFeedback)
+		v2Group.POST("/optimizer/analyze", v2OptimizerHandler.AnalyzeRule)
 	}
 }

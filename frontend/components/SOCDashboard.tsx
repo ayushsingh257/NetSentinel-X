@@ -13,6 +13,7 @@ import MITREIntelligence from "./MITREIntelligence";
 import DetectionStudio from "./DetectionStudio";
 import ThreatIntelFusion from "./ThreatIntelFusion";
 import UEBAAnalytics from "./UEBAAnalytics";
+import AIDetectionOptimizer from "./AIDetectionOptimizer";
 import { useEffect, useState } from "react";
 import { Bot, Sparkles } from "lucide-react";
 
@@ -140,6 +141,11 @@ export default function SOCDashboard() {
       {/* Enterprise User & Entity Behaviour Analytics (UEBA) Section */}
       <div className="p-6">
         <UEBAAnalytics />
+      </div>
+
+      {/* Enterprise AI Detection Optimizer & Coverage Studio Section */}
+      <div className="p-6">
+        <AIDetectionOptimizer />
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 p-6">
