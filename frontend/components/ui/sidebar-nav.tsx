@@ -47,16 +47,19 @@ export function SidebarNav({
   const [username, setUsername] = useState("Security Analyst");
 
   useEffect(() => {
-    const storedRole = localStorage.getItem("role") || "analyst";
-    const storedToken = localStorage.getItem("token") || "";
-    setRole(storedRole);
-    if (storedToken.includes("admin")) {
-      setUsername("SOC Admin");
-    } else if (storedToken.includes("analyst")) {
-      setUsername("Tier-2 Analyst");
-    } else {
-      setUsername("Security Operator");
-    }
+    const timer = setTimeout(() => {
+      const storedRole = localStorage.getItem("role") || "analyst";
+      const storedToken = localStorage.getItem("token") || "";
+      setRole(storedRole);
+      if (storedToken.includes("admin")) {
+        setUsername("SOC Admin");
+      } else if (storedToken.includes("analyst")) {
+        setUsername("Tier-2 Analyst");
+      } else {
+        setUsername("Security Operator");
+      }
+    }, 0);
+    return () => clearTimeout(timer);
   }, []);
 
   const handleLogout = () => {
