@@ -8,7 +8,7 @@
 
 ## Overview
 
-**NetSentinel-X** is an enterprise-grade AI Security Operations Platform and Network Detection & Response (NDR) engine. Designed for modern SOC environments, NetSentinel-X combines real-time eBPF network telemetry, sub-millisecond Deep Packet Inspection (DPI), autonomous AI threat reasoning, multi-event threat investigations, MITRE ATT&CK matrix correlation, custom Sigma/YARA detection engineering, multi-provider threat intelligence fusion, User & Entity Behaviour Analytics (UEBA), continuous AI Detection Optimization, an Enterprise AI Incident Management Desk, AI Executive Reporting & Compliance Intelligence, an Interactive Attack Graph & Threat Path Visualization Engine, an AI Threat Hunting & Historical Investigation Engine, and an AI Workflow Automation & Autonomous SOAR Playbook Engine into a unified, high-performance web platform.
+**NetSentinel-X** is an enterprise-grade AI Security Operations Platform and Network Detection & Response (NDR) engine. Designed for modern SOC environments, NetSentinel-X combines real-time eBPF network telemetry, sub-millisecond Deep Packet Inspection (DPI), autonomous AI threat reasoning, multi-event threat investigations, MITRE ATT&CK matrix correlation, custom Sigma/YARA detection engineering, multi-provider threat intelligence fusion, User & Entity Behaviour Analytics (UEBA), continuous AI Detection Optimization, an Enterprise AI Incident Management Desk, AI Executive Reporting & Compliance Intelligence, an Interactive Attack Graph & Threat Path Visualization Engine, an AI Threat Hunting & Historical Investigation Engine, an AI Workflow Automation & Autonomous SOAR Playbook Engine, and an Enterprise Observability, Audit Logging & Platform Health Monitoring Engine into a unified, high-performance web platform.
 
 ---
 
@@ -32,6 +32,7 @@
 - **Interactive Attack Graph & Threat Path Visualization Engine**: Dynamic graph topology correlating External IPs, Internal Hosts, Domains, Detection Rules, MITRE Techniques, and Incidents into visual attack chains with AI-powered path reasoning and containment recommendations.
 - **Historical Investigation & AI Threat Hunting Engine**: Proactive threat hunting workspace enabling historical security event search, IOC timeline tracking across 4 types (IP, Domain, Hash, URL), natural language AI hunt queries, hypothesis generation with confidence scoring, and interactive Attack Replay timeline.
 - **AI Workflow Automation & Autonomous SOAR Playbook Engine**: Configurable SOAR workflow engine, automated playbook execution, AI-driven playbook generation per threat category (Malware, Ransomware, C2 Beaconing, Credential Theft, DNS Tunneling), action orchestration, execution audit history, and manual analyst approval queue.
+- **Enterprise Observability, Audit Logging & Platform Health Monitoring Engine**: Self-observing security platform monitoring 8 core services (Backend API, Frontend, Database, WebSocket Engine, AI Engine, Threat Intelligence Engine, Workflow Engine, Detection Engine), 0-100 Platform Health Score calculation, centralized immutable Audit Logging across 8 event categories (AUTHENTICATION, INCIDENT, THREAT_HUNT, DETECTION, WORKFLOW, REPORT, ADMINISTRATION, SYSTEM) with CSV export, and real-time API latency & security platform metrics tracking.
 
 ---
 
@@ -64,7 +65,7 @@
 ### Era 9: Enterprise AI Incident Management Desk
 - Full 7-state incident lifecycle, evidence locker, P1-P4 SLA tracking, and resolution workflows.
 
-### Era 10: Enterprise Executive Reporting & Compliance Intelligence Engine
+### Era 10: Executive Reporting & Compliance Intelligence Engine
 - CISO executive summaries, SOC 2 / ISO 27001 / HIPAA compliance audit mapping, and one-click exports.
 
 ### Era 11: Interactive Attack Graph & Threat Path Visualization Engine
@@ -74,10 +75,14 @@
 - Full-text search across historical events, IOC history tracking, 5-step attack replay chain generation, and AI natural language threat hunt query processing.
 
 ### Era 13: AI Workflow Automation & Autonomous SOAR Playbook Engine
-- **Workflow Storage Models (`backend/models/workflow.go`)**: Models for `Workflow`, `WorkflowTrigger`, `WorkflowStep`, `WorkflowExecution`, `WorkflowApproval`, and `WorkflowTemplate`.
-- **Workflow Service (`backend/services/workflow_service.go`)**: Manages playbook creation, execution logging, manual approval decisions, execution history, and AI playbook generation across 5 categories.
-- **REST APIs (`/api/v2/workflows/*`)**: Endpoints for workflows, templates, manual execution, execution history, execution status, approval decisions, and AI playbook generation.
-- **Workflow Automation UI (`frontend/components/WorkflowAutomation.tsx`)**: Three-tab workspace — Playbook Library (configured playbooks + AI generator), Execution History (audit logs), and Approvals Queue (pending analyst manual approval decisions).
+- Configurable SOAR workflow engine, automated playbook execution, AI-driven playbook generation, action orchestration, execution audit history, and manual analyst approval queue.
+
+### Era 14: Enterprise Observability, Audit Logging & Platform Health Monitoring Engine
+- **Centralized Audit Logging (`backend/models/audit_log.go`, `backend/services/audit_service.go`)**: Multi-category immutable audit trail recording user, action, resource, severity, status, IP, and metadata with full-text search, category filtering, and CSV export.
+- **Platform Health Engine (`backend/models/system_health.go`, `backend/services/health_monitor_service.go`)**: Real-time status, uptime %, latency, error count tracking across 8 core platform services, yielding a composite 0-100 Enterprise Health Score.
+- **Platform Metrics Engine (`backend/models/platform_metrics.go`)**: Continuous API request metrics (total requests, avg latency, failure rate) and security platform metrics (alerts processed, incidents created, threat hunts executed, workflows executed).
+- **Observability REST APIs (`/api/v2/audit/*`, `/api/v2/health/*`, `/api/v2/metrics/*`)**: Full REST API suite.
+- **Observability Dashboard UI (`frontend/components/ObservabilityDashboard.tsx`)**: Three-tab dashboard — System Health (service cards & overall score), Audit Explorer (searchable log table & CSV export), and Platform Metrics (API latency & security operation counters).
 
 ---
 
@@ -96,7 +101,8 @@
 **Reports**: `POST /api/v2/reports/generate`, `GET /api/v2/compliance`  
 **Attack Graph**: `GET /api/v2/attack-graph`, `GET /api/v2/attack-graph/path/:id`  
 **History & Hunting**: `GET /api/v2/history/search`, `POST /api/v2/hunting/query`  
-**Workflows & SOAR**: `GET /api/v2/workflows`, `POST /api/v2/workflows/execute`, `GET /api/v2/workflows/approvals`, `POST /api/v2/workflows/playbooks`
+**Workflows & SOAR**: `GET /api/v2/workflows`, `POST /api/v2/workflows/execute`, `GET /api/v2/workflows/approvals`  
+**Observability**: `GET /api/v2/audit/logs`, `GET /api/v2/audit/search`, `GET /api/v2/audit/export`, `GET /api/v2/health`, `GET /api/v2/health/services`, `GET /api/v2/metrics`, `GET /api/v2/metrics/security`
 
 ---
 
@@ -128,8 +134,8 @@ NetSentinel-X V2 evolves through 16 structured production Eras:
 11. **Era 11 (Completed)**: Interactive Attack Graph & Threat Path Visualization ✅
 12. **Era 12 (Completed)**: Historical Investigation & AI Threat Hunting Engine ✅
 13. **Era 13 (Completed)**: AI Workflow Automation & Autonomous SOAR Playbook Engine ✅
-14. **Era 14 (Next)**: Enterprise Observability (Audit logs, Prometheus/Grafana)
-15. **Era 15**: Production Hardening & Scalability (Redis, circuit breakers)
+14. **Era 14 (Completed)**: Enterprise Observability, Audit Logging & Health Monitoring ✅
+15. **Era 15 (Next)**: Enterprise Security Hardening & Production Readiness
 16. **Era 16**: Enterprise Validation, Benchmarking & Release Candidate
 
 ---
@@ -137,6 +143,6 @@ NetSentinel-X V2 evolves through 16 structured production Eras:
 ## Current Development Status
 
 - **Current Version**: NetSentinel-X V2.0 Enterprise
-- **Current Era**: Era 13 Completed ✅
+- **Current Era**: Era 14 Completed ✅
 - **CI Status**: GitHub Actions Pipeline Verified 🟢
-- **Next Era**: Era 14 — Enterprise Observability (Audit Logs & Health Monitoring)
+- **Next Era**: Era 15 — Enterprise Security Hardening & Production Readiness

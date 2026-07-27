@@ -42,6 +42,7 @@ func SetupRoutes(router *gin.Engine) {
 	v2AttackGraphHandler := handlers.NewV2AttackGraphHandler()
 	v2HistoricalHandler := handlers.NewV2HistoricalHandler()
 	v2WorkflowHandler := handlers.NewV2WorkflowHandler()
+	v2ObservabilityHandler := handlers.NewV2ObservabilityHandler()
 
 	v2Group := router.Group("/api/v2")
 	{
@@ -138,5 +139,14 @@ func SetupRoutes(router *gin.Engine) {
 		v2Group.GET("/workflows/approvals", v2WorkflowHandler.GetApprovals)
 		v2Group.POST("/workflows/approvals/decide", v2WorkflowHandler.DecideApproval)
 		v2Group.POST("/workflows/playbooks", v2WorkflowHandler.GeneratePlaybook)
+
+		// Observability, Audit & Platform Health Routes
+		v2Group.GET("/audit/logs", v2ObservabilityHandler.GetAuditLogs)
+		v2Group.GET("/audit/search", v2ObservabilityHandler.SearchAuditLogs)
+		v2Group.GET("/audit/export", v2ObservabilityHandler.ExportAuditLogs)
+		v2Group.GET("/health", v2ObservabilityHandler.GetHealth)
+		v2Group.GET("/health/services", v2ObservabilityHandler.GetHealthServices)
+		v2Group.GET("/metrics", v2ObservabilityHandler.GetMetrics)
+		v2Group.GET("/metrics/security", v2ObservabilityHandler.GetSecurityMetrics)
 	}
 }

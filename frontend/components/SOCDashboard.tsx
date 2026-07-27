@@ -19,6 +19,7 @@ import ExecutiveReporting from "./ExecutiveReporting";
 import AttackGraph from "./AttackGraph";
 import ThreatHuntingWorkspace from "./ThreatHuntingWorkspace";
 import WorkflowAutomation from "./WorkflowAutomation";
+import ObservabilityDashboard from "./ObservabilityDashboard";
 import { useEffect, useState } from "react";
 import { Bot, Sparkles } from "lucide-react";
 
@@ -121,6 +122,11 @@ export default function SOCDashboard() {
 
           <h2 className="text-2xl font-bold text-yellow-400 mt-2">LIVE</h2>
         </div>
+      </div>
+
+      {/* Enterprise Observability & System Health Studio Section */}
+      <div className="p-6">
+        <ObservabilityDashboard />
       </div>
 
       {/* AI Workflow Automation & Autonomous SOAR Playbook Engine Section */}
