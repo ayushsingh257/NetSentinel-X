@@ -21,12 +21,14 @@ import ThreatHuntingWorkspace from "./ThreatHuntingWorkspace";
 import WorkflowAutomation from "./WorkflowAutomation";
 import ObservabilityDashboard from "./ObservabilityDashboard";
 import SecurityHardeningDashboard from "./SecurityHardeningDashboard";
+import DemoScenariosModal from "./DemoScenariosModal";
 import { useEffect, useState } from "react";
-import { Bot, Sparkles } from "lucide-react";
+import { Bot, Sparkles, Zap } from "lucide-react";
 
 export default function SOCDashboard() {
   const [copilotOpen, setCopilotOpen] = useState(false);
   const [copilotQuery, setCopilotQuery] = useState("");
+  const [demoModalOpen, setDemoModalOpen] = useState(false);
 
   const [analytics, setAnalytics] = useState({
     total_packets: 0,
@@ -82,15 +84,25 @@ export default function SOCDashboard() {
           </p>
         </div>
 
-        {/* AI Copilot Action CTA Header Button */}
-        <button
-          onClick={() => setCopilotOpen(true)}
-          className="inline-flex items-center gap-2.5 px-5 py-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-sm shadow-[0_0_20px_rgba(168,85,247,0.4)] hover:shadow-[0_0_30px_rgba(168,85,247,0.6)] transition-all duration-300 active:scale-95"
-        >
-          <Bot className="w-5 h-5" />
-          <span>Launch AI Copilot</span>
-          <Sparkles className="w-4 h-4 text-purple-200 animate-pulse" />
-        </button>
+        {/* Action Buttons Header */}
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => setDemoModalOpen(true)}
+            className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/50 font-bold text-sm shadow-[0_0_15px_rgba(245,158,11,0.3)] transition-all duration-300 active:scale-95 font-mono"
+          >
+            <Zap className="w-4 h-4 text-amber-400" />
+            <span>Attack Simulator</span>
+          </button>
+
+          <button
+            onClick={() => setCopilotOpen(true)}
+            className="inline-flex items-center gap-2.5 px-5 py-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-sm shadow-[0_0_20px_rgba(168,85,247,0.4)] hover:shadow-[0_0_30px_rgba(168,85,247,0.6)] transition-all duration-300 active:scale-95"
+          >
+            <Bot className="w-5 h-5" />
+            <span>Launch AI Copilot</span>
+            <Sparkles className="w-4 h-4 text-purple-200 animate-pulse" />
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 p-6">
@@ -226,6 +238,12 @@ export default function SOCDashboard() {
         isOpen={copilotOpen}
         onClose={() => setCopilotOpen(false)}
         initialQuery={copilotQuery}
+      />
+
+      {/* Enterprise Attack Simulator Demo Modal */}
+      <DemoScenariosModal
+        isOpen={demoModalOpen}
+        onClose={() => setDemoModalOpen(false)}
       />
     </div>
   );

@@ -47,6 +47,7 @@ func SetupRoutes(router *gin.Engine) {
 	v2WorkflowHandler := handlers.NewV2WorkflowHandler()
 	v2ObservabilityHandler := handlers.NewV2ObservabilityHandler()
 	v2SecurityHandler := handlers.NewV2SecurityHandler()
+	v2DemoHandler := handlers.NewV2DemoHandler()
 
 	v2Group := router.Group("/api/v2")
 	{
@@ -159,5 +160,9 @@ func SetupRoutes(router *gin.Engine) {
 		v2Group.GET("/security/sessions", v2SecurityHandler.GetActiveSessions)
 		v2Group.POST("/security/sessions/revoke", v2SecurityHandler.RevokeSession)
 		v2Group.GET("/security/events", v2SecurityHandler.GetEvents)
+
+		// Enterprise Attack Scenario Demo Loader Routes
+		v2Group.GET("/demo/scenarios", v2DemoHandler.GetScenarios)
+		v2Group.POST("/demo/load", v2DemoHandler.LoadScenario)
 	}
 }
