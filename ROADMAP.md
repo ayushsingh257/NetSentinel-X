@@ -2,105 +2,99 @@
 
 ## Project Vision
 
-**NetSentinel-X V2** is an Enterprise AI-powered Network Detection and Response (NDR), Security Operations Center (SOC), Threat Intelligence Fusion, and AI-assisted Investigation Platform.
+**NetSentinel-X V2** is an Enterprise AI-powered Network Detection and Response (NDR), Security Operations Center (SOC), Threat Intelligence Fusion, AI-assisted Investigation, and Zero Trust Security Platform.
 
 ---
 
 ## Current Project Status
 
 - **Current Version**: NetSentinel-X V2.0 Enterprise Release Candidate (`v2.0.0-rc1`)
-- **Current Core Era**: Era 16 — Enterprise Release Candidate & Final QA
-- **Evolution Status**: 100% Core Eras Completed (16/16 Core Eras) + 4 Security Hardening Eras Planned (Eras 17–20)
-- **Stability Status**: Production Release Candidate Verified. GitHub Actions CI/CD Pipeline 🟢 GREEN.
+- **Core Platform Eras (1–16)**: 100% Complete ✅
+- **Security Implementation Eras (17–24)**: Era 17 In Progress 🔄
+- **Stability Status**: GitHub Actions CI/CD Pipeline 🟢 GREEN.
 
 ---
 
-## Complete 20-Era Evolution & Security Matrix
+## Era Development Lifecycle
 
-### Era 1: Enterprise Experience & UI Modernization
-- **Status**: ✅ Completed
+Every era follows this mandatory process before being marked complete:
 
-### Era 2: AI Security Copilot
-- **Status**: ✅ Completed
-
-### Era 3: AI Threat Investigation Engine
-- **Status**: ✅ Completed
-
-### Era 4: Enterprise MITRE ATT&CK Intelligence Engine
-- **Status**: ✅ Completed
-
-### Era 5: Detection Engineering Studio (Sigma / YARA)
-- **Status**: ✅ Completed
-
-### Era 6: Enterprise Threat Intelligence Fusion Engine
-- **Status**: ✅ Completed
-
-### Era 7: Enterprise User & Entity Behaviour Analytics (UEBA) Engine
-- **Status**: ✅ Completed
-
-### Era 8: Enterprise AI Detection Optimizer & Coverage Studio
-- **Status**: ✅ Completed
-
-### Era 9: Enterprise AI Incident Management Desk
-- **Status**: ✅ Completed
-
-### Era 10: Enterprise Executive Reporting & Compliance Intelligence Engine
-- **Status**: ✅ Completed
-
-### Era 11: Interactive Attack Graph & Threat Path Visualization Engine
-- **Status**: ✅ Completed
-
-### Era 12: Historical Investigation & AI Threat Hunting Engine
-- **Status**: ✅ Completed
-
-### Era 13: AI Workflow Automation & Autonomous SOC Playbook Engine
-- **Status**: ✅ Completed
-
-### Era 14: Enterprise Observability, Audit Logging & Health Monitoring
-- **Status**: ✅ Completed
-
-### Era 15: Enterprise Security Hardening & Production Readiness
-- **Status**: ✅ Completed
-
-### Era 16: Enterprise Release Candidate & Final QA
-- **Status**: ✅ Completed
+```
+Implementation → Security Testing → Automated Testing → Code Review
+      ↓
+Git Commit → Git Push → GitHub Actions CI/CD → 🟢 GREEN → Completion Report
+```
 
 ---
 
-## Enterprise Security Implementation Roadmap (Eras 17–20)
+## Core Platform Eras (1–16) ✅
 
-### Era 17: Identity, Authentication & Access Security
-- **Goal**: Ensure zero compromise of authentication, sessions, accounts, or privileges.
-- **Key Modules**:
-  - Short-lived JWT access tokens with refresh token rotation, sliding sessions, device binding, and token revocation.
-  - Argon2id password hashing, complexity policies, HaveIBeenPwned k-Anonymity breach detection, one-time reset tokens.
-  - Multi-Factor Authentication (TOTP / Google Authenticator, WebAuthn Passkeys, Recovery Codes, Step-Up Auth for sensitive actions).
-  - Account Lockout, progressive delays, IP reputation checks, impossible travel detection, and device fingerprinting.
-  - Granular RBAC & Attribute-Based Access Control (ABAC) with resource-level permissions across Admin, Analyst, and Viewer roles.
+### Era 1: Enterprise Experience & UI Modernization — ✅ Completed
+### Era 2: AI Security Copilot — ✅ Completed
+### Era 3: AI Threat Investigation Engine — ✅ Completed
+### Era 4: Enterprise MITRE ATT&CK Intelligence Engine — ✅ Completed
+### Era 5: Detection Engineering Studio (Sigma / YARA) — ✅ Completed
+### Era 6: Enterprise Threat Intelligence Fusion Engine — ✅ Completed
+### Era 7: Enterprise User & Entity Behaviour Analytics (UEBA) Engine — ✅ Completed
+### Era 8: Enterprise AI Detection Optimizer & Coverage Studio — ✅ Completed
+### Era 9: Enterprise AI Incident Management Desk — ✅ Completed
+### Era 10: Enterprise Executive Reporting & Compliance Intelligence Engine — ✅ Completed
+### Era 11: Interactive Attack Graph & Threat Path Visualization Engine — ✅ Completed
+### Era 12: Historical Investigation & AI Threat Hunting Engine — ✅ Completed
+### Era 13: AI Workflow Automation & Autonomous SOC Playbook Engine — ✅ Completed
+### Era 14: Enterprise Observability, Audit Logging & Health Monitoring — ✅ Completed
+### Era 15: Enterprise Security Hardening & Production Readiness — ✅ Completed
+### Era 16: Enterprise Release Candidate & Final QA (`v2.0.0-rc1`) — ✅ Completed
 
-### Era 18: Web Application Security & Secure APIs
-- **Goal**: Protect the web application and API gateway from OWASP Top 10 exploits.
-- **Key Modules**:
-  - OWASP Top 10 mitigations for Injection, XSS, CSRF, SSRF, Broken Access Control, and Insecure Design.
-  - Strict input validation schemas (allowlisting, length/type checking, Unicode validation, sanitization with DOMPurify).
-  - CSRF synchronizer tokens, SameSite Strict/Lax cookies, Content Security Policy (CSP), and output encoding.
-  - SQL injection protection via parameterized queries and command injection whitelisting.
-  - Adaptive Rate Limiting (per User, per IP, per Endpoint, per API Key) with burst control.
-  - Security headers (`Strict-Transport-Security`, `Permissions-Policy`, `X-Content-Type-Options`, `X-Frame-Options`, strict CORS).
+---
 
-### Era 19: Infrastructure, Platform & Data Security
-- **Goal**: Protect servers, databases, containers, and data at rest and in transit.
-- **Key Modules**:
-  - Secrets Management Vault integration with versioning and zero plain-text secrets in code.
-  - TLS 1.3 enforcement across all API endpoints with AES-256 encryption at rest and field-level database encryption.
-  - Database firewall, least privilege read-only service accounts, and encrypted point-in-time backups.
-  - Container hardening: non-root Docker execution, minimal distroless images, read-only file systems, and SBOM generation.
-  - Immutable, tamper-evident audit logging with log retention policies and OpenTelemetry metrics tracing.
+## Enterprise Security Implementation Roadmap (Eras 17–24)
 
-### Era 20: Enterprise Security Governance & Zero Trust Architecture
-- **Goal**: Continuous risk verification, compliance reporting, and Zero Trust posture.
-- **Key Modules**:
-  - Zero Trust Architecture: continuous identity & device risk verification, micro-segmentation, and least privilege enforcement.
-  - Real-time Security Posture Scoring, Compliance Audit Dashboards (SOC 2, ISO 27001, HIPAA, NIST CSF, CIS Benchmarks).
-  - Dual-Approval Admin Workflows, Break-Glass emergency accounts, Admin MFA enforcement, and session recording.
-  - Advanced Threat Detection: impossible login detection, credential stuffing defense, account takeover (ATO) alerts, and insider threat scoring.
+### Era 17: Identity & Authentication Security
+- **Status**: 🔄 In Progress
+- **Goal**: Ensure zero compromise of authentication, sessions, accounts, or token systems.
+- **Key Deliverables**:
+  - Real JWT generation and verification using `golang-jwt/jwt/v5` with HS256 signing
+  - `GET /api/auth/me` — authenticated user profile endpoint
+  - `GET /api/auth/session/validate` — backend session validation (used by frontend guard)
+  - `POST /api/auth/refresh` — sliding session / token refresh
+  - `POST /api/auth/logout` — secure session termination
+  - `AuthMiddleware()` applied to all 50+ `/api/v2/*` enterprise endpoints
+  - Frontend dashboard layout upgraded to validate JWT against backend (not just localStorage)
+  - Hardcoded token bypass eliminated
+  - Security regression tests verifying old bypass patterns are rejected
+
+### Era 18: Authorization & Access Control Security
+- **Status**: 📋 Planned
+- **Goal**: Prevent unauthorized users from accessing resources.
+- **Key Deliverables**: RBAC permission matrix (Admin, Analyst, Viewer, Auditor), ABAC attribute-based rules, least-privilege enforcement, resource-level API permissions, privilege escalation detection.
+
+### Era 19: Web Application Security
+- **Status**: 📋 Planned
+- **Goal**: Protect frontend and backend applications from OWASP Top 10.
+- **Key Deliverables**: Input validation & schema allowlisting, XSS/CSRF protections, DOMPurify sanitization, Content Security Policy, SQL injection parameterization, file upload security.
+
+### Era 20: Secure API Architecture
+- **Status**: 📋 Planned
+- **Goal**: Protect APIs from abuse and exploitation.
+- **Key Deliverables**: API key scoping, OAuth2 readiness, adaptive rate limiting, signed requests, strict CORS, security headers (HSTS, CSP, Permissions-Policy, Referrer-Policy), webhook signature verification.
+
+### Era 21: Infrastructure & Platform Security
+- **Status**: 📋 Planned
+- **Goal**: Secure servers, containers, and deployment environments.
+- **Key Deliverables**: Secret vault integration, TLS 1.3, AES-256 at rest, non-root Docker containers, read-only filesystems, container scanning, WAF, DDoS protection, Fail2Ban, IDS/IPS.
+
+### Era 22: Data Protection & Monitoring Security
+- **Status**: 📋 Planned
+- **Goal**: Protect sensitive data and detect attacks in real-time.
+- **Key Deliverables**: Encrypted backups, least-privilege DB users, immutable tamper-evident audit logs, log signing, SAST/DAST scanning, container SBOM, dependency vulnerability management.
+
+### Era 23: Zero Trust Enterprise Security
+- **Status**: 📋 Planned
+- **Goal**: Continuous identity and device verification with zero implicit trust.
+- **Key Deliverables**: Continuous session risk scoring, impossible travel detection, account takeover detection, insider threat scoring, admin MFA enforcement, dual-approval workflows, break-glass emergency accounts, session recording.
+
+### Era 24: Security Governance & Compliance
+- **Status**: 📋 Planned
+- **Goal**: Make NetSentinel-X enterprise-compliant and governable.
+- **Key Deliverables**: SOC 2, ISO 27001, NIST CSF, CIS Benchmarks, OWASP ASVS compliance dashboards; security posture scoring; git secret scanning; code signing; SBOM enforcement; SSO/SAML/OIDC enterprise identity integration.

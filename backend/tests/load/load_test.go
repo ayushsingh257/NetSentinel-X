@@ -7,19 +7,38 @@ import (
 	"testing"
 	"time"
 
+	"netsentinel-x-backend/middleware"
 	"netsentinel-x-backend/routes"
 
 	"github.com/gin-gonic/gin"
 )
+
+// generateLoadTestToken creates a valid signed JWT for use in load tests.
+// This is necessary because /api/v2/* routes now require authentication.
+func generateLoadTestToken(t *testing.T) string {
+	t.Helper()
+	token, _, err := middleware.GenerateToken("usr-load-test", "loadtest", "analyst")
+	if err != nil {
+		t.Fatalf("Failed to generate load test token: %v", err)
+	}
+	return "Bearer " + token
+}
 
 func TestLoadConcurrency(t *testing.T) {
 	gin.SetMode(gin.TestMode)
 	router := gin.New()
 	routes.SetupRoutes(router)
 
-	endpoints := []string{
+	authHeader := generateLoadTestToken(t)
+
+	// Public endpoints (no auth required)
+	publicEndpoints := []string{
 		"/health",
 		"/analytics",
+	}
+
+	// Protected endpoints (require valid JWT — Era 17 security hardening)
+	protectedEndpoints := []string{
 		"/api/v2/copilot/prompts",
 		"/api/v2/mitre/matrix",
 		"/api/v2/intelligence",
@@ -33,6 +52,8 @@ func TestLoadConcurrency(t *testing.T) {
 		"/api/v2/demo/scenarios",
 	}
 
+	allEndpoints := append(publicEndpoints, protectedEndpoints...)
+
 	const concurrentWorkers = 50
 	const requestsPerWorker = 20
 
@@ -44,8 +65,17 @@ func TestLoadConcurrency(t *testing.T) {
 		go func(workerID int) {
 			defer wg.Done()
 			for j := 0; j < requestsPerWorker; j++ {
-				endpoint := endpoints[(workerID+j)%len(endpoints)]
+				endpoint := allEndpoints[(workerID+j)%len(allEndpoints)]
 				req := httptest.NewRequest("GET", endpoint, nil)
+
+				// Attach auth header for protected endpoints
+				for _, pe := range protectedEndpoints {
+					if endpoint == pe {
+						req.Header.Set("Authorization", authHeader)
+						break
+					}
+				}
+
 				resp := httptest.NewRecorder()
 				router.ServeHTTP(resp, req)
 
@@ -60,6 +90,34 @@ func TestLoadConcurrency(t *testing.T) {
 	duration := time.Since(start)
 
 	totalReqs := concurrentWorkers * requestsPerWorker
-	t.Logf("Successfully executed %d concurrent requests across 13 endpoints in %v (avg %.2f req/sec)",
-		totalReqs, duration, float64(totalReqs)/duration.Seconds())
+	t.Logf("Successfully executed %d concurrent authenticated requests across %d endpoints in %v (avg %.2f req/sec)",
+		totalReqs, len(allEndpoints), duration, float64(totalReqs)/duration.Seconds())
+}
+
+// TestUnauthenticatedRequestsRejected validates that protected endpoints
+// reject requests without a valid JWT — this is a security regression test.
+func TestUnauthenticatedRequestsRejected(t *testing.T) {
+	gin.SetMode(gin.TestMode)
+	router := gin.New()
+	routes.SetupRoutes(router)
+
+	protectedEndpoints := []string{
+		"/api/v2/copilot/prompts",
+		"/api/v2/mitre/matrix",
+		"/api/v2/incidents",
+		"/api/v2/security/posture",
+	}
+
+	for _, endpoint := range protectedEndpoints {
+		req := httptest.NewRequest("GET", endpoint, nil)
+		// No Authorization header
+		resp := httptest.NewRecorder()
+		router.ServeHTTP(resp, req)
+
+		if resp.Code != http.StatusUnauthorized {
+			t.Errorf("Expected 401 for unauthenticated request to %s, got %d", endpoint, resp.Code)
+		}
+	}
+
+	t.Log("Security validation: All protected endpoints correctly rejected unauthenticated requests")
 }

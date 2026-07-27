@@ -8,123 +8,96 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func TestProtectedRouteWithoutToken(t *testing.T) {
-
+func setupProtectedRouter() *gin.Engine {
 	gin.SetMode(gin.TestMode)
+	r := gin.New()
+	r.GET("/protected", AuthMiddleware(), func(c *gin.Context) {
+		role, _ := c.Get("role")
+		c.JSON(http.StatusOK, gin.H{"message": "authorized", "role": role})
+	})
+	return r
+}
 
-	router := gin.Default()
-
-	router.GET(
-		"/protected",
-		AuthMiddleware(),
-		func(c *gin.Context) {
-
-			c.JSON(http.StatusOK, gin.H{
-				"message": "authorized",
-			})
-		},
-	)
-
-	req, _ := http.NewRequest(
-		"GET",
-		"/protected",
-		nil,
-	)
-
-	response := httptest.NewRecorder()
-
-	router.ServeHTTP(response, req)
-
-	if response.Code != http.StatusUnauthorized {
-
-		t.Errorf(
-			"Expected status 401 but got %d",
-			response.Code,
-		)
+func TestProtectedRouteWithoutToken(t *testing.T) {
+	r := setupProtectedRouter()
+	req, _ := http.NewRequest("GET", "/protected", nil)
+	w := httptest.NewRecorder()
+	r.ServeHTTP(w, req)
+	if w.Code != http.StatusUnauthorized {
+		t.Errorf("Expected 401 but got %d", w.Code)
 	}
 }
 
 func TestProtectedRouteWithInvalidToken(t *testing.T) {
-
-	gin.SetMode(gin.TestMode)
-
-	router := gin.Default()
-
-	router.GET(
-		"/protected",
-		AuthMiddleware(),
-		func(c *gin.Context) {
-
-			c.JSON(http.StatusOK, gin.H{
-				"message": "authorized",
-			})
-		},
-	)
-
-	req, _ := http.NewRequest(
-		"GET",
-		"/protected",
-		nil,
-	)
-
-	req.Header.Set(
-		"Authorization",
-		"Bearer invalidtoken123",
-	)
-
-	response := httptest.NewRecorder()
-
-	router.ServeHTTP(response, req)
-
-	if response.Code != http.StatusUnauthorized {
-
-		t.Errorf(
-			"Expected status 401 but got %d",
-			response.Code,
-		)
+	r := setupProtectedRouter()
+	req, _ := http.NewRequest("GET", "/protected", nil)
+	req.Header.Set("Authorization", "Bearer invalidtoken123")
+	w := httptest.NewRecorder()
+	r.ServeHTTP(w, req)
+	if w.Code != http.StatusUnauthorized {
+		t.Errorf("Expected 401 but got %d", w.Code)
 	}
 }
 
-func TestProtectedRouteWithValidAdminToken(t *testing.T) {
+// TestProtectedRoute_HardcodedTokenNowRejected ensures the old bypass no longer works.
+func TestProtectedRoute_HardcodedTokenNowRejected(t *testing.T) {
+	r := setupProtectedRouter()
+	req, _ := http.NewRequest("GET", "/protected", nil)
+	// Old system accepted this; new JWT system must reject it
+	req.Header.Set("Authorization", "Bearer admin-token")
+	w := httptest.NewRecorder()
+	r.ServeHTTP(w, req)
+	if w.Code != http.StatusUnauthorized {
+		t.Errorf("Expected 401 for hardcoded token bypass attempt, but got %d", w.Code)
+	}
+}
 
-	gin.SetMode(gin.TestMode)
+func TestProtectedRouteWithValidJWT(t *testing.T) {
+	r := setupProtectedRouter()
 
-	router := gin.Default()
+	// Generate a real signed JWT
+	token, _, err := GenerateToken("usr-001", "admin", "admin")
+	if err != nil {
+		t.Fatalf("Failed to generate token: %v", err)
+	}
 
-	router.GET(
-		"/protected",
-		AuthMiddleware(),
-		func(c *gin.Context) {
+	req, _ := http.NewRequest("GET", "/protected", nil)
+	req.Header.Set("Authorization", "Bearer "+token)
+	w := httptest.NewRecorder()
+	r.ServeHTTP(w, req)
 
-			role, _ := c.Get("role")
+	if w.Code != http.StatusOK {
+		t.Errorf("Expected 200 with valid JWT but got %d", w.Code)
+	}
+}
 
-			c.JSON(http.StatusOK, gin.H{
-				"message": "authorized",
-				"role":    role,
-			})
-		},
-	)
+func TestProtectedRouteWithAnalystJWT(t *testing.T) {
+	r := setupProtectedRouter()
 
-	req, _ := http.NewRequest(
-		"GET",
-		"/protected",
-		nil,
-	)
+	token, _, err := GenerateToken("usr-002", "analyst", "analyst")
+	if err != nil {
+		t.Fatalf("Failed to generate token: %v", err)
+	}
 
-	req.Header.Set(
-		"Authorization",
-		"Bearer admin-token",
-	)
+	req, _ := http.NewRequest("GET", "/protected", nil)
+	req.Header.Set("Authorization", "Bearer "+token)
+	w := httptest.NewRecorder()
+	r.ServeHTTP(w, req)
 
-	response := httptest.NewRecorder()
+	if w.Code != http.StatusOK {
+		t.Errorf("Expected 200 with valid analyst JWT but got %d", w.Code)
+	}
+}
 
-	router.ServeHTTP(response, req)
-
-	if response.Code != http.StatusOK {
-
-		t.Errorf(
-			"Expected status 200 but got %d",
-			response.Code,
-		)
+func TestProtectedRouteMalformedHeader(t *testing.T) {
+	r := setupProtectedRouter()
+	req, _ := http.NewRequest("GET", "/protected", nil)
+	// Missing "Bearer " prefix
+	token, _, _ := GenerateToken("usr-001", "admin", "admin")
+	req.Header.Set("Authorization", token) // No "Bearer " prefix
+	w := httptest.NewRecorder()
+	r.ServeHTTP(w, req)
+	if w.Code != http.StatusUnauthorized {
+		t.Errorf("Expected 401 for malformed header but got %d", w.Code)
 	}
 }

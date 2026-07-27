@@ -10,10 +10,10 @@ import (
 
 func SetupRoutes(router *gin.Engine) {
 
-	// Apply Global Security Headers Middleware
+	// Apply Global Security Headers Middleware to all requests
 	router.Use(middleware.SecurityHeadersMiddleware())
 
-	// Legacy V1 Routes (Maintained for 100% backward compatibility)
+	// ─── Public Routes (no authentication required) ────────────────────────────
 	router.GET("/", handlers.HomeHandler)
 	router.GET("/health", handlers.HealthHandler)
 	router.GET("/analytics", handlers.GetAnalytics)
@@ -23,6 +23,7 @@ func SetupRoutes(router *gin.Engine) {
 	router.GET("/export/traffic", handlers.ExportTrafficReport)
 	router.GET("/ws", websocket.HandleWebSocket)
 
+	// ─── Legacy V1 Admin Routes (auth-protected) ───────────────────────────────
 	adminRoutes := router.Group("/")
 	adminRoutes.Use(
 		middleware.AuthMiddleware(),
@@ -32,7 +33,18 @@ func SetupRoutes(router *gin.Engine) {
 		adminRoutes.POST("/traffic", handlers.CreateTrafficLog)
 	}
 
-	// NetSentinel-X V2 Enterprise API Group
+	// ─── Auth Session Routes (all require valid JWT) ────────────────────────────
+	v2AuthHandler := handlers.NewV2AuthHandler()
+	authGroup := router.Group("/api/auth")
+	authGroup.Use(middleware.AuthMiddleware())
+	{
+		authGroup.GET("/me", v2AuthHandler.GetMe)
+		authGroup.GET("/session/validate", v2AuthHandler.ValidateSession)
+		authGroup.POST("/refresh", v2AuthHandler.RefreshToken)
+		authGroup.POST("/logout", v2AuthHandler.Logout)
+	}
+
+	// ─── NetSentinel-X V2 Enterprise API (all require valid JWT) ───────────────
 	v2CopilotHandler := handlers.NewV2CopilotHandler()
 	v2InvestigationHandler := handlers.NewV2InvestigationHandler()
 	v2MITREHandler := handlers.NewV2MITREHandler()
@@ -50,6 +62,8 @@ func SetupRoutes(router *gin.Engine) {
 	v2DemoHandler := handlers.NewV2DemoHandler()
 
 	v2Group := router.Group("/api/v2")
+	// ─── SECURITY: All /api/v2/* endpoints now require a valid JWT ─────────────
+	v2Group.Use(middleware.AuthMiddleware())
 	{
 		// AI Copilot Routes
 		v2Group.POST("/copilot/query", v2CopilotHandler.QueryCopilot)
