@@ -9,7 +9,7 @@
 
 ## Overview
 
-**NetSentinel-X V2** is an enterprise-grade AI Security Operations Platform and Network Detection & Response (NDR) engine. Built for modern SOC environments, NetSentinel-X combines real-time eBPF network telemetry, Deep Packet Inspection (DPI), autonomous AI threat reasoning, multi-event threat investigations, MITRE ATT&CK matrix correlation, custom Sigma/YARA detection engineering, multi-provider threat intelligence fusion, User & Entity Behaviour Analytics (UEBA), continuous AI Detection Optimization, an Enterprise AI Incident Management Desk, Executive Reporting & Compliance Intelligence, an Interactive Attack Graph, an AI Threat Hunting Workspace, an Autonomous SOAR Playbook Engine, an Observability & Health Engine, and an Enterprise Security Hardening Layer into a unified platform.
+**NetSentinel-X V2** is an enterprise-grade AI Security Operations Platform and Network Detection & Response (NDR) engine. Built for modern SOC environments, NetSentinel-X combines real-time eBPF network telemetry, Deep Packet Inspection (DPI), autonomous AI threat reasoning, multi-event threat investigations, MITRE ATT&CK matrix correlation, custom Sigma/YARA detection engineering, multi-provider threat intelligence fusion, User & Entity Behaviour Analytics (UEBA), continuous AI Detection Optimization, an Enterprise AI Incident Management Desk, Executive Reporting & Compliance Intelligence, an Interactive Attack Graph, an AI Threat Hunting Workspace, an Autonomous SOAR Playbook Engine, an Observability & Health Engine, an Enterprise Security Hardening Layer, and Zero Trust Security Architecture into a unified platform.
 
 ---
 
@@ -28,40 +28,18 @@
                                 | Security Headers & Rate Limiting |
                                 +----------------------------------+
                                                  |
-         +-------------------+-------------------+-------------------+-------------------+
-         |                   |                   |                   |                   |
-         v                   v                   v                   v                   v
-+-----------------+ +-----------------+ +-----------------+ +-----------------+ +-----------------+
-| Packet Telemetry| | Threat Intel    | | UEBA & Anomaly  | | AI Investigation| | SOAR Playbook   |
-| Engine (DPI)    | | Fusion Engine   | | Analytics       | | Copilot (RAG)   | | Engine          |
-+-----------------+ +-----------------+ +-----------------+ +-----------------+ +-----------------+
+                   +-----------------------------+-----------------------------+
+                   |                             |                             |
+                   v                             v                             v
+        +--------------------+        +--------------------+        +--------------------+
+        | eBPF DPI Telemetry |        | AI Copilot Engine  |        | Threat Intel Engine|
+        | Packet Ingestion   |        | RAG / LLM Provider |        | 8 Intel Feeds      |
+        +--------------------+        +--------------------+        +--------------------+
 ```
 
 ---
 
-## Platform Features
-
-- **Deep Packet Inspection (DPI)**: High-throughput packet parsing for Ethernet, IP, TCP, UDP, DNS, HTTP, and TLS headers.
-- **Real-time Streaming**: Zero-latency WebSocket pipeline streaming live network telemetry directly to the SOC interface.
-- **AI Security Copilot (RAG Powered)**: Autonomous AI assistant providing context-aware threat reasoning, natural language packet explanations, evidence collection, and MITRE mapping.
-- **AI Threat Investigation Engine**: Automated correlation converting individual alerts into full attack stories, visual timeline sequences, root cause analyses, and evidence records.
-- **Enterprise MITRE ATT&CK Intelligence Engine**: Interactive 12-tactic ATT&CK Matrix grid, real-time Threat Heat Map, automatic multi-protocol technique mapping, AI ATT&CK reasoning, and defensive mitigation knowledge base.
-- **Detection Engineering Studio**: Complete lifecycle for custom Sigma & YARA inspired detection rules, interactive Simulation Sandbox, rule validation, and AI Rule Assistant.
-- **Enterprise Threat Intelligence Fusion Engine**: Multi-provider threat intelligence aggregation across 8 providers (VirusTotal, AlienVault OTX, AbuseIPDB, GreyNoise, Shodan, Censys, IPinfo, WHOIS), composite reputation scoring, and async IOC enrichment.
-- **User & Entity Behaviour Analytics (UEBA)**: Statistical baseline profiling per host/user/IP/domain, anomaly scoring across 6 threat vectors (Beaconing, Port Scanning, Brute Force, Lateral Movement, Data Exfiltration, DNS Tunneling), Entity Risk Leaderboard, and AI Behaviour Deviation Reasoning.
-- **AI Detection Optimizer & Coverage Studio**: Rule Quality Scoring (0-100), AI False Positive Reduction recommendations, ATT&CK Coverage Gap identification, and Analyst Learning Feedback loop.
-- **AI Incident Management Desk**: End-to-end incident lifecycle management (NEW, TRIAGED, INVESTIGATING, CONTAINMENT, ERADICATION, RECOVERY, CLOSED), evidence locker, response SLA tracking (P1-P4), and resolution workflows.
-- **Executive Reporting & Compliance Intelligence Engine**: CISO-level security summary generation, business impact analysis, SOC 2 / ISO 27001 / HIPAA audit mapping, and one-click PDF/HTML/Markdown/JSON exports.
-- **Interactive Attack Graph & Threat Path Visualization Engine**: Dynamic graph topology correlating External IPs, Internal Hosts, Domains, Detection Rules, MITRE Techniques, and Incidents into visual attack chains with AI-powered path reasoning and containment recommendations.
-- **Historical Investigation & AI Threat Hunting Engine**: Proactive threat hunting workspace enabling historical security event search, IOC timeline tracking across 4 types (IP, Domain, Hash, URL), natural language AI hunt queries, hypothesis generation with confidence scoring, and interactive Attack Replay timeline.
-- **AI Workflow Automation & Autonomous SOAR Playbook Engine**: Configurable SOAR workflow engine, automated playbook execution, AI-driven playbook generation per threat category, action orchestration, execution audit history, and manual analyst approval queue.
-- **Enterprise Observability & System Health Engine**: Self-observing security platform monitoring 8 core services with 0-100 Platform Health Score calculation, centralized immutable Audit Logging across 8 event categories with CSV export, and real-time API latency & security platform metrics tracking.
-- **Enterprise Security Hardening & Production Readiness Layer**: 7-Role Granular RBAC (`SUPER_ADMIN`, `SOC_ADMIN`, `SECURITY_ANALYST`, `THREAT_HUNTER`, `DETECTION_ENGINEER`, `AUDITOR`, `VIEW_ONLY`) mapped to 10 strict permission flags, 100 req/min Rate Limiting middleware, security headers (`CSP`, `HSTS`, `X-Frame-Options`, `X-Content-Type-Options`), active session tracking & instant revocation, 0-secrets in source code architecture, and Docker production stack (`docker-compose.production.yml`).
-- **Enterprise Demonstration Simulator**: Built-in Attack Scenario Loader injecting realistic multi-vector attack streams (C2 Beaconing, Credential Stuffing, Data Exfiltration) for SOC live demonstration.
-
----
-
-## 16 Evolution Eras Roadmap (Completed ✅)
+## 20-Era Enterprise Evolution Roadmap
 
 1. **Era 1 (Completed)**: Enterprise Experience & UI Modernization ✅
 2. **Era 2 (Completed)**: AI Security Copilot ✅
@@ -79,6 +57,10 @@
 14. **Era 14 (Completed)**: Enterprise Observability & System Health Engine ✅
 15. **Era 15 (Completed)**: Enterprise Security Hardening & Production Readiness Layer ✅
 16. **Era 16 (Completed)**: Enterprise Release Candidate & Final QA (`v2.0.0-rc1`) ✅
+17. **Era 17 (Planned)**: Identity, Authentication & Access Security (MFA, Argon2id, Passkeys, RBAC/ABAC) 🛡️
+18. **Era 18 (Planned)**: Web Application Security & Secure APIs (OWASP Top 10, CSRF/XSS, Rate Limiting, CSP) 🛡️
+19. **Era 19 (Planned)**: Infrastructure, Platform & Data Security (Secrets Vault, TLS 1.3, AES-256, Container Hardening) 🛡️
+20. **Era 20 (Planned)**: Enterprise Security Governance & Zero Trust Architecture (Zero Trust, Compliance, Dual-Approval) 🛡️
 
 ---
 
