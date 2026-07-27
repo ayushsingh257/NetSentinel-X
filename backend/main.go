@@ -26,6 +26,7 @@ func main() {
 	router.Use(cors.New(cors.Config{
 		AllowOrigins: []string{
 			"http://localhost:3000",
+			"http://localhost:3001",
 		},
 
 		AllowMethods: []string{
@@ -52,6 +53,9 @@ func main() {
 	routes.SetupRoutes(router)
 
 	port := config.GetEnv("PORT")
+	if port == "" {
+		port = "8080"
+	}
 
 	fmt.Println("NetSentinel-X Backend Running On Port:", port)
 

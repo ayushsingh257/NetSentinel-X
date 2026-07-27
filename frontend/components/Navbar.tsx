@@ -2,76 +2,81 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { Shield, Activity, Bot, Cpu, FileText, Menu, X, BarChart3 } from "lucide-react";
+import { Shield, Activity, Bot, Cpu, Menu, X, BarChart3, LogIn, UserPlus } from "lucide-react";
+import AnimatedThemeToggler from "@/components/ui/animated-theme-toggler";
 
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   return (
-    <nav className="w-full border-b border-cyan-900/60 bg-zinc-950/90 backdrop-blur-md sticky top-0 z-50 transition-all duration-300">
-      <div className="max-w-7xl mx-auto px-6 py-3.5 flex items-center justify-between">
+    <nav className="w-full border-b border-slate-200 dark:border-zinc-800 bg-white/80 dark:bg-black/80 backdrop-blur-xl sticky top-0 z-50 transition-colors font-sans">
+      <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
         
-        {/* Brand */}
+        {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-3 group">
-          <div className="p-2 rounded-xl bg-cyan-950/80 border border-cyan-500/40 text-cyan-400 group-hover:border-cyan-400 group-hover:shadow-[0_0_15px_rgba(34,211,238,0.3)] transition-all">
-            <Shield className="w-6 h-6 text-cyan-400" />
+          <div className="p-2 rounded-xl bg-emerald-100 dark:bg-zinc-900 border border-emerald-500/40 text-emerald-600 dark:text-emerald-400 group-hover:border-emerald-500 transition-all">
+            <Shield className="w-6 h-6 text-emerald-600 dark:text-emerald-400" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-white tracking-tight flex items-center gap-1.5">
-              NetSentinel<span className="text-cyan-400 font-extrabold">-X</span>
-              <span className="text-[10px] px-1.5 py-0.5 rounded bg-cyan-900/40 text-cyan-300 border border-cyan-700/50 font-mono">v2.0</span>
+            <h1 className="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight flex items-center gap-1.5 font-sans">
+              NetSentinel<span className="text-emerald-600 dark:text-emerald-400">-X</span>
+              <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 border border-emerald-500/40 font-mono">v2.0</span>
             </h1>
-            <p className="text-xs text-zinc-400 tracking-wide hidden sm:block">
-              Enterprise AI Security Operations Platform
+            <p className="text-[11px] text-slate-500 dark:text-zinc-400 font-sans tracking-wide hidden sm:block">
+              Enterprise Network Detection &amp; AI SOC Platform
             </p>
           </div>
         </Link>
 
-        {/* Desktop Navigation Links */}
-        <div className="hidden lg:flex items-center gap-6 text-sm font-medium text-zinc-300">
-          <Link href="/dashboard" className="flex items-center gap-1.5 hover:text-cyan-400 transition-colors">
-            <BarChart3 className="w-4 h-4 text-cyan-400" />
+        {/* Navigation Links */}
+        <div className="hidden lg:flex items-center gap-6 text-xs font-bold text-slate-700 dark:text-zinc-300 font-sans">
+          <Link href="/dashboard" className="flex items-center gap-1.5 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+            <BarChart3 className="w-4 h-4 text-emerald-500" />
             <span>SOC Dashboard</span>
           </Link>
-          <Link href="/#copilot" className="flex items-center gap-1.5 hover:text-cyan-400 transition-colors">
-            <Bot className="w-4 h-4 text-purple-400" />
+          <Link href="/#copilot" className="flex items-center gap-1.5 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+            <Bot className="w-4 h-4 text-emerald-500" />
             <span>AI Copilot</span>
           </Link>
-          <Link href="/#architecture" className="flex items-center gap-1.5 hover:text-cyan-400 transition-colors">
-            <Cpu className="w-4 h-4 text-emerald-400" />
-            <span>Architecture</span>
+          <Link href="/#capabilities" className="flex items-center gap-1.5 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+            <Cpu className="w-4 h-4 text-emerald-500" />
+            <span>Capabilities</span>
           </Link>
-          <Link href="/#mitre" className="flex items-center gap-1.5 hover:text-cyan-400 transition-colors">
-            <Activity className="w-4 h-4 text-amber-400" />
-            <span>MITRE Radar</span>
-          </Link>
-          <Link href="/#docs" className="flex items-center gap-1.5 hover:text-cyan-400 transition-colors">
-            <FileText className="w-4 h-4 text-blue-400" />
-            <span>Docs</span>
+          <Link href="/#workflows" className="flex items-center gap-1.5 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+            <Activity className="w-4 h-4 text-emerald-500" />
+            <span>SOC Workflows</span>
           </Link>
         </div>
 
-        {/* Live Status Badge & Action CTA */}
-        <div className="hidden md:flex items-center gap-4">
-          <div className="flex items-center gap-2 bg-zinc-900/90 border border-emerald-500/60 shadow-[0_0_12px_rgba(16,185,129,0.15)] px-3.5 py-1.5 rounded-xl">
-            <div className="w-2.5 h-2.5 bg-emerald-400 rounded-full animate-pulse"></div>
-            <span className="text-xs font-mono font-semibold text-emerald-400 tracking-wider">
-              DPI ENGINE ACTIVE
-            </span>
+        {/* Right CTA Actions & Animated Theme Toggler */}
+        <div className="hidden md:flex items-center gap-3">
+          
+          {/* Animated Theme Toggler */}
+          <div className="p-1 rounded-xl bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800">
+            <AnimatedThemeToggler />
           </div>
 
           <Link
-            href="/dashboard"
-            className="relative inline-flex items-center justify-center px-4 py-2 text-xs font-bold text-white bg-cyan-600 hover:bg-cyan-500 border border-cyan-400/50 rounded-xl shadow-[0_0_15px_rgba(6,182,212,0.4)] hover:shadow-[0_0_25px_rgba(6,182,212,0.6)] transition-all duration-300 active:scale-95"
+            href="/login"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 rounded-xl transition-all"
           >
-            Launch SOC Dashboard
+            <LogIn className="w-3.5 h-3.5 text-emerald-500" />
+            <span>Sign In</span>
+          </Link>
+
+          <Link
+            href="/signup"
+            className="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold text-white bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 rounded-xl shadow-lg shadow-emerald-500/20 transition-all active:scale-95"
+          >
+            <UserPlus className="w-3.5 h-3.5" />
+            <span>Sign Up</span>
           </Link>
         </div>
 
-        {/* Mobile menu button */}
+        {/* Mobile menu toggle */}
         <button
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="lg:hidden p-2 rounded-lg text-zinc-400 hover:text-white bg-zinc-900 border border-zinc-800"
+          className="lg:hidden p-2 rounded-lg text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800"
           aria-label="Toggle Navigation Menu"
         >
           {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
@@ -80,44 +85,33 @@ export default function Navbar() {
 
       {/* Mobile navigation panel */}
       {mobileOpen && (
-        <div className="lg:hidden bg-zinc-950 border-b border-zinc-800 px-6 py-4 space-y-3">
+        <div className="lg:hidden bg-white dark:bg-black border-b border-slate-200 dark:border-zinc-800 px-6 py-4 space-y-3 font-sans">
+          <div className="flex items-center justify-between pb-2 border-b border-slate-200 dark:border-zinc-800">
+            <span className="text-xs text-slate-500 dark:text-slate-400">Toggle Theme:</span>
+            <AnimatedThemeToggler />
+          </div>
+
           <Link
             href="/dashboard"
             onClick={() => setMobileOpen(false)}
-            className="flex items-center gap-2 text-sm text-cyan-400 font-semibold py-2"
+            className="flex items-center gap-2 text-sm text-emerald-600 dark:text-emerald-400 font-bold py-2"
           >
             <BarChart3 className="w-4 h-4" /> SOC Dashboard
           </Link>
           <Link
-            href="/#copilot"
+            href="/login"
             onClick={() => setMobileOpen(false)}
-            className="flex items-center gap-2 text-sm text-zinc-300 hover:text-cyan-400 py-2"
+            className="flex items-center gap-2 text-sm text-slate-700 dark:text-slate-300 hover:text-emerald-600 py-2"
           >
-            <Bot className="w-4 h-4" /> AI Copilot
+            <LogIn className="w-4 h-4 text-emerald-500" /> Sign In
           </Link>
           <Link
-            href="/#architecture"
+            href="/signup"
             onClick={() => setMobileOpen(false)}
-            className="flex items-center gap-2 text-sm text-zinc-300 hover:text-cyan-400 py-2"
+            className="flex items-center gap-2 text-sm text-emerald-600 dark:text-emerald-400 font-bold py-2"
           >
-            <Cpu className="w-4 h-4" /> Architecture
+            <UserPlus className="w-4 h-4" /> Create Account
           </Link>
-          <Link
-            href="/#mitre"
-            onClick={() => setMobileOpen(false)}
-            className="flex items-center gap-2 text-sm text-zinc-300 hover:text-cyan-400 py-2"
-          >
-            <Activity className="w-4 h-4" /> MITRE ATT&CK Radar
-          </Link>
-          <div className="pt-2 border-t border-zinc-800">
-            <Link
-              href="/dashboard"
-              onClick={() => setMobileOpen(false)}
-              className="w-full inline-flex items-center justify-center py-2.5 text-xs font-bold text-white bg-cyan-600 rounded-xl"
-            >
-              Launch SOC Dashboard
-            </Link>
-          </div>
         </div>
       )}
     </nav>

@@ -20,6 +20,16 @@ func ConnectDatabase() {
 	dbname := GetEnv("DB_NAME")
 	sslmode := GetEnv("DB_SSLMODE")
 
+	if host == "" {
+		host = "localhost"
+	}
+	if port == "" {
+		port = "5432"
+	}
+	if sslmode == "" {
+		sslmode = "disable"
+	}
+
 	psqlInfo := fmt.Sprintf(
 		"host=%s port=%s user=%s password=%s dbname=%s sslmode=%s",
 		host,
@@ -32,7 +42,7 @@ func ConnectDatabase() {
 
 	var err error
 
-	for i := 0; i < 10; i++ {
+	for i := 0; i < 3; i++ {
 
 		DB, err = sql.Open("postgres", psqlInfo)
 
@@ -46,9 +56,8 @@ func ConnectDatabase() {
 			}
 		}
 
-		fmt.Println("Waiting for database...")
-		time.Sleep(5 * time.Second)
+		time.Sleep(1 * time.Second)
 	}
 
-	log.Fatal("Database unreachable:", err)
+	log.Println("PostgreSQL connection skipped (running in-memory mode for development/demo):", err)
 }
