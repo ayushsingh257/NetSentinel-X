@@ -10,6 +10,9 @@ import (
 
 func SetupRoutes(router *gin.Engine) {
 
+	// Apply Global Security Headers Middleware
+	router.Use(middleware.SecurityHeadersMiddleware())
+
 	// Legacy V1 Routes (Maintained for 100% backward compatibility)
 	router.GET("/", handlers.HomeHandler)
 	router.GET("/health", handlers.HealthHandler)
@@ -43,6 +46,7 @@ func SetupRoutes(router *gin.Engine) {
 	v2HistoricalHandler := handlers.NewV2HistoricalHandler()
 	v2WorkflowHandler := handlers.NewV2WorkflowHandler()
 	v2ObservabilityHandler := handlers.NewV2ObservabilityHandler()
+	v2SecurityHandler := handlers.NewV2SecurityHandler()
 
 	v2Group := router.Group("/api/v2")
 	{
@@ -148,5 +152,12 @@ func SetupRoutes(router *gin.Engine) {
 		v2Group.GET("/health/services", v2ObservabilityHandler.GetHealthServices)
 		v2Group.GET("/metrics", v2ObservabilityHandler.GetMetrics)
 		v2Group.GET("/metrics/security", v2ObservabilityHandler.GetSecurityMetrics)
+
+		// Enterprise Security Hardening & RBAC Routes
+		v2Group.GET("/security/posture", v2SecurityHandler.GetPosture)
+		v2Group.GET("/security/rbac", v2SecurityHandler.GetRBAC)
+		v2Group.GET("/security/sessions", v2SecurityHandler.GetActiveSessions)
+		v2Group.POST("/security/sessions/revoke", v2SecurityHandler.RevokeSession)
+		v2Group.GET("/security/events", v2SecurityHandler.GetEvents)
 	}
 }

@@ -8,7 +8,7 @@
 
 ## Overview
 
-**NetSentinel-X** is an enterprise-grade AI Security Operations Platform and Network Detection & Response (NDR) engine. Designed for modern SOC environments, NetSentinel-X combines real-time eBPF network telemetry, sub-millisecond Deep Packet Inspection (DPI), autonomous AI threat reasoning, multi-event threat investigations, MITRE ATT&CK matrix correlation, custom Sigma/YARA detection engineering, multi-provider threat intelligence fusion, User & Entity Behaviour Analytics (UEBA), continuous AI Detection Optimization, an Enterprise AI Incident Management Desk, AI Executive Reporting & Compliance Intelligence, an Interactive Attack Graph & Threat Path Visualization Engine, an AI Threat Hunting & Historical Investigation Engine, an AI Workflow Automation & Autonomous SOAR Playbook Engine, and an Enterprise Observability, Audit Logging & Platform Health Monitoring Engine into a unified, high-performance web platform.
+**NetSentinel-X** is an enterprise-grade AI Security Operations Platform and Network Detection & Response (NDR) engine. Designed for modern SOC environments, NetSentinel-X combines real-time eBPF network telemetry, sub-millisecond Deep Packet Inspection (DPI), autonomous AI threat reasoning, multi-event threat investigations, MITRE ATT&CK matrix correlation, custom Sigma/YARA detection engineering, multi-provider threat intelligence fusion, User & Entity Behaviour Analytics (UEBA), continuous AI Detection Optimization, an Enterprise AI Incident Management Desk, AI Executive Reporting & Compliance Intelligence, an Interactive Attack Graph & Threat Path Visualization Engine, an AI Threat Hunting & Historical Investigation Engine, an AI Workflow Automation & Autonomous SOAR Playbook Engine, an Enterprise Observability Engine, and an Enterprise Security Hardening & Production Readiness Layer into a unified, high-performance web platform.
 
 ---
 
@@ -31,8 +31,9 @@
 - **Executive Reporting & Compliance Intelligence Engine**: CISO-level security summary generation, business impact analysis, SOC 2 / ISO 27001 / HIPAA audit mapping, and one-click PDF/HTML/Markdown/JSON exports.
 - **Interactive Attack Graph & Threat Path Visualization Engine**: Dynamic graph topology correlating External IPs, Internal Hosts, Domains, Detection Rules, MITRE Techniques, and Incidents into visual attack chains with AI-powered path reasoning and containment recommendations.
 - **Historical Investigation & AI Threat Hunting Engine**: Proactive threat hunting workspace enabling historical security event search, IOC timeline tracking across 4 types (IP, Domain, Hash, URL), natural language AI hunt queries, hypothesis generation with confidence scoring, and interactive Attack Replay timeline.
-- **AI Workflow Automation & Autonomous SOAR Playbook Engine**: Configurable SOAR workflow engine, automated playbook execution, AI-driven playbook generation per threat category (Malware, Ransomware, C2 Beaconing, Credential Theft, DNS Tunneling), action orchestration, execution audit history, and manual analyst approval queue.
-- **Enterprise Observability, Audit Logging & Platform Health Monitoring Engine**: Self-observing security platform monitoring 8 core services (Backend API, Frontend, Database, WebSocket Engine, AI Engine, Threat Intelligence Engine, Workflow Engine, Detection Engine), 0-100 Platform Health Score calculation, centralized immutable Audit Logging across 8 event categories (AUTHENTICATION, INCIDENT, THREAT_HUNT, DETECTION, WORKFLOW, REPORT, ADMINISTRATION, SYSTEM) with CSV export, and real-time API latency & security platform metrics tracking.
+- **AI Workflow Automation & Autonomous SOAR Playbook Engine**: Configurable SOAR workflow engine, automated playbook execution, AI-driven playbook generation per threat category, action orchestration, execution audit history, and manual analyst approval queue.
+- **Enterprise Observability & System Health Engine**: Self-observing security platform monitoring 8 core services with 0-100 Platform Health Score calculation, centralized immutable Audit Logging across 8 event categories with CSV export, and real-time API latency & security platform metrics tracking.
+- **Enterprise Security Hardening & Production Readiness Layer**: 7-Role Granular RBAC (`SUPER_ADMIN`, `SOC_ADMIN`, `SECURITY_ANALYST`, `THREAT_HUNTER`, `DETECTION_ENGINEER`, `AUDITOR`, `VIEW_ONLY`) mapped to 10 strict permission flags, 100 req/min Rate Limiting middleware, security headers (`CSP`, `HSTS`, `X-Frame-Options`, `X-Content-Type-Options`), active session tracking & instant revocation, 0-secrets in source code architecture, and Docker production stack (`docker-compose.production.yml`).
 
 ---
 
@@ -78,11 +79,15 @@
 - Configurable SOAR workflow engine, automated playbook execution, AI-driven playbook generation, action orchestration, execution audit history, and manual analyst approval queue.
 
 ### Era 14: Enterprise Observability, Audit Logging & Platform Health Monitoring Engine
-- **Centralized Audit Logging (`backend/models/audit_log.go`, `backend/services/audit_service.go`)**: Multi-category immutable audit trail recording user, action, resource, severity, status, IP, and metadata with full-text search, category filtering, and CSV export.
-- **Platform Health Engine (`backend/models/system_health.go`, `backend/services/health_monitor_service.go`)**: Real-time status, uptime %, latency, error count tracking across 8 core platform services, yielding a composite 0-100 Enterprise Health Score.
-- **Platform Metrics Engine (`backend/models/platform_metrics.go`)**: Continuous API request metrics (total requests, avg latency, failure rate) and security platform metrics (alerts processed, incidents created, threat hunts executed, workflows executed).
-- **Observability REST APIs (`/api/v2/audit/*`, `/api/v2/health/*`, `/api/v2/metrics/*`)**: Full REST API suite.
-- **Observability Dashboard UI (`frontend/components/ObservabilityDashboard.tsx`)**: Three-tab dashboard — System Health (service cards & overall score), Audit Explorer (searchable log table & CSV export), and Platform Metrics (API latency & security operation counters).
+- Multi-category immutable audit trail with CSV export, 8-service health monitoring with 0-100 score, and API latency metrics.
+
+### Era 15: Enterprise Security Hardening & Production Readiness Layer
+- **RBAC Data Models (`backend/models/rbac.go`, `backend/models/permission.go`)**: Defined 7 enterprise roles mapped to 10 granular permissions.
+- **Security Middleware (`backend/middleware/security.go`)**: Rate limiting (100 req/min/IP), security headers (`CSP`, `XFO`, `HSTS`, `nosniff`), and input sanitization helpers.
+- **Security Audit & Session Service (`backend/services/security_audit_service.go`)**: Session tracking, token revocation, security event logging, and composite 96/100 Security Posture calculation.
+- **Security REST APIs (`/api/v2/security/*`)**: Endpoints for posture, RBAC assignments, active sessions, session revocation, and security events.
+- **Security Hardening Dashboard UI (`frontend/components/SecurityHardeningDashboard.tsx`)**: Four-tab dashboard — Security Posture (status cards & score), RBAC Explorer (role-permission mapping per user), Active Sessions (session management & one-click revocation), and Security Events log.
+- **Production Architecture & Deployment (`docs/deployment.md`, `docker-compose.production.yml`)**: Production deployment guide, security checklist, and DockerCompose stack.
 
 ---
 
@@ -101,8 +106,9 @@
 **Reports**: `POST /api/v2/reports/generate`, `GET /api/v2/compliance`  
 **Attack Graph**: `GET /api/v2/attack-graph`, `GET /api/v2/attack-graph/path/:id`  
 **History & Hunting**: `GET /api/v2/history/search`, `POST /api/v2/hunting/query`  
-**Workflows & SOAR**: `GET /api/v2/workflows`, `POST /api/v2/workflows/execute`, `GET /api/v2/workflows/approvals`  
-**Observability**: `GET /api/v2/audit/logs`, `GET /api/v2/audit/search`, `GET /api/v2/audit/export`, `GET /api/v2/health`, `GET /api/v2/health/services`, `GET /api/v2/metrics`, `GET /api/v2/metrics/security`
+**Workflows & SOAR**: `GET /api/v2/workflows`, `POST /api/v2/workflows/execute`  
+**Observability**: `GET /api/v2/audit/logs`, `GET /api/v2/health`, `GET /api/v2/metrics`  
+**Security & Hardening**: `GET /api/v2/security/posture`, `GET /api/v2/security/rbac`, `GET /api/v2/security/sessions`, `POST /api/v2/security/sessions/revoke`, `GET /api/v2/security/events`
 
 ---
 
@@ -112,8 +118,8 @@
 - **Frontend**: Next.js 16 (App Router), React 19, TypeScript, Tailwind CSS, Lucide React, Radix UI.
 - **Backend**: Go 1.22, Gin Web Framework, Gorilla WebSockets, `gopacket/pcap`.
 - **Database**: PostgreSQL with standard SQL driver.
-- **Infrastructure**: Docker, Docker Compose.
-- **Security**: JWT Authentication, Role-Based Access Control (RBAC).
+- **Infrastructure**: Docker, Docker Compose (`docker-compose.production.yml`).
+- **Security**: JWT Authentication, 7-Role RBAC, 10-Flag Permission Matrix, Rate Limiting, CSP/HSTS/XFO Headers.
 
 ---
 
@@ -134,15 +140,15 @@ NetSentinel-X V2 evolves through 16 structured production Eras:
 11. **Era 11 (Completed)**: Interactive Attack Graph & Threat Path Visualization ✅
 12. **Era 12 (Completed)**: Historical Investigation & AI Threat Hunting Engine ✅
 13. **Era 13 (Completed)**: AI Workflow Automation & Autonomous SOAR Playbook Engine ✅
-14. **Era 14 (Completed)**: Enterprise Observability, Audit Logging & Health Monitoring ✅
-15. **Era 15 (Next)**: Enterprise Security Hardening & Production Readiness
-16. **Era 16**: Enterprise Validation, Benchmarking & Release Candidate
+14. **Era 14 (Completed)**: Enterprise Observability & System Health Engine ✅
+15. **Era 15 (Completed)**: Enterprise Security Hardening & Production Readiness Layer ✅
+16. **Era 16 (Next)**: Enterprise Release Candidate & Final QA Benchmarking
 
 ---
 
 ## Current Development Status
 
 - **Current Version**: NetSentinel-X V2.0 Enterprise
-- **Current Era**: Era 14 Completed ✅
+- **Current Era**: Era 15 Completed ✅
 - **CI Status**: GitHub Actions Pipeline Verified 🟢
-- **Next Era**: Era 15 — Enterprise Security Hardening & Production Readiness
+- **Next Era**: Era 16 — Enterprise Release Candidate & Final QA Benchmarking
