@@ -13,12 +13,15 @@ export default function DashboardLayout({
   const [authorized, setAuthorized] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/login");
-    } else {
-      setAuthorized(true);
-    }
+    const timer = setTimeout(() => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        router.push("/login");
+      } else {
+        setAuthorized(true);
+      }
+    }, 0);
+    return () => clearTimeout(timer);
   }, [router]);
 
   if (!authorized) {
