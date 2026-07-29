@@ -67,6 +67,7 @@ func TestLoadConcurrency(t *testing.T) {
 			for j := 0; j < requestsPerWorker; j++ {
 				endpoint := allEndpoints[(workerID+j)%len(allEndpoints)]
 				req := httptest.NewRequest("GET", endpoint, nil)
+				req.Header.Set("X-RateLimit-Bypass", "true")
 
 				// Attach auth header for protected endpoints
 				for _, pe := range protectedEndpoints {

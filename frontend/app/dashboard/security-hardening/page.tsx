@@ -4,27 +4,38 @@ import { useState } from "react";
 import SecurityHardeningDashboard from "@/components/SecurityHardeningDashboard";
 import AuthorizationDashboard from "@/components/AuthorizationDashboard";
 import WebSecurityDashboard from "@/components/WebSecurityDashboard";
-import { ShieldCheck, Lock, Globe } from "lucide-react";
+import APISecurityDashboard from "@/components/APISecurityDashboard";
+import { ShieldCheck, Lock, Globe, Key } from "lucide-react";
 
 export default function SecurityHardeningPage() {
   const [activeView, setActiveView] = useState<
-    "websec" | "authz" | "hardening"
-  >("websec");
+    "apisec" | "websec" | "authz" | "hardening"
+  >("apisec");
 
   return (
     <div className="space-y-6 font-sans">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl bg-slate-900/90 dark:bg-zinc-950/90 border border-slate-800 dark:border-zinc-800">
         <div>
           <h1 className="text-2xl font-extrabold text-white">
-            Enterprise Security, OWASP Web Protection &amp; Access Control
+            Enterprise API Architecture &amp; Security Controls
           </h1>
           <p className="text-xs text-slate-400 dark:text-zinc-400 mt-1">
-            OWASP Web Application Security, CSRF/XSS Protections, RBAC
-            Permissions &amp; Platform Hardening
+            API Key Management, OAuth2 Readiness, Adaptive Rate Limiting, OWASP Web Security &amp; RBAC Access Control
           </p>
         </div>
 
-        <div className="flex items-center p-1 bg-slate-800/80 dark:bg-zinc-900/80 rounded-xl border border-slate-700/50 dark:border-zinc-800 font-sans">
+        <div className="flex flex-wrap items-center p-1 bg-slate-800/80 dark:bg-zinc-900/80 rounded-xl border border-slate-700/50 dark:border-zinc-800 font-sans">
+          <button
+            onClick={() => setActiveView("apisec")}
+            className={`flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-lg transition-all ${
+              activeView === "apisec"
+                ? "bg-emerald-500 text-white shadow-md shadow-emerald-500/20"
+                : "text-slate-400 hover:text-white"
+            }`}
+          >
+            <Key className="w-4 h-4" />
+            API Security (Era 20)
+          </button>
           <button
             onClick={() => setActiveView("websec")}
             className={`flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-lg transition-all ${
@@ -61,7 +72,9 @@ export default function SecurityHardeningPage() {
         </div>
       </div>
 
-      {activeView === "websec" ? (
+      {activeView === "apisec" ? (
+        <APISecurityDashboard />
+      ) : activeView === "websec" ? (
         <WebSecurityDashboard />
       ) : activeView === "authz" ? (
         <AuthorizationDashboard />

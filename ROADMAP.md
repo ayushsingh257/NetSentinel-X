@@ -91,9 +91,17 @@ Git Commit → Git Push → GitHub Actions CI/CD → 🟢 GREEN → Completion R
   - Full backend and frontend unit test suites created & verified
 
 ### Era 20: Secure API Architecture
-- **Status**: 📋 Planned
-- **Goal**: Protect APIs from abuse and exploitation.
-- **Key Deliverables**: API key scoping, OAuth2 readiness, adaptive rate limiting, signed requests, strict CORS, security headers (HSTS, CSP, Permissions-Policy, Referrer-Policy), webhook signature verification.
+- **Status**: ✅ Completed
+- **Completion**:
+  - `APIKeyService` & `api_key.go` middleware for SHA256 key hashing, generation, rotation, and revocation
+  - `OAuthService` & `oauth2_architecture.md` supporting PKCE, Client Credentials, and scope mapping
+  - `AdaptiveRateService` dynamic rate limiting (100 -> 20 -> 0 req/min) with 401/403/scan signal tracking
+  - `RequestSignatureService` enforcing HMAC-SHA256 request body verification & 300s clock drift anti-replay checks
+  - `WebhookSecurityService` with HMAC payload signing (`X-Webhook-Signature`)
+  - `APIAbuseDetectionEngine` scanning endpoint enumeration and credential bursts
+  - `APISecurityDashboard.tsx` component & `/api/v2/api-security/*` endpoints
+  - Documentation created: `docs/api_security_architecture_review.md`, `docs/oauth2_architecture.md`, `docs/api_security_guide.md`
+  - Full backend and frontend unit test suites created & verified
 
 ### Era 21: Infrastructure & Platform Security
 - **Status**: 📋 Planned

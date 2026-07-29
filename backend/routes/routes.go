@@ -29,6 +29,18 @@ func SetupRoutes(router *gin.Engine) {
 	xssService := services.NewXSSProtectionService()
 	fileSecService := services.NewFileSecurityService()
 
+	apiKeyService := services.NewAPIKeyService()
+	middleware.SetGlobalAPIKeyService(apiKeyService)
+
+	oauthService := services.NewOAuthService()
+	adaptiveRateService := services.NewAdaptiveRateService(auditService)
+	middleware.SetGlobalAdaptiveRateService(adaptiveRateService)
+
+	webhookService := services.NewWebhookSecurityService()
+	apiAbuseEngine := services.NewAPIAbuseDetectionEngine(secAuditService, auditService)
+
+	router.Use(middleware.AdaptiveRateLimitMiddleware())
+
 	// ─── Public Routes (no authentication required) ────────────────────────────
 	router.GET("/", handlers.HomeHandler)
 	router.GET("/health", handlers.HealthHandler)
@@ -78,11 +90,21 @@ func SetupRoutes(router *gin.Engine) {
 	v2DemoHandler := handlers.NewV2DemoHandler()
 	v2AuthzHandler := handlers.NewV2AuthorizationHandler(authzService, privMonitorService, secAuditService)
 	v2WebSecHandler := handlers.NewV2WebSecurityHandler(valService, xssService, fileSecService)
+	v2APISecHandler := handlers.NewV2APISecurityHandler(apiKeyService, oauthService, adaptiveRateService, webhookService, apiAbuseEngine)
 
 	v2Group := router.Group("/api/v2")
 	// ─── SECURITY: All /api/v2/* endpoints require JWT + Permission Guards ──────
 	v2Group.Use(middleware.AuthMiddleware())
 	{
+		// API Security Layer Routes
+		v2Group.GET("/api-security/posture", v2APISecHandler.GetAPIPosture)
+		v2Group.GET("/api-security/keys", v2APISecHandler.GetAPIKeys)
+		v2Group.POST("/api-security/keys", middleware.RequirePermission(models.PermSystemConfiguration), v2APISecHandler.CreateAPIKey)
+		v2Group.POST("/api-security/keys/revoke", middleware.RequirePermission(models.PermSystemConfiguration), v2APISecHandler.RevokeAPIKey)
+		v2Group.GET("/api-security/events", middleware.RequirePermission(models.PermViewAuditLogs), v2APISecHandler.GetAPIThreatEvents)
+		v2Group.GET("/api-security/oauth/clients", v2APISecHandler.GetOAuthClients)
+		v2Group.GET("/api-security/webhooks", v2APISecHandler.GetWebhooks)
+
 		// CSRF Token Endpoint & Web Security Endpoints
 		v2Group.GET("/security/csrf-token", middleware.CSRFTokenHandler)
 		v2Group.GET("/web-security/posture", v2WebSecHandler.GetWebSecurityPosture)
