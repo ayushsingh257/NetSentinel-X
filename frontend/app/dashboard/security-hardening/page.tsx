@@ -3,24 +3,39 @@
 import { useState } from "react";
 import SecurityHardeningDashboard from "@/components/SecurityHardeningDashboard";
 import AuthorizationDashboard from "@/components/AuthorizationDashboard";
-import { ShieldCheck, Lock } from "lucide-react";
+import WebSecurityDashboard from "@/components/WebSecurityDashboard";
+import { ShieldCheck, Lock, Globe } from "lucide-react";
 
 export default function SecurityHardeningPage() {
-  const [activeView, setActiveView] = useState<"authz" | "hardening">("authz");
+  const [activeView, setActiveView] = useState<
+    "websec" | "authz" | "hardening"
+  >("websec");
 
   return (
     <div className="space-y-6 font-sans">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl bg-slate-900/90 dark:bg-zinc-950/90 border border-slate-800 dark:border-zinc-800">
         <div>
           <h1 className="text-2xl font-extrabold text-white">
-            Enterprise Security, RBAC &amp; Access Control
+            Enterprise Security, OWASP Web Protection &amp; Access Control
           </h1>
           <p className="text-xs text-slate-400 dark:text-zinc-400 mt-1">
-            Role-Based Access Control (RBAC), Permission Guards, Privilege Escalation Detection &amp; Session Management
+            OWASP Web Application Security, CSRF/XSS Protections, RBAC
+            Permissions &amp; Platform Hardening
           </p>
         </div>
 
         <div className="flex items-center p-1 bg-slate-800/80 dark:bg-zinc-900/80 rounded-xl border border-slate-700/50 dark:border-zinc-800 font-sans">
+          <button
+            onClick={() => setActiveView("websec")}
+            className={`flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-lg transition-all ${
+              activeView === "websec"
+                ? "bg-emerald-500 text-white shadow-md shadow-emerald-500/20"
+                : "text-slate-400 hover:text-white"
+            }`}
+          >
+            <Globe className="w-4 h-4" />
+            Web Security (Era 19)
+          </button>
           <button
             onClick={() => setActiveView("authz")}
             className={`flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-lg transition-all ${
@@ -46,7 +61,9 @@ export default function SecurityHardeningPage() {
         </div>
       </div>
 
-      {activeView === "authz" ? (
+      {activeView === "websec" ? (
+        <WebSecurityDashboard />
+      ) : activeView === "authz" ? (
         <AuthorizationDashboard />
       ) : (
         <SecurityHardeningDashboard />

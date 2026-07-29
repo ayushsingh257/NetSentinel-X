@@ -12,15 +12,22 @@ import (
 
 func SetupRoutes(router *gin.Engine) {
 
-	// Apply Global Security Headers Middleware to all requests
+	// Apply Global Security Headers & Request Security Middleware to all requests
 	router.Use(middleware.SecurityHeadersMiddleware())
+	router.Use(middleware.RequestSecurityMiddleware())
+	router.Use(middleware.ValidateQueryParams())
+	router.Use(middleware.ValidateHeaders())
 
-	// Initialize authorization services
+	// Initialize security & authorization services
 	auditService := services.NewAuditService()
 	secAuditService := services.NewSecurityAuditService()
 	privMonitorService := services.NewPrivilegeMonitorService(secAuditService, auditService)
 	authzService := services.NewAuthorizationService(auditService, privMonitorService)
 	middleware.SetGlobalAuthorizationService(authzService)
+
+	valService := services.NewInputValidationService()
+	xssService := services.NewXSSProtectionService()
+	fileSecService := services.NewFileSecurityService()
 
 	// ─── Public Routes (no authentication required) ────────────────────────────
 	router.GET("/", handlers.HomeHandler)
@@ -70,11 +77,20 @@ func SetupRoutes(router *gin.Engine) {
 	v2SecurityHandler := handlers.NewV2SecurityHandler()
 	v2DemoHandler := handlers.NewV2DemoHandler()
 	v2AuthzHandler := handlers.NewV2AuthorizationHandler(authzService, privMonitorService, secAuditService)
+	v2WebSecHandler := handlers.NewV2WebSecurityHandler(valService, xssService, fileSecService)
 
 	v2Group := router.Group("/api/v2")
 	// ─── SECURITY: All /api/v2/* endpoints require JWT + Permission Guards ──────
 	v2Group.Use(middleware.AuthMiddleware())
 	{
+		// CSRF Token Endpoint & Web Security Endpoints
+		v2Group.GET("/security/csrf-token", middleware.CSRFTokenHandler)
+		v2Group.GET("/web-security/posture", v2WebSecHandler.GetWebSecurityPosture)
+		v2Group.GET("/web-security/events", v2WebSecHandler.GetAttackLogs)
+		v2Group.POST("/web-security/test-input", v2WebSecHandler.TestInput)
+		v2Group.POST("/web-security/file-check", v2WebSecHandler.ValidateFileUpload)
+		v2Group.POST("/security/files/validate", v2WebSecHandler.ValidateFileUpload)
+
 		// Authorization & RBAC Management Routes
 		v2Group.GET("/authz/me", v2AuthzHandler.GetMyPermissions)
 		v2Group.POST("/authz/check", v2AuthzHandler.CheckPermission)

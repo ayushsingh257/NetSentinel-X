@@ -91,14 +91,16 @@ func RateLimitMiddleware() gin.HandlerFunc {
 	}
 }
 
+// SecurityHeadersMiddleware attaches Era 19 hardened HTTP security headers.
 func SecurityHeadersMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		c.Header("Content-Security-Policy", "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:;")
+		c.Header("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' ws://localhost:8080 http://localhost:8080 ws://localhost:3000 http://localhost:3000; frame-ancestors 'none'; object-src 'none';")
 		c.Header("X-Frame-Options", "DENY")
 		c.Header("X-Content-Type-Options", "nosniff")
 		c.Header("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload")
 		c.Header("X-XSS-Protection", "1; mode=block")
 		c.Header("Referrer-Policy", "strict-origin-when-cross-origin")
+		c.Header("Permissions-Policy", "camera=(), microphone=(), geolocation=(), payment=()")
 		c.Next()
 	}
 }
