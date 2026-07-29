@@ -113,15 +113,17 @@ Git Commit → Git Push → GitHub Actions CI/CD → 🟢 GREEN → Completion R
 ---
 
 ### Era 21: Infrastructure & Platform Security
-- **Status**: 📋 Planned
-- **Deployment Question**: *"How are your servers, containers, and network secured?"*
-- **Focus**: Server hardening, Docker security, and network segmentation
-- **Key Deliverables**:
-  - Production Linux hardening guide (firewall rules, SSH hardening, password auth disabled, Fail2Ban, minimal exposed ports)
-  - Network architecture: Internet → 443 HTTPS → Reverse Proxy → Internal (Backend, Database, Redis)
-  - Docker security: non-root containers, read-only filesystems, dropped Linux capabilities, minimal base images
-  - Container image scanning with Trivy / Docker Scout
-  - `docs/infrastructure_security.md`
+- **Status**: ✅ Completed
+- **Commit**: `7878b50` | **CI/CD Run**: `30472127893` — 🟢 GREEN (Backend: 31s | Frontend: 59s)
+- **Completion**:
+  - `InfrastructureSecurityService` posture scoring across 5 domains (Server Hardening, Docker Security, Network, TLS, Environment)
+  - `V2InfrastructureHandler` REST endpoints (`/api/v2/infra/{posture,hardening,docker,network,tls}`)
+  - Production server hardening guide (`docs/server_hardening_guide.md`): SSH 2222, key-only, Fail2Ban, UFW, TLS 1.3 reverse proxy
+  - Hardened multi-stage Dockerfiles (`distroless:nonroot` Go backend, dedicated non-root user `netsentinel:10001` Next.js frontend)
+  - Container security controls: read-only filesystem, capability drop ALL, no-new-privileges, resource limits, bridge isolation
+  - Trivy container image scanning script (`docker/scan_images.sh`)
+  - `InfrastructureSecurityDashboard.tsx` component & `/api/v2/infra/*` endpoints
+  - Full unit test coverage: `infrastructure_security_test.go`, `InfrastructureSecurityDashboard.test.tsx`
 
 ### Era 22: Secrets Management & Cryptographic Security
 - **Status**: 📋 Planned
