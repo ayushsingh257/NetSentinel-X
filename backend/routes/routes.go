@@ -55,6 +55,12 @@ func SetupRoutes(router *gin.Engine) {
 	mfaService := services.NewMFAService()
 	loginRiskService := services.NewLoginRiskService()
 	authEventService := services.NewAuthEventService()
+	auditChainService := services.NewAuditChainService()
+	severityService := services.NewEventSeverityService()
+	securityEventService := services.NewSecurityEventService(auditChainService, severityService)
+	securityAlertService := services.NewSecurityAlertService()
+	threatEngine := services.NewThreatDetectionEngine(auditChainService, securityAlertService)
+	timelineService := services.NewIncidentTimelineService(auditChainService)
 
 	router.Use(middleware.AdaptiveRateLimitMiddleware())
 
@@ -112,11 +118,20 @@ func SetupRoutes(router *gin.Engine) {
 	v2SecretsHandler := handlers.NewV2SecretsSecurityHandler(secretsService, cryptoService, leakService, envService)
 	v2DBSecurityHandler := handlers.NewV2DatabaseSecurityHandler(dbSecurityService, dataEncryptService, dataClassService, dbAuditService, sqlSecurityService, backupService)
 	v2IdentityHandler := handlers.NewV2IdentitySecurityHandler(tokenService, refreshTokenService, sessionSecService, mfaService, loginRiskService, authEventService)
+	v2SIEMHandler := handlers.NewV2SIEMSecurityHandler(auditChainService, securityEventService, threatEngine, securityAlertService, timelineService)
 
 	v2Group := router.Group("/api/v2")
 	// ─── SECURITY: All /api/v2/* endpoints require JWT + Permission Guards ──────
 	v2Group.Use(middleware.AuthMiddleware())
 	{
+		// SIEM-Grade Logging & Security Monitoring Routes (Era 25)
+		v2Group.GET("/siem/posture", v2SIEMHandler.GetSIEMPosture)
+		v2Group.GET("/siem/events", middleware.RequirePermission(models.PermViewAuditLogs), v2SIEMHandler.GetEvents)
+		v2Group.GET("/siem/alerts", middleware.RequirePermission(models.PermViewAuditLogs), v2SIEMHandler.GetAlerts)
+		v2Group.GET("/siem/timeline", middleware.RequirePermission(models.PermViewAuditLogs), v2SIEMHandler.GetTimeline)
+		v2Group.GET("/siem/integrity", middleware.RequirePermission(models.PermViewAuditLogs), v2SIEMHandler.GetIntegrity)
+		v2Group.POST("/siem/alerts/:id/resolve", middleware.RequirePermission(models.PermSystemConfiguration), v2SIEMHandler.ResolveAlert)
+
 		// Secure Session & Advanced Identity Routes (Era 24)
 		v2Group.GET("/identity/posture", v2IdentityHandler.GetIdentityPosture)
 		v2Group.GET("/identity/sessions", middleware.RequirePermission(models.PermViewAuditLogs), v2IdentityHandler.GetSessions)

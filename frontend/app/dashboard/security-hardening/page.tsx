@@ -9,14 +9,16 @@ import InfrastructureSecurityDashboard from "@/components/InfrastructureSecurity
 import SecretsSecurityDashboard from "@/components/SecretsSecurityDashboard";
 import DatabaseSecurityDashboard from "@/components/DatabaseSecurityDashboard";
 import IdentitySecurityDashboard from "@/components/IdentitySecurityDashboard";
-import { ShieldCheck, Lock, Globe, Key, Server, KeyRound, Database, UserCheck } from "lucide-react";
+import SIEMSecurityDashboard from "@/components/SIEMSecurityDashboard";
+import { ShieldCheck, Lock, Globe, Key, Server, KeyRound, Database, UserCheck, Activity } from "lucide-react";
 
 export default function SecurityHardeningPage() {
   const [activeView, setActiveView] = useState<
-    "identity" | "database" | "secrets" | "infra" | "apisec" | "websec" | "authz" | "hardening"
-  >("identity");
+    "siem" | "identity" | "database" | "secrets" | "infra" | "apisec" | "websec" | "authz" | "hardening"
+  >("siem");
 
   const tabs = [
+    { id: "siem", label: "SIEM & Audit (Era 25)", icon: <Activity className="w-4 h-4" /> },
     { id: "identity", label: "Identity & MFA (Era 24)", icon: <UserCheck className="w-4 h-4" /> },
     { id: "database", label: "Database & Data (Era 23)", icon: <Database className="w-4 h-4" /> },
     { id: "secrets", label: "Secrets & Crypto (Era 22)", icon: <KeyRound className="w-4 h-4" /> },
@@ -35,7 +37,7 @@ export default function SecurityHardeningPage() {
             Enterprise Security Controls
           </h1>
           <p className="text-xs text-slate-400 dark:text-zinc-400 mt-1">
-            Identity Protection, TOTP MFA, Database Hardening &amp; Secrets Management — Eras 15–24
+            SIEM Audit Logging, Hash Chain Integrity, Identity Protection &amp; Secrets Management — Eras 15–25
           </p>
         </div>
 
@@ -57,7 +59,9 @@ export default function SecurityHardeningPage() {
         </div>
       </div>
 
-      {activeView === "identity" ? (
+      {activeView === "siem" ? (
+        <SIEMSecurityDashboard />
+      ) : activeView === "identity" ? (
         <IdentitySecurityDashboard />
       ) : activeView === "database" ? (
         <DatabaseSecurityDashboard />
