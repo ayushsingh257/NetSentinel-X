@@ -8,14 +8,16 @@ import APISecurityDashboard from "@/components/APISecurityDashboard";
 import InfrastructureSecurityDashboard from "@/components/InfrastructureSecurityDashboard";
 import SecretsSecurityDashboard from "@/components/SecretsSecurityDashboard";
 import DatabaseSecurityDashboard from "@/components/DatabaseSecurityDashboard";
-import { ShieldCheck, Lock, Globe, Key, Server, KeyRound, Database } from "lucide-react";
+import IdentitySecurityDashboard from "@/components/IdentitySecurityDashboard";
+import { ShieldCheck, Lock, Globe, Key, Server, KeyRound, Database, UserCheck } from "lucide-react";
 
 export default function SecurityHardeningPage() {
   const [activeView, setActiveView] = useState<
-    "database" | "secrets" | "infra" | "apisec" | "websec" | "authz" | "hardening"
-  >("database");
+    "identity" | "database" | "secrets" | "infra" | "apisec" | "websec" | "authz" | "hardening"
+  >("identity");
 
   const tabs = [
+    { id: "identity", label: "Identity & MFA (Era 24)", icon: <UserCheck className="w-4 h-4" /> },
     { id: "database", label: "Database & Data (Era 23)", icon: <Database className="w-4 h-4" /> },
     { id: "secrets", label: "Secrets & Crypto (Era 22)", icon: <KeyRound className="w-4 h-4" /> },
     { id: "infra", label: "Infrastructure (Era 21)", icon: <Server className="w-4 h-4" /> },
@@ -33,7 +35,7 @@ export default function SecurityHardeningPage() {
             Enterprise Security Controls
           </h1>
           <p className="text-xs text-slate-400 dark:text-zinc-400 mt-1">
-            Database Protection, Secrets Management, Infrastructure Hardening &amp; API Security — Eras 15–23
+            Identity Protection, TOTP MFA, Database Hardening &amp; Secrets Management — Eras 15–24
           </p>
         </div>
 
@@ -55,7 +57,9 @@ export default function SecurityHardeningPage() {
         </div>
       </div>
 
-      {activeView === "database" ? (
+      {activeView === "identity" ? (
+        <IdentitySecurityDashboard />
+      ) : activeView === "database" ? (
         <DatabaseSecurityDashboard />
       ) : activeView === "secrets" ? (
         <SecretsSecurityDashboard />

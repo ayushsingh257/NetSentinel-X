@@ -49,6 +49,12 @@ func SetupRoutes(router *gin.Engine) {
 	dbAuditService := services.NewDatabaseAuditService()
 	sqlSecurityService := services.NewSQLSecurityService()
 	backupService := services.NewBackupSecurityService()
+	tokenService := services.NewTokenService()
+	refreshTokenService := services.NewRefreshTokenService(auditService)
+	sessionSecService := services.NewSessionSecurityService()
+	mfaService := services.NewMFAService()
+	loginRiskService := services.NewLoginRiskService()
+	authEventService := services.NewAuthEventService()
 
 	router.Use(middleware.AdaptiveRateLimitMiddleware())
 
@@ -105,11 +111,23 @@ func SetupRoutes(router *gin.Engine) {
 	v2InfraHandler := handlers.NewV2InfrastructureHandler(intraService)
 	v2SecretsHandler := handlers.NewV2SecretsSecurityHandler(secretsService, cryptoService, leakService, envService)
 	v2DBSecurityHandler := handlers.NewV2DatabaseSecurityHandler(dbSecurityService, dataEncryptService, dataClassService, dbAuditService, sqlSecurityService, backupService)
+	v2IdentityHandler := handlers.NewV2IdentitySecurityHandler(tokenService, refreshTokenService, sessionSecService, mfaService, loginRiskService, authEventService)
 
 	v2Group := router.Group("/api/v2")
 	// ─── SECURITY: All /api/v2/* endpoints require JWT + Permission Guards ──────
 	v2Group.Use(middleware.AuthMiddleware())
 	{
+		// Secure Session & Advanced Identity Routes (Era 24)
+		v2Group.GET("/identity/posture", v2IdentityHandler.GetIdentityPosture)
+		v2Group.GET("/identity/sessions", middleware.RequirePermission(models.PermViewAuditLogs), v2IdentityHandler.GetSessions)
+		v2Group.POST("/identity/session/revoke", middleware.RequirePermission(models.PermSystemConfiguration), v2IdentityHandler.RevokeSession)
+		v2Group.POST("/identity/session/revoke-all", middleware.RequirePermission(models.PermSystemConfiguration), v2IdentityHandler.RevokeAllUserSessions)
+		v2Group.POST("/identity/mfa/setup", v2IdentityHandler.SetupMFA)
+		v2Group.POST("/identity/mfa/verify", v2IdentityHandler.VerifyMFA)
+		v2Group.POST("/identity/refresh", v2IdentityHandler.RefreshToken)
+		v2Group.GET("/identity/events", middleware.RequirePermission(models.PermViewAuditLogs), v2IdentityHandler.GetEvents)
+		v2Group.GET("/identity/risk", v2IdentityHandler.EvaluateRisk)
+
 		// Database Security & Data Protection Routes (Era 23)
 		v2Group.GET("/database/posture", v2DBSecurityHandler.GetDatabasePosture)
 		v2Group.GET("/database/config", middleware.RequirePermission(models.PermViewAuditLogs), v2DBSecurityHandler.GetDatabaseConfig)
