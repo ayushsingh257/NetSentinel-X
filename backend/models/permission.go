@@ -13,6 +13,8 @@ const (
 	PermExportReports       Permission = "EXPORT_REPORTS"
 	PermViewAuditLogs       Permission = "VIEW_AUDIT_LOGS"
 	PermSystemConfiguration Permission = "SYSTEM_CONFIGURATION"
+	PermViewDashboard       Permission = "VIEW_DASHBOARD"
+	PermViewReports         Permission = "VIEW_REPORTS"
 )
 
 var RolePermissionsMap = map[Role][]Permission{
@@ -20,27 +22,32 @@ var RolePermissionsMap = map[Role][]Permission{
 		PermViewIncidents, PermCreateIncidents, PermCloseIncidents,
 		PermRunThreatHunts, PermCreateRules, PermModifyRules,
 		PermExecutePlaybooks, PermExportReports, PermViewAuditLogs,
-		PermSystemConfiguration,
+		PermSystemConfiguration, PermViewDashboard, PermViewReports,
 	},
 	RoleSOCAdmin: {
 		PermViewIncidents, PermCreateIncidents, PermCloseIncidents,
 		PermRunThreatHunts, PermCreateRules, PermModifyRules,
 		PermExecutePlaybooks, PermExportReports, PermViewAuditLogs,
+		PermViewDashboard, PermViewReports,
 	},
 	RoleSecurityAnalyst: {
 		PermViewIncidents, PermCreateIncidents, PermCloseIncidents,
 		PermRunThreatHunts, PermExecutePlaybooks, PermExportReports,
+		PermViewDashboard, PermViewReports,
 	},
 	RoleThreatHunter: {
 		PermViewIncidents, PermRunThreatHunts, PermExportReports,
+		PermViewDashboard, PermViewReports,
 	},
 	RoleDetectionEngineer: {
 		PermViewIncidents, PermCreateRules, PermModifyRules, PermExportReports,
+		PermViewDashboard, PermViewReports,
 	},
 	RoleAuditor: {
 		PermViewIncidents, PermExportReports, PermViewAuditLogs,
+		PermViewDashboard, PermViewReports,
 	},
 	RoleViewOnly: {
-		PermViewIncidents,
+		PermViewIncidents, PermViewReports, PermViewDashboard,
 	},
 }

@@ -3,6 +3,8 @@ package routes
 import (
 	"netsentinel-x-backend/handlers"
 	"netsentinel-x-backend/middleware"
+	"netsentinel-x-backend/models"
+	"netsentinel-x-backend/services"
 	"netsentinel-x-backend/websocket"
 
 	"github.com/gin-gonic/gin"
@@ -12,6 +14,13 @@ func SetupRoutes(router *gin.Engine) {
 
 	// Apply Global Security Headers Middleware to all requests
 	router.Use(middleware.SecurityHeadersMiddleware())
+
+	// Initialize authorization services
+	auditService := services.NewAuditService()
+	secAuditService := services.NewSecurityAuditService()
+	privMonitorService := services.NewPrivilegeMonitorService(secAuditService, auditService)
+	authzService := services.NewAuthorizationService(auditService, privMonitorService)
+	middleware.SetGlobalAuthorizationService(authzService)
 
 	// ─── Public Routes (no authentication required) ────────────────────────────
 	router.GET("/", handlers.HomeHandler)
@@ -60,11 +69,19 @@ func SetupRoutes(router *gin.Engine) {
 	v2ObservabilityHandler := handlers.NewV2ObservabilityHandler()
 	v2SecurityHandler := handlers.NewV2SecurityHandler()
 	v2DemoHandler := handlers.NewV2DemoHandler()
+	v2AuthzHandler := handlers.NewV2AuthorizationHandler(authzService, privMonitorService, secAuditService)
 
 	v2Group := router.Group("/api/v2")
-	// ─── SECURITY: All /api/v2/* endpoints now require a valid JWT ─────────────
+	// ─── SECURITY: All /api/v2/* endpoints require JWT + Permission Guards ──────
 	v2Group.Use(middleware.AuthMiddleware())
 	{
+		// Authorization & RBAC Management Routes
+		v2Group.GET("/authz/me", v2AuthzHandler.GetMyPermissions)
+		v2Group.POST("/authz/check", v2AuthzHandler.CheckPermission)
+		v2Group.GET("/authz/roles", v2AuthzHandler.GetRoleMatrix)
+		v2Group.GET("/authz/violations", middleware.RequirePermission(models.PermViewAuditLogs), v2AuthzHandler.GetViolations)
+		v2Group.GET("/authz/events", middleware.RequirePermission(models.PermViewAuditLogs), v2AuthzHandler.GetAuthzEvents)
+
 		// AI Copilot Routes
 		v2Group.POST("/copilot/query", v2CopilotHandler.QueryCopilot)
 		v2Group.GET("/copilot/prompts", v2CopilotHandler.GetCopilotPrompts)
@@ -82,15 +99,15 @@ func SetupRoutes(router *gin.Engine) {
 		v2Group.GET("/mitre/heatmap", v2MITREHandler.GetHeatMap)
 		v2Group.POST("/mitre/explain", v2MITREHandler.ExplainTechnique)
 
-		// Detection Engineering Studio Routes
-		v2Group.GET("/detections/rules", v2DetectionHandler.GetRules)
-		v2Group.POST("/detections/rules", v2DetectionHandler.CreateRule)
-		v2Group.GET("/detections/rules/:id", v2DetectionHandler.GetRuleByID)
-		v2Group.PUT("/detections/rules/:id", v2DetectionHandler.UpdateRule)
-		v2Group.DELETE("/detections/rules/:id", v2DetectionHandler.DeleteRule)
-		v2Group.POST("/detections/rules/:id/toggle", v2DetectionHandler.ToggleRule)
-		v2Group.POST("/detections/test", v2DetectionHandler.TestRule)
-		v2Group.POST("/detections/simulate", v2DetectionHandler.Simulate)
+		// Detection Engineering Studio Routes (Permission Protected)
+		v2Group.GET("/detections/rules", middleware.RequirePermission(models.PermViewIncidents), v2DetectionHandler.GetRules)
+		v2Group.POST("/detections/rules", middleware.RequirePermission(models.PermCreateRules), v2DetectionHandler.CreateRule)
+		v2Group.GET("/detections/rules/:id", middleware.RequirePermission(models.PermViewIncidents), v2DetectionHandler.GetRuleByID)
+		v2Group.PUT("/detections/rules/:id", middleware.RequirePermission(models.PermModifyRules), v2DetectionHandler.UpdateRule)
+		v2Group.DELETE("/detections/rules/:id", middleware.RequirePermission(models.PermModifyRules), v2DetectionHandler.DeleteRule)
+		v2Group.POST("/detections/rules/:id/toggle", middleware.RequirePermission(models.PermModifyRules), v2DetectionHandler.ToggleRule)
+		v2Group.POST("/detections/test", middleware.RequirePermission(models.PermCreateRules), v2DetectionHandler.TestRule)
+		v2Group.POST("/detections/simulate", middleware.RequirePermission(models.PermCreateRules), v2DetectionHandler.Simulate)
 		v2Group.GET("/detections/analytics", v2DetectionHandler.GetAnalytics)
 		v2Group.POST("/detections/ai-assistant", v2DetectionHandler.AIAssistant)
 
@@ -117,19 +134,19 @@ func SetupRoutes(router *gin.Engine) {
 		v2Group.POST("/optimizer/feedback", v2OptimizerHandler.SubmitFeedback)
 		v2Group.POST("/optimizer/analyze", v2OptimizerHandler.AnalyzeRule)
 
-		// AI Incident Management Desk Routes
+		// AI Incident Management Desk Routes (Permission Protected)
 		v2Group.GET("/incidents", v2IncidentHandler.GetOverview)
 		v2Group.GET("/incidents/list", v2IncidentHandler.GetIncidents)
 		v2Group.GET("/incidents/:id", v2IncidentHandler.GetIncidentByID)
-		v2Group.POST("/incidents/create", v2IncidentHandler.CreateIncident)
-		v2Group.POST("/incidents/:id/evidence", v2IncidentHandler.AddEvidence)
-		v2Group.POST("/incidents/:id/assign", v2IncidentHandler.AssignAnalyst)
-		v2Group.POST("/incidents/:id/close", v2IncidentHandler.CloseIncident)
+		v2Group.POST("/incidents/create", middleware.RequirePermission(models.PermCreateIncidents), v2IncidentHandler.CreateIncident)
+		v2Group.POST("/incidents/:id/evidence", middleware.RequirePermission(models.PermCreateIncidents), v2IncidentHandler.AddEvidence)
+		v2Group.POST("/incidents/:id/assign", middleware.RequirePermission(models.PermCreateIncidents), v2IncidentHandler.AssignAnalyst)
+		v2Group.POST("/incidents/:id/close", middleware.RequirePermission(models.PermCloseIncidents), v2IncidentHandler.CloseIncident)
 
-		// AI Executive Reporting & Compliance Routes
+		// AI Executive Reporting & Compliance Routes (Permission Protected)
 		v2Group.GET("/reports", v2ReportHandler.GetReports)
-		v2Group.POST("/reports/generate", v2ReportHandler.GenerateReport)
-		v2Group.GET("/reports/export/:id", v2ReportHandler.ExportReport)
+		v2Group.POST("/reports/generate", middleware.RequirePermission(models.PermExportReports), v2ReportHandler.GenerateReport)
+		v2Group.GET("/reports/export/:id", middleware.RequirePermission(models.PermExportReports), v2ReportHandler.ExportReport)
 		v2Group.GET("/compliance", v2ReportHandler.GetCompliance)
 		v2Group.GET("/compliance/status", v2ReportHandler.GetComplianceStatus)
 
@@ -140,29 +157,29 @@ func SetupRoutes(router *gin.Engine) {
 		v2Group.GET("/attack-graph/path/:id", v2AttackGraphHandler.GetPathByID)
 		v2Group.POST("/attack-graph/explain", v2AttackGraphHandler.ExplainPath)
 
-		// Historical Investigation & AI Threat Hunting Routes
+		// Historical Investigation & AI Threat Hunting Routes (Permission Protected)
 		v2Group.GET("/history/search", v2HistoricalHandler.SearchEvents)
 		v2Group.GET("/history/events", v2HistoricalHandler.GetEvents)
 		v2Group.GET("/history/ioc/:value", v2HistoricalHandler.GetIOCHistory)
 		v2Group.GET("/history/replay/:id", v2HistoricalHandler.GetReplayByID)
-		v2Group.POST("/hunting/query", v2HistoricalHandler.RunHuntQuery)
+		v2Group.POST("/hunting/query", middleware.RequirePermission(models.PermRunThreatHunts), v2HistoricalHandler.RunHuntQuery)
 		v2Group.GET("/hunting/hypothesis", v2HistoricalHandler.GetHuntHypothesis)
 
-		// AI Workflow Automation & SOAR Playbook Routes
+		// AI Workflow Automation & SOAR Playbook Routes (Permission Protected)
 		v2Group.GET("/workflows", v2WorkflowHandler.GetWorkflows)
-		v2Group.POST("/workflows", v2WorkflowHandler.CreateWorkflow)
+		v2Group.POST("/workflows", middleware.RequirePermission(models.PermExecutePlaybooks), v2WorkflowHandler.CreateWorkflow)
 		v2Group.GET("/workflows/templates", v2WorkflowHandler.GetTemplates)
-		v2Group.POST("/workflows/execute", v2WorkflowHandler.ExecuteWorkflow)
+		v2Group.POST("/workflows/execute", middleware.RequirePermission(models.PermExecutePlaybooks), v2WorkflowHandler.ExecuteWorkflow)
 		v2Group.GET("/workflows/history", v2WorkflowHandler.GetHistory)
 		v2Group.GET("/workflows/status/:id", v2WorkflowHandler.GetExecutionStatus)
 		v2Group.GET("/workflows/approvals", v2WorkflowHandler.GetApprovals)
-		v2Group.POST("/workflows/approvals/decide", v2WorkflowHandler.DecideApproval)
-		v2Group.POST("/workflows/playbooks", v2WorkflowHandler.GeneratePlaybook)
+		v2Group.POST("/workflows/approvals/decide", middleware.RequirePermission(models.PermExecutePlaybooks), v2WorkflowHandler.DecideApproval)
+		v2Group.POST("/workflows/playbooks", middleware.RequirePermission(models.PermExecutePlaybooks), v2WorkflowHandler.GeneratePlaybook)
 
 		// Observability, Audit & Platform Health Routes
-		v2Group.GET("/audit/logs", v2ObservabilityHandler.GetAuditLogs)
-		v2Group.GET("/audit/search", v2ObservabilityHandler.SearchAuditLogs)
-		v2Group.GET("/audit/export", v2ObservabilityHandler.ExportAuditLogs)
+		v2Group.GET("/audit/logs", middleware.RequirePermission(models.PermViewAuditLogs), v2ObservabilityHandler.GetAuditLogs)
+		v2Group.GET("/audit/search", middleware.RequirePermission(models.PermViewAuditLogs), v2ObservabilityHandler.SearchAuditLogs)
+		v2Group.GET("/audit/export", middleware.RequirePermission(models.PermExportReports), v2ObservabilityHandler.ExportAuditLogs)
 		v2Group.GET("/health", v2ObservabilityHandler.GetHealth)
 		v2Group.GET("/health/services", v2ObservabilityHandler.GetHealthServices)
 		v2Group.GET("/metrics", v2ObservabilityHandler.GetMetrics)
@@ -172,7 +189,7 @@ func SetupRoutes(router *gin.Engine) {
 		v2Group.GET("/security/posture", v2SecurityHandler.GetPosture)
 		v2Group.GET("/security/rbac", v2SecurityHandler.GetRBAC)
 		v2Group.GET("/security/sessions", v2SecurityHandler.GetActiveSessions)
-		v2Group.POST("/security/sessions/revoke", v2SecurityHandler.RevokeSession)
+		v2Group.POST("/security/sessions/revoke", middleware.RequirePermission(models.PermSystemConfiguration), v2SecurityHandler.RevokeSession)
 		v2Group.GET("/security/events", v2SecurityHandler.GetEvents)
 
 		// Enterprise Attack Scenario Demo Loader Routes

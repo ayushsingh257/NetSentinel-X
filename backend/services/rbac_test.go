@@ -1,8 +1,9 @@
 package services
 
 import (
-	"netsentinel-x-backend/models"
 	"testing"
+
+	"netsentinel-x-backend/models"
 )
 
 func TestRBAC(t *testing.T) {
@@ -15,11 +16,17 @@ func TestRBAC(t *testing.T) {
 
 	t.Run("ViewOnly Has Restricted Permissions", func(t *testing.T) {
 		perms := models.RolePermissionsMap[models.RoleViewOnly]
-		if len(perms) != 1 {
-			t.Fatalf("Expected 1 permission for ViewOnly, got %d", len(perms))
+		if len(perms) != 3 {
+			t.Fatalf("Expected 3 permissions for ViewOnly, got %d", len(perms))
 		}
-		if perms[0] != models.PermViewIncidents {
-			t.Errorf("Expected PermViewIncidents, got %s", perms[0])
+		hasViewIncidents := false
+		for _, p := range perms {
+			if p == models.PermViewIncidents {
+				hasViewIncidents = true
+			}
+		}
+		if !hasViewIncidents {
+			t.Errorf("Expected PermViewIncidents in ViewOnly permissions")
 		}
 	})
 }
