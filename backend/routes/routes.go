@@ -43,6 +43,12 @@ func SetupRoutes(router *gin.Engine) {
 	cryptoService := services.NewCryptographicSecurityService()
 	leakService := services.NewSecretDetectionService()
 	envService := services.NewEnvironmentSecurityService()
+	dbSecurityService := services.NewDatabaseSecurityService(auditService)
+	dataEncryptService := services.NewDataEncryptionService()
+	dataClassService := services.NewDataClassificationService()
+	dbAuditService := services.NewDatabaseAuditService()
+	sqlSecurityService := services.NewSQLSecurityService()
+	backupService := services.NewBackupSecurityService()
 
 	router.Use(middleware.AdaptiveRateLimitMiddleware())
 
@@ -98,11 +104,20 @@ func SetupRoutes(router *gin.Engine) {
 	v2APISecHandler := handlers.NewV2APISecurityHandler(apiKeyService, oauthService, adaptiveRateService, webhookService, apiAbuseEngine)
 	v2InfraHandler := handlers.NewV2InfrastructureHandler(intraService)
 	v2SecretsHandler := handlers.NewV2SecretsSecurityHandler(secretsService, cryptoService, leakService, envService)
+	v2DBSecurityHandler := handlers.NewV2DatabaseSecurityHandler(dbSecurityService, dataEncryptService, dataClassService, dbAuditService, sqlSecurityService, backupService)
 
 	v2Group := router.Group("/api/v2")
 	// ─── SECURITY: All /api/v2/* endpoints require JWT + Permission Guards ──────
 	v2Group.Use(middleware.AuthMiddleware())
 	{
+		// Database Security & Data Protection Routes (Era 23)
+		v2Group.GET("/database/posture", v2DBSecurityHandler.GetDatabasePosture)
+		v2Group.GET("/database/config", middleware.RequirePermission(models.PermViewAuditLogs), v2DBSecurityHandler.GetDatabaseConfig)
+		v2Group.GET("/database/access", middleware.RequirePermission(models.PermViewAuditLogs), v2DBSecurityHandler.GetDatabaseAccess)
+		v2Group.GET("/database/audit", middleware.RequirePermission(models.PermViewAuditLogs), v2DBSecurityHandler.GetDatabaseAudit)
+		v2Group.GET("/database/encryption", v2DBSecurityHandler.GetDatabaseEncryption)
+		v2Group.GET("/database/backups", middleware.RequirePermission(models.PermViewAuditLogs), v2DBSecurityHandler.GetDatabaseBackups)
+
 		// Secrets Management & Cryptographic Security Routes (Era 22)
 		v2Group.GET("/secrets/posture", v2SecretsHandler.GetSecretsPosture)
 		v2Group.GET("/secrets/list", middleware.RequirePermission(models.PermViewAuditLogs), v2SecretsHandler.GetSecretsList)
