@@ -39,6 +39,10 @@ func SetupRoutes(router *gin.Engine) {
 	webhookService := services.NewWebhookSecurityService()
 	apiAbuseEngine := services.NewAPIAbuseDetectionEngine(secAuditService, auditService)
 	intraService := services.NewInfrastructureSecurityService(auditService)
+	secretsService := services.NewSecretsManagementService(auditService)
+	cryptoService := services.NewCryptographicSecurityService()
+	leakService := services.NewSecretDetectionService()
+	envService := services.NewEnvironmentSecurityService()
 
 	router.Use(middleware.AdaptiveRateLimitMiddleware())
 
@@ -93,11 +97,21 @@ func SetupRoutes(router *gin.Engine) {
 	v2WebSecHandler := handlers.NewV2WebSecurityHandler(valService, xssService, fileSecService)
 	v2APISecHandler := handlers.NewV2APISecurityHandler(apiKeyService, oauthService, adaptiveRateService, webhookService, apiAbuseEngine)
 	v2InfraHandler := handlers.NewV2InfrastructureHandler(intraService)
+	v2SecretsHandler := handlers.NewV2SecretsSecurityHandler(secretsService, cryptoService, leakService, envService)
 
 	v2Group := router.Group("/api/v2")
 	// ─── SECURITY: All /api/v2/* endpoints require JWT + Permission Guards ──────
 	v2Group.Use(middleware.AuthMiddleware())
 	{
+		// Secrets Management & Cryptographic Security Routes (Era 22)
+		v2Group.GET("/secrets/posture", v2SecretsHandler.GetSecretsPosture)
+		v2Group.GET("/secrets/list", middleware.RequirePermission(models.PermViewAuditLogs), v2SecretsHandler.GetSecretsList)
+		v2Group.GET("/secrets/status", v2SecretsHandler.GetSecretsStatus)
+		v2Group.POST("/secrets/register", middleware.RequirePermission(models.PermSystemConfiguration), v2SecretsHandler.RegisterSecret)
+		v2Group.POST("/secrets/rotate", middleware.RequirePermission(models.PermSystemConfiguration), v2SecretsHandler.RotateSecret)
+		v2Group.GET("/secrets/events", middleware.RequirePermission(models.PermViewAuditLogs), v2SecretsHandler.GetSecretEvents)
+		v2Group.GET("/crypto/posture", v2SecretsHandler.GetCryptoPosture)
+
 		// Infrastructure & Platform Security Routes (Era 21)
 		v2Group.GET("/infra/posture", v2InfraHandler.GetInfraPosture)
 		v2Group.GET("/infra/hardening", middleware.RequirePermission(models.PermViewAuditLogs), v2InfraHandler.GetHardeningChecks)

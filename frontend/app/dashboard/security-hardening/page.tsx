@@ -6,14 +6,16 @@ import AuthorizationDashboard from "@/components/AuthorizationDashboard";
 import WebSecurityDashboard from "@/components/WebSecurityDashboard";
 import APISecurityDashboard from "@/components/APISecurityDashboard";
 import InfrastructureSecurityDashboard from "@/components/InfrastructureSecurityDashboard";
-import { ShieldCheck, Lock, Globe, Key, Server } from "lucide-react";
+import SecretsSecurityDashboard from "@/components/SecretsSecurityDashboard";
+import { ShieldCheck, Lock, Globe, Key, Server, KeyRound } from "lucide-react";
 
 export default function SecurityHardeningPage() {
   const [activeView, setActiveView] = useState<
-    "infra" | "apisec" | "websec" | "authz" | "hardening"
-  >("infra");
+    "secrets" | "infra" | "apisec" | "websec" | "authz" | "hardening"
+  >("secrets");
 
   const tabs = [
+    { id: "secrets", label: "Secrets & Crypto (Era 22)", icon: <KeyRound className="w-4 h-4" /> },
     { id: "infra", label: "Infrastructure (Era 21)", icon: <Server className="w-4 h-4" /> },
     { id: "apisec", label: "API Security (Era 20)", icon: <Key className="w-4 h-4" /> },
     { id: "websec", label: "Web Security (Era 19)", icon: <Globe className="w-4 h-4" /> },
@@ -29,7 +31,7 @@ export default function SecurityHardeningPage() {
             Enterprise Security Controls
           </h1>
           <p className="text-xs text-slate-400 dark:text-zinc-400 mt-1">
-            Infrastructure Hardening, API Security, Web Security, RBAC & Platform Controls — Eras 15–21
+            Secrets Management, Infrastructure Hardening, API Security, Web Security &amp; RBAC — Eras 15–22
           </p>
         </div>
 
@@ -51,7 +53,9 @@ export default function SecurityHardeningPage() {
         </div>
       </div>
 
-      {activeView === "infra" ? (
+      {activeView === "secrets" ? (
+        <SecretsSecurityDashboard />
+      ) : activeView === "infra" ? (
         <InfrastructureSecurityDashboard />
       ) : activeView === "apisec" ? (
         <APISecurityDashboard />
