@@ -172,14 +172,20 @@ Git Commit → Git Push → GitHub Actions CI/CD → 🟢 GREEN → Completion R
   - Full unit test coverage: `identity_security_test.go`, `IdentitySecurityDashboard.test.tsx`
 
 ### Era 25: Logging, Audit & Security Monitoring (SIEM-Grade)
-- **Status**: 📋 Planned
-- **Deployment Question**: *"If a breach happens, will you know exactly what happened and when?"*
-- **Focus**: Upgrade Era 14 Observability to security-grade immutable audit pipeline
-- **Key Deliverables**:
-  - Security Event Pipeline: Failed login → Security Event → SIEM Storage → Alert
-  - Track: login attempts, permission changes, admin actions, data exports, API abuse
-  - Immutable audit log storage with cryptographic hash chaining
-  - Tamper detection: each log entry includes SHA256 of previous record
+- **Status**: ✅ Completed
+- **Commit**: `ea900b1` | **CI/CD Run**: `30476884316` — 🟢 GREEN (Backend: 38s | Frontend: 1m6s)
+- **Completion**:
+  - `SecurityAuditLog` model with `PreviousHash` and `CurrentHash` for cryptographic append-only log chain
+  - `AuditChainService` calculating SHA-256 hash chaining across events (`GENESIS_ROOT_HASH` seed) and verifying chain integrity (`CHAIN_VALID` vs `TAMPERING_DETECTED`)
+  - `SecurityEventService` normalizing and appending events across Auth (Era 24), Authz (Era 18), API Security (Era 20), DB (Era 23), and Infra (Era 21)
+  - `EventSeverityService` classifying security telemetry into `INFO`, `LOW`, `MEDIUM`, `HIGH`, and `CRITICAL` levels
+  - `ThreatDetectionEngine` correlating events to detect Brute Force (10 failed logins), Privilege Escalation, Data Exfiltration, and API Abuse
+  - `SecurityAlertService` managing threat alert state lifecycles (`OPEN`, `INVESTIGATING`, `RESOLVED`)
+  - `IncidentTimelineService` auto-generating chronological attack timeline events
+  - `V2SIEMSecurityHandler` REST endpoints (`/api/v2/siem/*`) with JWT & RBAC guards
+  - `SIEMSecurityDashboard.tsx` 5-tab component & `/api/v2/siem/*` endpoints
+  - Documentation: `docs/siem_security_architecture_review.md`, `docs/siem_monitoring_guide.md`
+  - Full unit test coverage: `siem_security_test.go`, `SIEMSecurityDashboard.test.tsx`
   - `docs/security_monitoring_guide.md`
 
 ### Era 26: CI/CD Security & Secure Development Lifecycle (SSDLC)
