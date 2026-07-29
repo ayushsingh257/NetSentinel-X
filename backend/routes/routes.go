@@ -38,6 +38,7 @@ func SetupRoutes(router *gin.Engine) {
 
 	webhookService := services.NewWebhookSecurityService()
 	apiAbuseEngine := services.NewAPIAbuseDetectionEngine(secAuditService, auditService)
+	intraService := services.NewInfrastructureSecurityService(auditService)
 
 	router.Use(middleware.AdaptiveRateLimitMiddleware())
 
@@ -91,11 +92,19 @@ func SetupRoutes(router *gin.Engine) {
 	v2AuthzHandler := handlers.NewV2AuthorizationHandler(authzService, privMonitorService, secAuditService)
 	v2WebSecHandler := handlers.NewV2WebSecurityHandler(valService, xssService, fileSecService)
 	v2APISecHandler := handlers.NewV2APISecurityHandler(apiKeyService, oauthService, adaptiveRateService, webhookService, apiAbuseEngine)
+	v2InfraHandler := handlers.NewV2InfrastructureHandler(intraService)
 
 	v2Group := router.Group("/api/v2")
 	// ─── SECURITY: All /api/v2/* endpoints require JWT + Permission Guards ──────
 	v2Group.Use(middleware.AuthMiddleware())
 	{
+		// Infrastructure & Platform Security Routes (Era 21)
+		v2Group.GET("/infra/posture", v2InfraHandler.GetInfraPosture)
+		v2Group.GET("/infra/hardening", middleware.RequirePermission(models.PermViewAuditLogs), v2InfraHandler.GetHardeningChecks)
+		v2Group.GET("/infra/docker", middleware.RequirePermission(models.PermViewAuditLogs), v2InfraHandler.GetDockerSecurity)
+		v2Group.GET("/infra/network", v2InfraHandler.GetNetworkSegmentation)
+		v2Group.GET("/infra/tls", v2InfraHandler.GetTLSControls)
+
 		// API Security Layer Routes
 		v2Group.GET("/api-security/posture", v2APISecHandler.GetAPIPosture)
 		v2Group.GET("/api-security/keys", v2APISecHandler.GetAPIKeys)

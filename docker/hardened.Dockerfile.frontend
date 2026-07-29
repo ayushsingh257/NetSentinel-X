@@ -1,0 +1,57 @@
+# ─── Stage 1: Dependencies ───────────────────────────────────────────────────
+FROM node:20-alpine AS deps
+
+# Install only production dependencies
+WORKDIR /app
+COPY package.json package-lock.json ./
+RUN npm ci --only=production --ignore-scripts
+
+# ─── Stage 2: Build ──────────────────────────────────────────────────────────
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+# Build production Next.js bundle
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV NODE_ENV=production
+RUN npm run build
+
+# ─── Stage 3: Hardened Runtime ───────────────────────────────────────────────
+FROM node:20-alpine AS runner
+
+# Security labels
+LABEL org.opencontainers.image.vendor="NetSentinel-X"
+LABEL org.opencontainers.image.title="NetSentinel-X Frontend"
+LABEL org.opencontainers.image.description="Hardened Next.js frontend — Era 21 production image"
+LABEL security.non-root="true"
+LABEL security.no-privileged="true"
+
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+
+WORKDIR /app
+
+# Create dedicated non-root system user & group
+RUN addgroup --system --gid 10001 netsentinel && \
+    adduser --system --uid 10001 --ingroup netsentinel netsentinel
+
+# Copy only what's needed for runtime (no source, no node_modules)
+COPY --from=builder --chown=netsentinel:netsentinel /app/public ./public
+COPY --from=builder --chown=netsentinel:netsentinel /app/.next/standalone ./
+COPY --from=builder --chown=netsentinel:netsentinel /app/.next/static ./.next/static
+
+# Switch to non-root user
+USER netsentinel
+
+EXPOSE 3000
+
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1
+
+CMD ["node", "server.js"]

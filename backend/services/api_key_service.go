@@ -64,7 +64,7 @@ func (s *APIKeyService) GenerateAPIKey(name, ownerID string, permissions []strin
 	}
 
 	keyObj := models.APIKey{
-		ID:          fmt.Sprintf("KEY-%d", now.UnixNano()%100000),
+		ID:          fmt.Sprintf("KEY-%s", rawHex[:8]),
 		Name:        name,
 		KeyHash:     hash,
 		Prefix:      prefix,

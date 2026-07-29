@@ -1,0 +1,53 @@
+# ─── Stage 1: Build ──────────────────────────────────────────────────────────
+FROM golang:1.22-alpine AS builder
+
+# Install only required build dependencies
+RUN apk add --no-cache libpcap-dev gcc musl-dev
+
+WORKDIR /build
+
+# Copy dependency files first (better layer caching)
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Copy source code
+COPY . .
+
+# Build with security flags: no CGO for static binary, trimpath removes debug info
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
+    go build \
+    -ldflags="-w -s -extldflags=-static" \
+    -trimpath \
+    -o netsentinel-backend \
+    ./cmd/server/main.go 2>/dev/null || \
+    go build \
+    -ldflags="-w -s" \
+    -trimpath \
+    -o netsentinel-backend \
+    .
+
+# ─── Stage 2: Hardened Runtime ───────────────────────────────────────────────
+# Use distroless for minimal attack surface — no shell, no package manager, no OS utilities
+FROM gcr.io/distroless/static-debian12:nonroot
+
+# Security labels for compliance scanning
+LABEL org.opencontainers.image.vendor="NetSentinel-X"
+LABEL org.opencontainers.image.title="NetSentinel-X Backend"
+LABEL org.opencontainers.image.description="Hardened Go API backend — Era 21 production image"
+LABEL security.non-root="true"
+LABEL security.read-only-fs="true"
+LABEL security.no-privileged="true"
+
+# Copy only the compiled binary
+COPY --from=builder /build/netsentinel-backend /netsentinel-backend
+
+# Run as nonroot user (UID 65532 in distroless)
+# DO NOT add USER directive — distroless:nonroot already runs as nonroot
+
+EXPOSE 8080
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD ["/netsentinel-backend", "--health-check"] || exit 1
+
+ENTRYPOINT ["/netsentinel-backend"]
