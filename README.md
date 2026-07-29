@@ -9,7 +9,7 @@
 
 ## Overview
 
-**NetSentinel-X V2** is an enterprise-grade AI Security Operations Platform and Network Detection & Response (NDR) engine. Built for modern SOC environments, NetSentinel-X combines real-time eBPF network telemetry, Deep Packet Inspection (DPI), autonomous AI threat reasoning, multi-event threat investigations, MITRE ATT&CK matrix correlation, custom Sigma/YARA detection engineering, multi-provider threat intelligence fusion, User & Entity Behaviour Analytics (UEBA), continuous AI Detection Optimization, an Enterprise AI Incident Management Desk, Executive Reporting & Compliance Intelligence, an Interactive Attack Graph, an AI Threat Hunting Workspace, an Autonomous SOAR Playbook Engine, an Observability & Health Engine, an Enterprise Security Hardening Layer, and Zero Trust Security Architecture into a unified platform.
+**NetSentinel-X V2** is an enterprise-grade AI Security Operations Platform and Network Detection & Response (NDR) engine. Built for modern SOC environments, it combines real-time eBPF network telemetry, Deep Packet Inspection (DPI), autonomous AI threat reasoning, multi-event threat investigations, MITRE ATT&CK matrix correlation, custom Sigma/YARA detection engineering, multi-provider threat intelligence fusion, User & Entity Behaviour Analytics (UEBA), continuous AI Detection Optimization, an Enterprise AI Incident Management Desk, Executive Reporting & Compliance Intelligence, an Interactive Attack Graph, an AI Threat Hunting Workspace, an Autonomous SOAR Playbook Engine, an Observability & Health Engine, and a multi-layered Enterprise Security Architecture into a unified platform.
 
 ---
 
@@ -18,14 +18,15 @@
 ```
                                 +----------------------------------+
                                 |  NetSentinel-X Next.js 16 Web UI |
-                                |  React 19 / TypeScript / Tailwind |
+                                |  React 19 / TypeScript / Tailwind|
                                 +----------------------------------+
                                                  |
                                          ( HTTP / WebSocket )
                                                  v
                                 +----------------------------------+
                                 |    Go 1.22 Gin API Gateway       |
-                                | Security Headers & Rate Limiting |
+                                | JWT Auth + RBAC + Rate Limiting  |
+                                | HMAC Signatures + API Key Guard  |
                                 +----------------------------------+
                                                  |
                    +-----------------------------+-----------------------------+
@@ -39,8 +40,9 @@
 
 ---
 
-## 24-Era Enterprise Evolution Roadmap
+## 30-Era Enterprise Evolution Roadmap
 
+### Phase 1: Core Platform (Eras 1–16) — Product & Platform Evolution ✅
 1. **Era 1 (Completed)**: Enterprise Experience & UI Modernization ✅
 2. **Era 2 (Completed)**: AI Security Copilot ✅
 3. **Era 3 (Completed)**: AI Threat Investigation Engine ✅
@@ -57,14 +59,24 @@
 14. **Era 14 (Completed)**: Enterprise Observability & System Health Engine ✅
 15. **Era 15 (Completed)**: Enterprise Security Hardening & Production Readiness Layer ✅
 16. **Era 16 (Completed)**: Enterprise Release Candidate & Final QA (`v2.0.0-rc1`) ✅
-17. **Era 17 (Completed)**: Identity & Authentication Security (JWT Signing, Session Validation) ✅
-18. **Era 18 (Completed)**: Enterprise Authorization & Access Control Security (RBAC Engine, Privilege Escalation Detection) ✅
+
+### Phase 2: Security Foundation (Eras 17–20) — Security Awareness Layer ✅
+17. **Era 17 (Completed)**: Identity & Authentication Security (JWT HS256, Session Validation) ✅
+18. **Era 18 (Completed)**: Authorization & Access Control Security (7-Tier RBAC, Privilege Escalation Detection) ✅
 19. **Era 19 (Completed)**: Web Application Security (OWASP Top 10, CSRF/XSS, CSP, DOMPurify, File Upload Allowlist) ✅
-20. **Era 20 (Completed)**: Secure API Architecture (API Keys, OAuth2 Readiness, Adaptive Rate Limiting, Signed Requests, Webhooks) ✅
-21. **Era 21 (Planned)**: Infrastructure & Platform Security (Secrets Vault, TLS 1.3, Container Hardening) 🛡️
-22. **Era 22 (Planned)**: Data Protection & Monitoring Security (Log Signing, Tamper Evident Audits) 🛡️
-23. **Era 23 (Planned)**: Zero Trust Enterprise Security (Continuous Risk Scoring, Impossible Travel) 🛡️
-24. **Era 24 (Planned)**: Security Governance & Compliance (SOC 2, ISO 27001 Automation) 🛡️
+20. **Era 20 (Completed)**: Secure API Architecture (API Keys, OAuth2 Readiness, Adaptive Rate Limiting, HMAC Signed Requests, Webhooks) ✅
+
+### Phase 3: Production Security & Enterprise Readiness (Eras 21–30) 🔄
+21. **Era 21 (Planned)**: Infrastructure & Platform Security (Server Hardening, Docker Security, Network Segmentation) 🛡️
+22. **Era 22 (Planned)**: Secrets Management & Cryptographic Security (HashiCorp Vault, Key Rotation, Gitleaks) 🛡️
+23. **Era 23 (Planned)**: Database Security & Data Protection (Least-Privilege DB Users, Encryption at Rest, Audit Logs) 🛡️
+24. **Era 24 (Planned)**: Secure Session & Advanced Identity — MFA (TOTP, Short-Lived JWTs, Refresh Rotation) 🛡️
+25. **Era 25 (Planned)**: Logging, Audit & Security Monitoring — SIEM-Grade (Tamper-Evident Hash Chain Audit Logs) 🛡️
+26. **Era 26 (Planned)**: CI/CD Security & SSDLC (Semgrep SAST, Gitleaks, Trivy Container Scan) 🛡️
+27. **Era 27 (Planned)**: Production Deployment Security (Production Readiness Scanner, Security Score 96+/100) 🛡️
+28. **Era 28 (Planned)**: Backup, Disaster Recovery & Business Continuity (RPO: 5min, RTO: 30min) 🛡️
+29. **Era 29 (Planned)**: Privacy & Compliance Framework (SOC 2, ISO 27001, PII Detection, Data Classification) 🛡️
+30. **Era 30 (Planned)**: Final Enterprise Security Validation (OWASP ZAP, Penetration Test, Security Validation Report) 🛡️
 
 ---
 
@@ -80,7 +92,7 @@ cd NetSentinel-X
 docker-compose -f docker-compose.production.yml up -d --build
 ```
 
-Access Web Dashboard: `http://localhost:3000`  
+Access Web Dashboard: `http://localhost:3000`
 Access API Gateway: `http://localhost:8080`
 
 ---

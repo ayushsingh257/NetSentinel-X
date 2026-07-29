@@ -2,7 +2,7 @@
 
 ## Project Vision
 
-**NetSentinel-X V2** is an Enterprise AI-powered Network Detection and Response (NDR), Security Operations Center (SOC), Threat Intelligence Fusion, AI-assisted Investigation, and Zero Trust Security Platform.
+**NetSentinel-X V2** is an Enterprise AI-powered Network Detection and Response (NDR), Security Operations Center (SOC), Threat Intelligence Fusion, AI-assisted Investigation, and Zero Trust Security Platform — designed to meet and exceed enterprise production security standards.
 
 ---
 
@@ -10,8 +10,9 @@
 
 - **Current Version**: NetSentinel-X V2.0 Enterprise Release Candidate (`v2.0.0-rc1`)
 - **Core Platform Eras (1–16)**: 100% Complete ✅
-- **Security Implementation Eras (17–24)**: Era 17 In Progress 🔄
-- **Stability Status**: GitHub Actions CI/CD Pipeline 🟢 GREEN.
+- **Security Foundation Eras (17–20)**: 100% Complete ✅
+- **Production Security Eras (21–30)**: In Progress 🔄
+- **Stability Status**: GitHub Actions CI/CD Pipeline 🟢 GREEN
 
 ---
 
@@ -27,7 +28,7 @@ Git Commit → Git Push → GitHub Actions CI/CD → 🟢 GREEN → Completion R
 
 ---
 
-## Core Platform Eras (1–16) ✅
+## Phase 1: Core Platform Eras (1–16) ✅ — Product & Platform Evolution
 
 ### Era 1: Enterprise Experience & UI Modernization — ✅ Completed
 ### Era 2: AI Security Copilot — ✅ Completed
@@ -48,7 +49,7 @@ Git Commit → Git Push → GitHub Actions CI/CD → 🟢 GREEN → Completion R
 
 ---
 
-## Enterprise Security Implementation Roadmap (Eras 17–24)
+## Phase 2: Security Foundation Eras (17–20) ✅ — Security Awareness Layer
 
 ### Era 17: Identity & Authentication Security
 - **Status**: ✅ Completed
@@ -56,7 +57,7 @@ Git Commit → Git Push → GitHub Actions CI/CD → 🟢 GREEN → Completion R
 - **CI/CD Run**: `30243470748` — 🟢 GREEN (1m24s)
 - **Completion**:
   - Real JWT generation and verification via `golang-jwt/jwt/v5` HS256 signing
-  - `GET /api/auth/me` — authenticated user profile endpoint  
+  - `GET /api/auth/me` — authenticated user profile endpoint
   - `GET /api/auth/session/validate` — backend session validation used by frontend guard
   - `POST /api/auth/refresh` — sliding session / token refresh
   - `POST /api/auth/logout` — secure session termination
@@ -68,57 +69,198 @@ Git Commit → Git Push → GitHub Actions CI/CD → 🟢 GREEN → Completion R
 
 ### Era 18: Authorization & Access Control Security
 - **Status**: ✅ Completed
+- **Commit**: `827744e` | **CI/CD Run**: `30438210530` — 🟢 GREEN (1m2s)
 - **Completion**:
   - `AuthorizationService` implemented with 7-tier RBAC role hierarchy
   - `PrivilegeMonitorService` created to detect and block privilege escalation attempts
   - `RequirePermission()` middleware added to protect all sensitive v2 API endpoints
-  - `GET /api/v2/authz/me`, `POST /api/v2/authz/check`, `GET /api/v2/authz/roles`, `GET /api/v2/authz/violations`, `GET /api/v2/authz/events` endpoints created
-  - `AuthorizationDashboard.tsx` component created with Permission Explorer, Access Control Matrix, and Security Violations tabs
-  - Documentation created: `docs/authorization_architecture_review.md`, `docs/rbac_guide.md`, `docs/permission_matrix.md`
+  - `AuthorizationDashboard.tsx` component with Permission Explorer, Access Control Matrix, and Security Violations tabs
+  - Documentation: `docs/authorization_architecture_review.md`, `docs/rbac_guide.md`, `docs/permission_matrix.md`
   - Backend & Frontend unit test suites created & verified
 
 ### Era 19: Web Application Security
 - **Status**: ✅ Completed
+- **Commit**: `499546d` | **CI/CD Run**: `30439297757` — 🟢 GREEN (1m4s)
 - **Completion**:
-  - `InputValidationService` & `validation.go` middleware for query, header, and body payload validation
+  - `InputValidationService` & `validation.go` middleware for XSS, SQLi, and OS command injection
   - `XSSProtectionService` & `DOMPurify` frontend sanitization in `lib/sanitize.ts`
-  - `CSRFProtectionMiddleware` with token generation, SameSite cookies, and `GET /api/v2/security/csrf-token`
+  - `CSRFProtectionMiddleware` with token generation, SameSite cookies
   - Upgraded Content-Security-Policy and Permissions-Policy in `SecurityHeadersMiddleware`
   - `FileSecurityService` enforcing extension allowlist (`.pdf`, `.json`, `.csv`, `.txt`) and MIME validation
   - `RequestSecurityMiddleware` enforcing 5MB body limit & recon User-Agent blocking
   - `WebSecurityDashboard.tsx` component & `/api/v2/web-security/*` endpoints
-  - Documentation created: `docs/web_security_architecture_review.md`, `docs/sql_security_audit.md`, `docs/web_security_guide.md`
-  - Full backend and frontend unit test suites created & verified
+  - Documentation: `docs/web_security_architecture_review.md`, `docs/sql_security_audit.md`, `docs/web_security_guide.md`
 
 ### Era 20: Secure API Architecture
 - **Status**: ✅ Completed
+- **Commit**: `ce6bec3` | **CI/CD Run**: `30440269605` — 🟢 GREEN (57s)
 - **Completion**:
   - `APIKeyService` & `api_key.go` middleware for SHA256 key hashing, generation, rotation, and revocation
   - `OAuthService` & `oauth2_architecture.md` supporting PKCE, Client Credentials, and scope mapping
-  - `AdaptiveRateService` dynamic rate limiting (100 -> 20 -> 0 req/min) with 401/403/scan signal tracking
+  - `AdaptiveRateService` dynamic rate limiting (100 → 20 → 0 req/min) with 401/403/scan signal tracking
   - `RequestSignatureService` enforcing HMAC-SHA256 request body verification & 300s clock drift anti-replay checks
   - `WebhookSecurityService` with HMAC payload signing (`X-Webhook-Signature`)
   - `APIAbuseDetectionEngine` scanning endpoint enumeration and credential bursts
   - `APISecurityDashboard.tsx` component & `/api/v2/api-security/*` endpoints
-  - Documentation created: `docs/api_security_architecture_review.md`, `docs/oauth2_architecture.md`, `docs/api_security_guide.md`
-  - Full backend and frontend unit test suites created & verified
+  - Documentation: `docs/api_security_architecture_review.md`, `docs/oauth2_architecture.md`, `docs/api_security_guide.md`
+
+---
+
+## Phase 3: Production Security & Enterprise Readiness (Eras 21–30) 🔄
+
+> **Goal**: Transform NetSentinel-X from a security-aware platform into a production-hardened, enterprise-validated deployment ready for live environments. Each era answers a critical deployment question that recruiters, security engineers, and enterprise buyers ask.
+
+---
 
 ### Era 21: Infrastructure & Platform Security
 - **Status**: 📋 Planned
-- **Goal**: Secure servers, containers, and deployment environments.
-- **Key Deliverables**: Secret vault integration, TLS 1.3, AES-256 at rest, non-root Docker containers, read-only filesystems, container scanning, WAF, DDoS protection, Fail2Ban, IDS/IPS.
+- **Deployment Question**: *"How are your servers, containers, and network secured?"*
+- **Focus**: Server hardening, Docker security, and network segmentation
+- **Key Deliverables**:
+  - Production Linux hardening guide (firewall rules, SSH hardening, password auth disabled, Fail2Ban, minimal exposed ports)
+  - Network architecture: Internet → 443 HTTPS → Reverse Proxy → Internal (Backend, Database, Redis)
+  - Docker security: non-root containers, read-only filesystems, dropped Linux capabilities, minimal base images
+  - Container image scanning with Trivy / Docker Scout
+  - `docs/infrastructure_security.md`
 
-### Era 22: Data Protection & Monitoring Security
+### Era 22: Secrets Management & Cryptographic Security
 - **Status**: 📋 Planned
-- **Goal**: Protect sensitive data and detect attacks in real-time.
-- **Key Deliverables**: Encrypted backups, least-privilege DB users, immutable tamper-evident audit logs, log signing, SAST/DAST scanning, container SBOM, dependency vulnerability management.
+- **Deployment Question**: *"How are credentials, API keys, and JWT secrets managed in production?"*
+- **Focus**: Eliminate `.env` plaintext secrets, implement vault-backed secrets lifecycle
+- **Key Deliverables**:
+  - HashiCorp Vault / AWS Secrets Manager / GitHub Secrets integration guide
+  - Key rotation procedures for JWT secrets and API keys
+  - Secret scanning pipeline with Gitleaks
+  - Leaked credential detection and automated revocation workflow
+  - `docs/secrets_management_guide.md`
 
-### Era 23: Zero Trust Enterprise Security
+### Era 23: Database Security & Data Protection
 - **Status**: 📋 Planned
-- **Goal**: Continuous identity and device verification with zero implicit trust.
-- **Key Deliverables**: Continuous session risk scoring, impossible travel detection, account takeover detection, insider threat scoring, admin MFA enforcement, dual-approval workflows, break-glass emergency accounts, session recording.
+- **Deployment Question**: *"What happens if someone gets access to your database?"*
+- **Focus**: PostgreSQL hardening, least-privilege DB users, encryption at rest
+- **Key Deliverables**:
+  - Separate DB users with minimal required permissions (SELECT, INSERT, UPDATE on specific tables only)
+  - Encrypted database connections (TLS)
+  - Backup encryption and restore verification
+  - Database audit logs for all DDL/DML operations
+  - Migration security review
+  - `docs/database_security_guide.md`
 
-### Era 24: Security Governance & Compliance
+### Era 24: Secure Session & Advanced Identity (MFA)
 - **Status**: 📋 Planned
-- **Goal**: Make NetSentinel-X enterprise-compliant and governable.
-- **Key Deliverables**: SOC 2, ISO 27001, NIST CSF, CIS Benchmarks, OWASP ASVS compliance dashboards; security posture scoring; git secret scanning; code signing; SBOM enforcement; SSO/SAML/OIDC enterprise identity integration.
+- **Deployment Question**: *"Can privileged accounts be compromised without multi-factor authentication?"*
+- **Focus**: MFA enforcement for privileged roles, short-lived JWT tokens, refresh rotation
+- **Key Deliverables**:
+  - TOTP-based MFA (Google Authenticator compatible) for `SUPER_ADMIN` and `SOC_ADMIN` roles
+  - Recovery codes generation and secure storage
+  - JWT access token TTL reduced from 24h → 15 minutes
+  - Refresh token rotation (30-day sliding window)
+  - Session / device management dashboard
+  - Suspicious login detection (impossible travel, new device)
+  - `docs/mfa_guide.md`
+
+### Era 25: Logging, Audit & Security Monitoring (SIEM-Grade)
+- **Status**: 📋 Planned
+- **Deployment Question**: *"If a breach happens, will you know exactly what happened and when?"*
+- **Focus**: Upgrade Era 14 Observability to security-grade immutable audit pipeline
+- **Key Deliverables**:
+  - Security Event Pipeline: Failed login → Security Event → SIEM Storage → Alert
+  - Track: login attempts, permission changes, admin actions, data exports, API abuse
+  - Immutable audit log storage with cryptographic hash chaining
+  - Tamper detection: each log entry includes SHA256 of previous record
+  - `docs/security_monitoring_guide.md`
+
+### Era 26: CI/CD Security & Secure Development Lifecycle (SSDLC)
+- **Status**: 📋 Planned
+- **Deployment Question**: *"Is your development pipeline itself secure? Can malicious code be injected?"*
+- **Focus**: Upgrade GitHub Actions pipeline with SAST, secret scanning, and supply chain security
+- **Key Deliverables**:
+  - SAST integration: Semgrep / SonarQube
+  - Secret scanning: Gitleaks in CI pre-push hook
+  - Dependency security: Dependabot + OWASP Dependency-Check
+  - Container scanning: Trivy in CI pipeline
+  - Pipeline: Developer Push → Tests → SAST → Secret Scan → Dependency Scan → Container Scan → Deploy
+  - `docs/ssdlc_guide.md`
+
+### Era 27: Production Deployment Security
+- **Status**: 📋 Planned
+- **Deployment Question**: *"Is the production configuration actually safe, or are there leftover debug settings?"*
+- **Focus**: Production readiness scanner, hardened deployment configuration
+- **Key Deliverables**:
+  - Production Readiness Scanner checking: debug mode OFF, default credentials removed, test accounts removed, dev secrets eliminated
+  - HTTPS enforcement, secure cookies, monitoring alerts active
+  - Production Security Score dashboard (target: 96+/100)
+  - `docs/production_deployment_guide.md`
+
+### Era 28: Backup, Disaster Recovery & Business Continuity
+- **Status**: 📋 Planned
+- **Deployment Question**: *"What happens if the database goes down or gets corrupted at 3am?"*
+- **Focus**: Automated backup, restore verification, and defined recovery objectives
+- **Key Deliverables**:
+  - Automated daily encrypted database backups
+  - Restore testing pipeline (verify backup integrity on schedule)
+  - Defined RPO (Maximum Acceptable Data Loss: 5 minutes) and RTO (Maximum Recovery Time: 30 minutes)
+  - Disaster recovery runbook
+  - `docs/disaster_recovery_guide.md`
+
+### Era 29: Privacy & Compliance Framework
+- **Status**: 📋 Planned
+- **Deployment Question**: *"Is this platform compliant with SOC 2, ISO 27001, or GDPR?"*
+- **Focus**: Data classification, PII detection, compliance readiness dashboards
+- **Key Deliverables**:
+  - Data classification engine (PUBLIC, INTERNAL, CONFIDENTIAL, RESTRICTED)
+  - PII detection and masking in logs and API responses
+  - Data retention policy enforcement (configurable per data class)
+  - SOC 2 and ISO 27001 compliance readiness checklists
+  - `docs/compliance_framework.md`
+
+### Era 30: Final Enterprise Security Validation
+- **Status**: 📋 Planned
+- **Deployment Question**: *"Can we actually go live? Has this been security tested end-to-end?"*
+- **Focus**: Full penetration testing simulation and security validation report
+- **Key Deliverables**:
+  - Vulnerability testing: OWASP ZAP, Nmap, Burp Suite simulation
+  - Authentication bypass attempt: Can login be bypassed?
+  - Authorization escalation attempt: Can analyst become admin?
+  - API abuse testing: Endpoint enumeration, rate limit bypass, replay attacks
+  - Web security validation: XSS, CSRF, SQLi
+  - Infrastructure scan: Open ports, weak configs, exposed secrets
+  - Final NetSentinel-X V2 Enterprise Security Validation Report
+  - GitHub README updated with: *"Production deployment architecture validated"*
+  - `docs/security_validation_report.md`
+
+---
+
+## Final Production Security Architecture (Post Era 30)
+
+```
+                        Users (MFA Enforced)
+                               |
+                         JWT (15-min TTL)
+                         + Refresh Token
+                               |
+                          RBAC Engine
+                          (7-Tier ACL)
+                               |
+                     API Security Layer
+                   (Keys, HMAC, Rate Limit)
+                               |
+                     Web Security Layer
+                   (XSS, CSRF, CSP, Input)
+                               |
+                  Application Services (Go + Next.js)
+                               |
+                     Database Security
+                   (Least Privilege + Encrypted)
+                               |
+                  Infrastructure Security
+                  (Docker, TLS, Firewall, Fail2Ban)
+
+Supporting Systems:
+  ├── Immutable Audit Logs (Tamper-Evident Hash Chain)
+  ├── SIEM-Grade Security Event Pipeline
+  ├── Automated Encrypted Backups (RPO: 5min / RTO: 30min)
+  ├── CI/CD Security Pipeline (SAST + Secret Scan + Trivy)
+  ├── HashiCorp Vault / Secrets Manager
+  └── Compliance Dashboards (SOC 2, ISO 27001)
+```
