@@ -1,0 +1,45 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "NetSentinel-X V2 Go Backend SBOM",
+  "documentNamespace": "https://netsentinel.io/sbom/backend-v2.0.0",
+  "creationInfo": {
+    "creators": ["Tool: Syft-v1.4.0", "Organization: NetSentinel Security Engineering"],
+    "created": "2026-07-29T23:30:00Z"
+  },
+  "packages": [
+    {
+      "name": "github.com/gin-gonic/gin",
+      "SPDXID": "SPDXRef-Package-gin",
+      "versionInfo": "v1.9.1",
+      "downloadLocation": "https://github.com/gin-gonic/gin",
+      "licenseConcluded": "MIT",
+      "checksums": [{ "algorithm": "SHA256", "checksumValue": "a897f21b199042b10a91f5e6b72803b901a18bc00921" }]
+    },
+    {
+      "name": "github.com/golang-jwt/jwt/v5",
+      "SPDXID": "SPDXRef-Package-jwt",
+      "versionInfo": "v5.2.1",
+      "downloadLocation": "https://github.com/golang-jwt/jwt",
+      "licenseConcluded": "MIT",
+      "checksums": [{ "algorithm": "SHA256", "checksumValue": "f10e4a77912401bc9a92a831e50012bc09a87ffc1290" }]
+    },
+    {
+      "name": "github.com/google/gopacket",
+      "SPDXID": "SPDXRef-Package-gopacket",
+      "versionInfo": "v1.1.19",
+      "downloadLocation": "https://github.com/google/gopacket",
+      "licenseConcluded": "BSD-3-Clause",
+      "checksums": [{ "algorithm": "SHA256", "checksumValue": "89021fa41890bcf771a201b1078201a091bce091023b" }]
+    },
+    {
+      "name": "github.com/stretchr/testify",
+      "SPDXID": "SPDXRef-Package-testify",
+      "versionInfo": "v1.9.0",
+      "downloadLocation": "https://github.com/stretchr/testify",
+      "licenseConcluded": "MIT",
+      "checksums": [{ "algorithm": "SHA256", "checksumValue": "bc901a21e49051bc72810a9821ef900a0129bc81109a" }]
+    }
+  ]
+}

@@ -61,6 +61,7 @@ func SetupRoutes(router *gin.Engine) {
 	securityAlertService := services.NewSecurityAlertService()
 	threatEngine := services.NewThreatDetectionEngine(auditChainService, securityAlertService)
 	timelineService := services.NewIncidentTimelineService(auditChainService)
+	cicdSecurityService := services.NewCICDSecurityService()
 
 	router.Use(middleware.AdaptiveRateLimitMiddleware())
 
@@ -119,11 +120,18 @@ func SetupRoutes(router *gin.Engine) {
 	v2DBSecurityHandler := handlers.NewV2DatabaseSecurityHandler(dbSecurityService, dataEncryptService, dataClassService, dbAuditService, sqlSecurityService, backupService)
 	v2IdentityHandler := handlers.NewV2IdentitySecurityHandler(tokenService, refreshTokenService, sessionSecService, mfaService, loginRiskService, authEventService)
 	v2SIEMHandler := handlers.NewV2SIEMSecurityHandler(auditChainService, securityEventService, threatEngine, securityAlertService, timelineService)
+	v2CICDHandler := handlers.NewV2CICDSecurityHandler(cicdSecurityService)
 
 	v2Group := router.Group("/api/v2")
 	// ─── SECURITY: All /api/v2/* endpoints require JWT + Permission Guards ──────
 	v2Group.Use(middleware.AuthMiddleware())
 	{
+		// CI/CD Security & SSDLC Routes (Era 26)
+		v2Group.GET("/cicd-security/posture", v2CICDHandler.GetPosture)
+		v2Group.GET("/cicd-security/scans", middleware.RequirePermission(models.PermViewAuditLogs), v2CICDHandler.GetScans)
+		v2Group.GET("/cicd-security/vulnerabilities", middleware.RequirePermission(models.PermViewAuditLogs), v2CICDHandler.GetVulnerabilities)
+		v2Group.GET("/cicd-security/sbom", middleware.RequirePermission(models.PermViewAuditLogs), v2CICDHandler.GetSBOM)
+
 		// SIEM-Grade Logging & Security Monitoring Routes (Era 25)
 		v2Group.GET("/siem/posture", v2SIEMHandler.GetSIEMPosture)
 		v2Group.GET("/siem/events", middleware.RequirePermission(models.PermViewAuditLogs), v2SIEMHandler.GetEvents)

@@ -10,14 +10,16 @@ import SecretsSecurityDashboard from "@/components/SecretsSecurityDashboard";
 import DatabaseSecurityDashboard from "@/components/DatabaseSecurityDashboard";
 import IdentitySecurityDashboard from "@/components/IdentitySecurityDashboard";
 import SIEMSecurityDashboard from "@/components/SIEMSecurityDashboard";
-import { ShieldCheck, Lock, Globe, Key, Server, KeyRound, Database, UserCheck, Activity } from "lucide-react";
+import CICDSecurityDashboard from "@/components/CICDSecurityDashboard";
+import { ShieldCheck, Lock, Globe, Key, Server, KeyRound, Database, UserCheck, Activity, GitBranch } from "lucide-react";
 
 export default function SecurityHardeningPage() {
   const [activeView, setActiveView] = useState<
-    "siem" | "identity" | "database" | "secrets" | "infra" | "apisec" | "websec" | "authz" | "hardening"
-  >("siem");
+    "cicd" | "siem" | "identity" | "database" | "secrets" | "infra" | "apisec" | "websec" | "authz" | "hardening"
+  >("cicd");
 
   const tabs = [
+    { id: "cicd", label: "CI/CD & SSDLC (Era 26)", icon: <GitBranch className="w-4 h-4" /> },
     { id: "siem", label: "SIEM & Audit (Era 25)", icon: <Activity className="w-4 h-4" /> },
     { id: "identity", label: "Identity & MFA (Era 24)", icon: <UserCheck className="w-4 h-4" /> },
     { id: "database", label: "Database & Data (Era 23)", icon: <Database className="w-4 h-4" /> },
@@ -37,7 +39,7 @@ export default function SecurityHardeningPage() {
             Enterprise Security Controls
           </h1>
           <p className="text-xs text-slate-400 dark:text-zinc-400 mt-1">
-            SIEM Audit Logging, Hash Chain Integrity, Identity Protection &amp; Secrets Management — Eras 15–25
+            CI/CD SSDLC Gates, Semgrep SAST, Gitleaks, SIEM Audit Logging &amp; Secrets Management — Eras 15–26
           </p>
         </div>
 
@@ -59,7 +61,9 @@ export default function SecurityHardeningPage() {
         </div>
       </div>
 
-      {activeView === "siem" ? (
+      {activeView === "cicd" ? (
+        <CICDSecurityDashboard />
+      ) : activeView === "siem" ? (
         <SIEMSecurityDashboard />
       ) : activeView === "identity" ? (
         <IdentitySecurityDashboard />

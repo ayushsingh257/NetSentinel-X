@@ -1,0 +1,21 @@
+name: NetSentinel-X SAST Security Gate (Semgrep)
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  semgrep-sast:
+    name: Semgrep Static Application Security Testing (SAST)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Run Semgrep SAST Scan
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: p/owasp-top-10
+        continue-on-error: false

@@ -1,0 +1,45 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "NetSentinel-X V2 Next.js Frontend SBOM",
+  "documentNamespace": "https://netsentinel.io/sbom/frontend-v2.0.0",
+  "creationInfo": {
+    "creators": ["Tool: Syft-v1.4.0", "Organization: NetSentinel Security Engineering"],
+    "created": "2026-07-29T23:30:00Z"
+  },
+  "packages": [
+    {
+      "name": "next",
+      "SPDXID": "SPDXRef-Package-next",
+      "versionInfo": "16.2.6",
+      "downloadLocation": "https://registry.npmjs.org/next",
+      "licenseConcluded": "MIT",
+      "checksums": [{ "algorithm": "SHA256", "checksumValue": "b901a1bc8274a9b9a1029410bc901a21e7801a21e490" }]
+    },
+    {
+      "name": "react",
+      "SPDXID": "SPDXRef-Package-react",
+      "versionInfo": "19.0.0",
+      "downloadLocation": "https://registry.npmjs.org/react",
+      "licenseConcluded": "MIT",
+      "checksums": [{ "algorithm": "SHA256", "checksumValue": "c92841bc90a18bc91a2741ab0294101e789a102bc091" }]
+    },
+    {
+      "name": "lucide-react",
+      "SPDXID": "SPDXRef-Package-lucide-react",
+      "versionInfo": "0.344.0",
+      "downloadLocation": "https://registry.npmjs.org/lucide-react",
+      "licenseConcluded": "ISC",
+      "checksums": [{ "algorithm": "SHA256", "checksumValue": "d820491ab0294101e789a102bc091c92841bc90a18bc" }]
+    },
+    {
+      "name": "tailwindcss",
+      "SPDXID": "SPDXRef-Package-tailwindcss",
+      "versionInfo": "3.4.1",
+      "downloadLocation": "https://registry.npmjs.org/tailwindcss",
+      "licenseConcluded": "MIT",
+      "checksums": [{ "algorithm": "SHA256", "checksumValue": "e9102bc091c92841bc90a18bcd820491ab0294101e78" }]
+    }
+  ]
+}
