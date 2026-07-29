@@ -61,30 +61,30 @@ type TLSControl struct {
 
 // InfraSecurityPosture is the full infrastructure security posture report.
 type InfraSecurityPosture struct {
-	OverallScore      int                   `json:"overall_score"`
-	Grade             string                `json:"grade"`
-	Domains           []InfraSecurityDomain `json:"domains"`
-	HardeningChecks   []HardeningCheck      `json:"hardening_checks"`
-	DockerChecks      []DockerSecurityCheck  `json:"docker_checks"`
-	NetworkControls   []NetworkSegmentControl `json:"network_controls"`
-	TLSControls       []TLSControl          `json:"tls_controls"`
-	CriticalIssues    int                   `json:"critical_issues"`
-	WarningIssues     int                   `json:"warning_issues"`
-	PassedChecks      int                   `json:"passed_checks"`
-	TotalChecks       int                   `json:"total_checks"`
-	GeneratedAt       time.Time             `json:"generated_at"`
-	ProductionReady   bool                  `json:"production_ready"`
+	OverallScore    int                     `json:"overall_score"`
+	Grade           string                  `json:"grade"`
+	Domains         []InfraSecurityDomain   `json:"domains"`
+	HardeningChecks []HardeningCheck        `json:"hardening_checks"`
+	DockerChecks    []DockerSecurityCheck   `json:"docker_checks"`
+	NetworkControls []NetworkSegmentControl `json:"network_controls"`
+	TLSControls     []TLSControl            `json:"tls_controls"`
+	CriticalIssues  int                     `json:"critical_issues"`
+	WarningIssues   int                     `json:"warning_issues"`
+	PassedChecks    int                     `json:"passed_checks"`
+	TotalChecks     int                     `json:"total_checks"`
+	GeneratedAt     time.Time               `json:"generated_at"`
+	ProductionReady bool                    `json:"production_ready"`
 }
 
 // ─── Infrastructure Security Service ─────────────────────────────────────────
 
 // InfrastructureSecurityService performs infrastructure security posture scanning.
 type InfrastructureSecurityService struct {
-	mu              sync.RWMutex
-	lastPosture     *InfraSecurityPosture
-	lastScanTime    time.Time
-	cacheDuration   time.Duration
-	auditService    *AuditService
+	mu            sync.RWMutex
+	lastPosture   *InfraSecurityPosture
+	lastScanTime  time.Time
+	cacheDuration time.Duration
+	auditService  *AuditService
 }
 
 // NewInfrastructureSecurityService creates a new infrastructure security scanner.
