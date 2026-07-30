@@ -75,6 +75,7 @@ func SetupRoutes(router *gin.Engine) {
 	secOwaspService := services.NewOWASPValidationService()
 	secSimService := services.NewSecuritySimulationService()
 	secScoreService := services.NewSecurityScoreService()
+	secAuditReportService := services.NewSecurityAuditReportService()
 
 	router.Use(middleware.AdaptiveRateLimitMiddleware())
 
@@ -138,11 +139,16 @@ func SetupRoutes(router *gin.Engine) {
 	v2DRHandler := handlers.NewV2BackupSecurityHandler(drBackupService, drRestoreService)
 	v2ComplianceHandler := handlers.NewV2ComplianceHandler(privacyClassService, privacyPIIService, privacyMaskService, privacyRetService)
 	v2ValidationHandler := handlers.NewV2SecurityValidationHandler(secAuditCheckService, secVulnService, secOwaspService, secSimService, secScoreService)
+	v2AuditReportHandler := handlers.NewV2SecurityAuditReportHandler(secAuditReportService)
 
 	v2Group := router.Group("/api/v2")
 	// ─── SECURITY: All /api/v2/* endpoints require JWT + Permission Guards ──────
 	v2Group.Use(middleware.AuthMiddleware())
 	{
+		// DevSecOps Security Audit & Zero Trust Report Routes (Era 31)
+		v2Group.GET("/security-audit/report", middleware.RequirePermission(models.PermViewAuditLogs), v2AuditReportHandler.GetReport)
+		v2Group.POST("/security-audit/run", middleware.RequirePermission(models.PermSystemConfiguration), v2AuditReportHandler.RunAudit)
+
 		// Enterprise Security Validation & Certification Routes (Era 30)
 		v2Group.GET("/security-validation/status", v2ValidationHandler.GetStatus)
 		v2Group.GET("/security-validation/audit", middleware.RequirePermission(models.PermViewAuditLogs), v2ValidationHandler.GetAudit)

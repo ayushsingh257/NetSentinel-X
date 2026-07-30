@@ -15,14 +15,16 @@ import ProductionDeploymentSecurityDashboard from "@/components/ProductionDeploy
 import DisasterRecoveryDashboard from "@/components/DisasterRecoveryDashboard";
 import ComplianceDashboard from "@/components/ComplianceDashboard";
 import SecurityCertificationDashboard from "@/components/SecurityCertificationDashboard";
-import { ShieldCheck, Lock, Globe, Key, Server, KeyRound, Database, UserCheck, Activity, GitBranch, Rocket, RotateCcw, FileText, Award } from "lucide-react";
+import SecurityAuditReviewDashboard from "@/components/SecurityAuditReviewDashboard";
+import { ShieldCheck, Lock, Globe, Key, Server, KeyRound, Database, UserCheck, Activity, GitBranch, Rocket, RotateCcw, FileText, Award, CheckSquare } from "lucide-react";
 
 export default function SecurityHardeningPage() {
   const [activeView, setActiveView] = useState<
-    "certification" | "compliance" | "dr" | "deployment" | "cicd" | "siem" | "identity" | "database" | "secrets" | "infra" | "apisec" | "websec" | "authz" | "hardening"
-  >("certification");
+    "devsecops" | "certification" | "compliance" | "dr" | "deployment" | "cicd" | "siem" | "identity" | "database" | "secrets" | "infra" | "apisec" | "websec" | "authz" | "hardening"
+  >("devsecops");
 
   const tabs = [
+    { id: "devsecops", label: "DevSecOps Audit (Era 31)", icon: <CheckSquare className="w-4 h-4" /> },
     { id: "certification", label: "Security Certification (Era 30)", icon: <Award className="w-4 h-4" /> },
     { id: "compliance", label: "Privacy & Compliance (Era 29)", icon: <FileText className="w-4 h-4" /> },
     { id: "dr", label: "Disaster Recovery (Era 28)", icon: <RotateCcw className="w-4 h-4" /> },
@@ -47,7 +49,7 @@ export default function SecurityHardeningPage() {
             Enterprise Security Controls
           </h1>
           <p className="text-xs text-slate-400 dark:text-zinc-400 mt-1">
-            Enterprise Certification &amp; OWASP Validation (98/100 Rating), SOC 2, ISO 27001, GDPR &amp; SSDLC — Eras 15–30
+            STRIDE Threat Modeling, Zero Trust Architecture (100%), Enterprise Certification (98/100) &amp; SSDLC — Eras 15–31
           </p>
         </div>
 
@@ -69,7 +71,9 @@ export default function SecurityHardeningPage() {
         </div>
       </div>
 
-      {activeView === "certification" ? (
+      {activeView === "devsecops" ? (
+        <SecurityAuditReviewDashboard />
+      ) : activeView === "certification" ? (
         <SecurityCertificationDashboard />
       ) : activeView === "compliance" ? (
         <ComplianceDashboard />
