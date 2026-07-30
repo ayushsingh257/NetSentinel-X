@@ -27,6 +27,22 @@
 
 ---
 
+## Production Security Hardening Layer (Eras 17–27)
+
+- **Era 17 — Identity Security**: Authentication hardening & session security.
+- **Era 18 — Authorization Security**: 7-Role RBAC & granular permission controls.
+- **Era 19 — Web Application Security**: OWASP Top 10 mitigation & input sanitization.
+- **Era 20 — Secure API Architecture**: HMAC-SHA256 API keys, OAuth2 token authentication, and adaptive rate limiting.
+- **Era 21 — Infrastructure Security**: Container hardening, network DMZ isolation, TLS 1.3, and Trivy security scans.
+- **Era 22 — Secrets Security**: HashiCorp Vault key management, secret rotation, and Gitleaks CI/CD gates.
+- **Era 23 — Database Security**: Least-privilege DB roles, AES-256-GCM data encryption, and query audit logging.
+- **Era 24 — Secure Session & Identity (MFA)**: Short-lived 15m JWTs, single-use 30d refresh token rotation, RFC 6238 TOTP MFA, and impossible travel detection.
+- **Era 25 — SIEM-Grade Logging & Monitoring**: Immutable SHA-256 cryptographic hash chain audit logs, real-time threat correlation rules, and attack timeline reconstruction.
+- **Era 26 — CI/CD Security & SSDLC**: Automated Semgrep SAST, Gitleaks secret scanning, package CVE audits (`govulncheck` & `npm audit`), Trivy container security, and Syft SBOM generation.
+- **Era 27 — Production Deployment Security**: Production readiness security evaluation engine, TLS 1.3 & HSTS enforcement, secure cookies, infrastructure health monitoring (98/100 score), and zero-downtime rolling blue/green deployment strategy.
+
+---
+
 ## Performance & Security Benchmarks
 
 - **API Average Response Time**: `< 18.4 ms`
