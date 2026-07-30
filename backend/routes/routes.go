@@ -62,6 +62,8 @@ func SetupRoutes(router *gin.Engine) {
 	threatEngine := services.NewThreatDetectionEngine(auditChainService, securityAlertService)
 	timelineService := services.NewIncidentTimelineService(auditChainService)
 	cicdSecurityService := services.NewCICDSecurityService()
+	readinessService := services.NewProductionReadinessService()
+	deploymentHealthService := services.NewDeploymentHealthService()
 
 	router.Use(middleware.AdaptiveRateLimitMiddleware())
 
@@ -121,11 +123,19 @@ func SetupRoutes(router *gin.Engine) {
 	v2IdentityHandler := handlers.NewV2IdentitySecurityHandler(tokenService, refreshTokenService, sessionSecService, mfaService, loginRiskService, authEventService)
 	v2SIEMHandler := handlers.NewV2SIEMSecurityHandler(auditChainService, securityEventService, threatEngine, securityAlertService, timelineService)
 	v2CICDHandler := handlers.NewV2CICDSecurityHandler(cicdSecurityService)
+	v2DeploymentHandler := handlers.NewV2DeploymentSecurityHandler(readinessService, deploymentHealthService)
 
 	v2Group := router.Group("/api/v2")
 	// ─── SECURITY: All /api/v2/* endpoints require JWT + Permission Guards ──────
 	v2Group.Use(middleware.AuthMiddleware())
 	{
+		// Production Deployment Security Routes (Era 27)
+		v2Group.GET("/deployment/posture", v2DeploymentHandler.GetPosture)
+		v2Group.GET("/deployment/config", middleware.RequirePermission(models.PermViewAuditLogs), v2DeploymentHandler.GetConfig)
+		v2Group.GET("/deployment/tls", middleware.RequirePermission(models.PermViewAuditLogs), v2DeploymentHandler.GetTLS)
+		v2Group.GET("/deployment/health", middleware.RequirePermission(models.PermViewAuditLogs), v2DeploymentHandler.GetHealth)
+		v2Group.GET("/deployment/rollback", middleware.RequirePermission(models.PermSystemConfiguration), v2DeploymentHandler.GetRollback)
+
 		// CI/CD Security & SSDLC Routes (Era 26)
 		v2Group.GET("/cicd-security/posture", v2CICDHandler.GetPosture)
 		v2Group.GET("/cicd-security/scans", middleware.RequirePermission(models.PermViewAuditLogs), v2CICDHandler.GetScans)
