@@ -64,6 +64,8 @@ func SetupRoutes(router *gin.Engine) {
 	cicdSecurityService := services.NewCICDSecurityService()
 	readinessService := services.NewProductionReadinessService()
 	deploymentHealthService := services.NewDeploymentHealthService()
+	drBackupService := services.NewBackupService()
+	drRestoreService := services.NewRestoreVerificationService(drBackupService)
 
 	router.Use(middleware.AdaptiveRateLimitMiddleware())
 
@@ -124,11 +126,19 @@ func SetupRoutes(router *gin.Engine) {
 	v2SIEMHandler := handlers.NewV2SIEMSecurityHandler(auditChainService, securityEventService, threatEngine, securityAlertService, timelineService)
 	v2CICDHandler := handlers.NewV2CICDSecurityHandler(cicdSecurityService)
 	v2DeploymentHandler := handlers.NewV2DeploymentSecurityHandler(readinessService, deploymentHealthService)
+	v2DRHandler := handlers.NewV2BackupSecurityHandler(drBackupService, drRestoreService)
 
 	v2Group := router.Group("/api/v2")
 	// ─── SECURITY: All /api/v2/* endpoints require JWT + Permission Guards ──────
 	v2Group.Use(middleware.AuthMiddleware())
 	{
+		// Enterprise Backup & Disaster Recovery Routes (Era 28)
+		v2Group.GET("/backup/status", v2DRHandler.GetBackupStatus)
+		v2Group.GET("/backup/history", middleware.RequirePermission(models.PermViewAuditLogs), v2DRHandler.GetBackupHistory)
+		v2Group.GET("/backup/integrity", middleware.RequirePermission(models.PermViewAuditLogs), v2DRHandler.GetBackupIntegrity)
+		v2Group.GET("/backup/recovery-readiness", middleware.RequirePermission(models.PermViewAuditLogs), v2DRHandler.GetRecoveryReadiness)
+		v2Group.POST("/backup/restore-test", middleware.RequirePermission(models.PermSystemConfiguration), v2DRHandler.ExecuteRestoreTest)
+
 		// Production Deployment Security Routes (Era 27)
 		v2Group.GET("/deployment/posture", v2DeploymentHandler.GetPosture)
 		v2Group.GET("/deployment/config", middleware.RequirePermission(models.PermViewAuditLogs), v2DeploymentHandler.GetConfig)

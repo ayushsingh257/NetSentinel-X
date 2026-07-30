@@ -12,14 +12,16 @@ import IdentitySecurityDashboard from "@/components/IdentitySecurityDashboard";
 import SIEMSecurityDashboard from "@/components/SIEMSecurityDashboard";
 import CICDSecurityDashboard from "@/components/CICDSecurityDashboard";
 import ProductionDeploymentSecurityDashboard from "@/components/ProductionDeploymentSecurityDashboard";
-import { ShieldCheck, Lock, Globe, Key, Server, KeyRound, Database, UserCheck, Activity, GitBranch, Rocket } from "lucide-react";
+import DisasterRecoveryDashboard from "@/components/DisasterRecoveryDashboard";
+import { ShieldCheck, Lock, Globe, Key, Server, KeyRound, Database, UserCheck, Activity, GitBranch, Rocket, RotateCcw } from "lucide-react";
 
 export default function SecurityHardeningPage() {
   const [activeView, setActiveView] = useState<
-    "deployment" | "cicd" | "siem" | "identity" | "database" | "secrets" | "infra" | "apisec" | "websec" | "authz" | "hardening"
-  >("deployment");
+    "dr" | "deployment" | "cicd" | "siem" | "identity" | "database" | "secrets" | "infra" | "apisec" | "websec" | "authz" | "hardening"
+  >("dr");
 
   const tabs = [
+    { id: "dr", label: "Disaster Recovery (Era 28)", icon: <RotateCcw className="w-4 h-4" /> },
     { id: "deployment", label: "Production Deployment (Era 27)", icon: <Rocket className="w-4 h-4" /> },
     { id: "cicd", label: "CI/CD & SSDLC (Era 26)", icon: <GitBranch className="w-4 h-4" /> },
     { id: "siem", label: "SIEM & Audit (Era 25)", icon: <Activity className="w-4 h-4" /> },
@@ -41,7 +43,7 @@ export default function SecurityHardeningPage() {
             Enterprise Security Controls
           </h1>
           <p className="text-xs text-slate-400 dark:text-zinc-400 mt-1">
-            Production Readiness Engine, TLS 1.3 Transport, Zero-Downtime Deployment &amp; SSDLC — Eras 15–27
+            Disaster Recovery &amp; Business Continuity (RPO ≤ 5m, RTO ≤ 30m), Production Readiness &amp; SSDLC — Eras 15–28
           </p>
         </div>
 
@@ -63,7 +65,9 @@ export default function SecurityHardeningPage() {
         </div>
       </div>
 
-      {activeView === "deployment" ? (
+      {activeView === "dr" ? (
+        <DisasterRecoveryDashboard />
+      ) : activeView === "deployment" ? (
         <ProductionDeploymentSecurityDashboard />
       ) : activeView === "cicd" ? (
         <CICDSecurityDashboard />
