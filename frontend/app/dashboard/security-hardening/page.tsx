@@ -14,14 +14,16 @@ import CICDSecurityDashboard from "@/components/CICDSecurityDashboard";
 import ProductionDeploymentSecurityDashboard from "@/components/ProductionDeploymentSecurityDashboard";
 import DisasterRecoveryDashboard from "@/components/DisasterRecoveryDashboard";
 import ComplianceDashboard from "@/components/ComplianceDashboard";
-import { ShieldCheck, Lock, Globe, Key, Server, KeyRound, Database, UserCheck, Activity, GitBranch, Rocket, RotateCcw, FileText } from "lucide-react";
+import SecurityCertificationDashboard from "@/components/SecurityCertificationDashboard";
+import { ShieldCheck, Lock, Globe, Key, Server, KeyRound, Database, UserCheck, Activity, GitBranch, Rocket, RotateCcw, FileText, Award } from "lucide-react";
 
 export default function SecurityHardeningPage() {
   const [activeView, setActiveView] = useState<
-    "compliance" | "dr" | "deployment" | "cicd" | "siem" | "identity" | "database" | "secrets" | "infra" | "apisec" | "websec" | "authz" | "hardening"
-  >("compliance");
+    "certification" | "compliance" | "dr" | "deployment" | "cicd" | "siem" | "identity" | "database" | "secrets" | "infra" | "apisec" | "websec" | "authz" | "hardening"
+  >("certification");
 
   const tabs = [
+    { id: "certification", label: "Security Certification (Era 30)", icon: <Award className="w-4 h-4" /> },
     { id: "compliance", label: "Privacy & Compliance (Era 29)", icon: <FileText className="w-4 h-4" /> },
     { id: "dr", label: "Disaster Recovery (Era 28)", icon: <RotateCcw className="w-4 h-4" /> },
     { id: "deployment", label: "Production Deployment (Era 27)", icon: <Rocket className="w-4 h-4" /> },
@@ -45,7 +47,7 @@ export default function SecurityHardeningPage() {
             Enterprise Security Controls
           </h1>
           <p className="text-xs text-slate-400 dark:text-zinc-400 mt-1">
-            SOC 2 Type II, ISO 27001 &amp; GDPR Privacy Governance, PII Masking, Disaster Recovery &amp; SSDLC — Eras 15–29
+            Enterprise Certification &amp; OWASP Validation (98/100 Rating), SOC 2, ISO 27001, GDPR &amp; SSDLC — Eras 15–30
           </p>
         </div>
 
@@ -67,7 +69,9 @@ export default function SecurityHardeningPage() {
         </div>
       </div>
 
-      {activeView === "compliance" ? (
+      {activeView === "certification" ? (
+        <SecurityCertificationDashboard />
+      ) : activeView === "compliance" ? (
         <ComplianceDashboard />
       ) : activeView === "dr" ? (
         <DisasterRecoveryDashboard />

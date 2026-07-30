@@ -70,6 +70,11 @@ func SetupRoutes(router *gin.Engine) {
 	privacyPIIService := services.NewPIIDetectionService()
 	privacyMaskService := services.NewDataMaskingService()
 	privacyRetService := services.NewDataRetentionService()
+	secAuditCheckService := services.NewSecurityAuditService()
+	secVulnService := services.NewVulnerabilityAssessmentService()
+	secOwaspService := services.NewOWASPValidationService()
+	secSimService := services.NewSecuritySimulationService()
+	secScoreService := services.NewSecurityScoreService()
 
 	router.Use(middleware.AdaptiveRateLimitMiddleware())
 
@@ -132,11 +137,18 @@ func SetupRoutes(router *gin.Engine) {
 	v2DeploymentHandler := handlers.NewV2DeploymentSecurityHandler(readinessService, deploymentHealthService)
 	v2DRHandler := handlers.NewV2BackupSecurityHandler(drBackupService, drRestoreService)
 	v2ComplianceHandler := handlers.NewV2ComplianceHandler(privacyClassService, privacyPIIService, privacyMaskService, privacyRetService)
+	v2ValidationHandler := handlers.NewV2SecurityValidationHandler(secAuditCheckService, secVulnService, secOwaspService, secSimService, secScoreService)
 
 	v2Group := router.Group("/api/v2")
 	// ─── SECURITY: All /api/v2/* endpoints require JWT + Permission Guards ──────
 	v2Group.Use(middleware.AuthMiddleware())
 	{
+		// Enterprise Security Validation & Certification Routes (Era 30)
+		v2Group.GET("/security-validation/status", v2ValidationHandler.GetStatus)
+		v2Group.GET("/security-validation/audit", middleware.RequirePermission(models.PermViewAuditLogs), v2ValidationHandler.GetAudit)
+		v2Group.GET("/security-validation/owasp", middleware.RequirePermission(models.PermViewAuditLogs), v2ValidationHandler.GetOWASP)
+		v2Group.GET("/security-validation/vulnerabilities", middleware.RequirePermission(models.PermViewAuditLogs), v2ValidationHandler.GetVulnerabilities)
+		v2Group.POST("/security-validation/run-scan", middleware.RequirePermission(models.PermSystemConfiguration), v2ValidationHandler.RunScan)
 		// Privacy & Compliance Framework Routes (Era 29)
 		v2Group.GET("/privacy-compliance/status", v2ComplianceHandler.GetComplianceStatus)
 		v2Group.GET("/privacy-compliance/frameworks", middleware.RequirePermission(models.PermViewAuditLogs), v2ComplianceHandler.GetComplianceFrameworks)
