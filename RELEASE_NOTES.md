@@ -41,6 +41,7 @@
 - **Era 26 — CI/CD Security & SSDLC**: Automated Semgrep SAST, Gitleaks secret scanning, package CVE audits (`govulncheck` & `npm audit`), Trivy container security, and Syft SBOM generation.
 - **Era 27 — Production Deployment Security**: Production readiness security evaluation engine, TLS 1.3 & HSTS enforcement, secure cookies, infrastructure health monitoring (98/100 score), and zero-downtime rolling blue/green deployment strategy.
 - **Era 28 — Backup, Disaster Recovery & Business Continuity**: Automated database backup engine, AES-256 GCM encryption, SHA-256 integrity hash verification (`BackupHash = SHA256(BackupData)`), sandbox restore simulation testing, RPO ≤ 5 minutes & RTO ≤ 30 minutes compliance.
+- **Era 29 — Privacy & Compliance Framework**: Automated Data Classification (`PUBLIC`, `INTERNAL`, `CONFIDENTIAL`, `RESTRICTED`), PII Detection & Protection (`PII_FOUND`), Data Masking (`e*****@test.com`, `******3210`), Data Retention Policies (365d/730d/30d), and SOC 2 Type II (96%), ISO 27001 (98%), and GDPR (95%) control mappings.
 
 ---
 
