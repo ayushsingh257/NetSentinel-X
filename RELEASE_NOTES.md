@@ -40,6 +40,7 @@
 - **Era 25 — SIEM-Grade Logging & Monitoring**: Immutable SHA-256 cryptographic hash chain audit logs, real-time threat correlation rules, and attack timeline reconstruction.
 - **Era 26 — CI/CD Security & SSDLC**: Automated Semgrep SAST, Gitleaks secret scanning, package CVE audits (`govulncheck` & `npm audit`), Trivy container security, and Syft SBOM generation.
 - **Era 27 — Production Deployment Security**: Production readiness security evaluation engine, TLS 1.3 & HSTS enforcement, secure cookies, infrastructure health monitoring (98/100 score), and zero-downtime rolling blue/green deployment strategy.
+- **Era 28 — Backup, Disaster Recovery & Business Continuity**: Automated database backup engine, AES-256 GCM encryption, SHA-256 integrity hash verification (`BackupHash = SHA256(BackupData)`), sandbox restore simulation testing, RPO ≤ 5 minutes & RTO ≤ 30 minutes compliance.
 
 ---
 
