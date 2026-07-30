@@ -66,6 +66,10 @@ func SetupRoutes(router *gin.Engine) {
 	deploymentHealthService := services.NewDeploymentHealthService()
 	drBackupService := services.NewBackupService()
 	drRestoreService := services.NewRestoreVerificationService(drBackupService)
+	privacyClassService := services.NewDataClassificationService()
+	privacyPIIService := services.NewPIIDetectionService()
+	privacyMaskService := services.NewDataMaskingService()
+	privacyRetService := services.NewDataRetentionService()
 
 	router.Use(middleware.AdaptiveRateLimitMiddleware())
 
@@ -127,11 +131,24 @@ func SetupRoutes(router *gin.Engine) {
 	v2CICDHandler := handlers.NewV2CICDSecurityHandler(cicdSecurityService)
 	v2DeploymentHandler := handlers.NewV2DeploymentSecurityHandler(readinessService, deploymentHealthService)
 	v2DRHandler := handlers.NewV2BackupSecurityHandler(drBackupService, drRestoreService)
+	v2ComplianceHandler := handlers.NewV2ComplianceHandler(privacyClassService, privacyPIIService, privacyMaskService, privacyRetService)
 
 	v2Group := router.Group("/api/v2")
 	// ─── SECURITY: All /api/v2/* endpoints require JWT + Permission Guards ──────
 	v2Group.Use(middleware.AuthMiddleware())
 	{
+		// Privacy & Compliance Framework Routes (Era 29)
+		v2Group.GET("/privacy-compliance/status", v2ComplianceHandler.GetComplianceStatus)
+		v2Group.GET("/privacy-compliance/frameworks", middleware.RequirePermission(models.PermViewAuditLogs), v2ComplianceHandler.GetComplianceFrameworks)
+		v2Group.GET("/privacy-compliance/pii-report", middleware.RequirePermission(models.PermViewAuditLogs), v2ComplianceHandler.GetPIIReport)
+		v2Group.GET("/privacy-compliance/data-classification", middleware.RequirePermission(models.PermViewAuditLogs), v2ComplianceHandler.GetDataClassification)
+		v2Group.POST("/privacy-compliance/privacy-scan", middleware.RequirePermission(models.PermSystemConfiguration), v2ComplianceHandler.ExecutePrivacyScan)
+
+		v2Group.GET("/compliance/frameworks", middleware.RequirePermission(models.PermViewAuditLogs), v2ComplianceHandler.GetComplianceFrameworks)
+		v2Group.GET("/compliance/pii-report", middleware.RequirePermission(models.PermViewAuditLogs), v2ComplianceHandler.GetPIIReport)
+		v2Group.GET("/compliance/data-classification", middleware.RequirePermission(models.PermViewAuditLogs), v2ComplianceHandler.GetDataClassification)
+		v2Group.POST("/compliance/privacy-scan", middleware.RequirePermission(models.PermSystemConfiguration), v2ComplianceHandler.ExecutePrivacyScan)
+
 		// Enterprise Backup & Disaster Recovery Routes (Era 28)
 		v2Group.GET("/backup/status", v2DRHandler.GetBackupStatus)
 		v2Group.GET("/backup/history", middleware.RequirePermission(models.PermViewAuditLogs), v2DRHandler.GetBackupHistory)

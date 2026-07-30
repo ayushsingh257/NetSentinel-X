@@ -13,14 +13,16 @@ import SIEMSecurityDashboard from "@/components/SIEMSecurityDashboard";
 import CICDSecurityDashboard from "@/components/CICDSecurityDashboard";
 import ProductionDeploymentSecurityDashboard from "@/components/ProductionDeploymentSecurityDashboard";
 import DisasterRecoveryDashboard from "@/components/DisasterRecoveryDashboard";
-import { ShieldCheck, Lock, Globe, Key, Server, KeyRound, Database, UserCheck, Activity, GitBranch, Rocket, RotateCcw } from "lucide-react";
+import ComplianceDashboard from "@/components/ComplianceDashboard";
+import { ShieldCheck, Lock, Globe, Key, Server, KeyRound, Database, UserCheck, Activity, GitBranch, Rocket, RotateCcw, FileText } from "lucide-react";
 
 export default function SecurityHardeningPage() {
   const [activeView, setActiveView] = useState<
-    "dr" | "deployment" | "cicd" | "siem" | "identity" | "database" | "secrets" | "infra" | "apisec" | "websec" | "authz" | "hardening"
-  >("dr");
+    "compliance" | "dr" | "deployment" | "cicd" | "siem" | "identity" | "database" | "secrets" | "infra" | "apisec" | "websec" | "authz" | "hardening"
+  >("compliance");
 
   const tabs = [
+    { id: "compliance", label: "Privacy & Compliance (Era 29)", icon: <FileText className="w-4 h-4" /> },
     { id: "dr", label: "Disaster Recovery (Era 28)", icon: <RotateCcw className="w-4 h-4" /> },
     { id: "deployment", label: "Production Deployment (Era 27)", icon: <Rocket className="w-4 h-4" /> },
     { id: "cicd", label: "CI/CD & SSDLC (Era 26)", icon: <GitBranch className="w-4 h-4" /> },
@@ -43,7 +45,7 @@ export default function SecurityHardeningPage() {
             Enterprise Security Controls
           </h1>
           <p className="text-xs text-slate-400 dark:text-zinc-400 mt-1">
-            Disaster Recovery &amp; Business Continuity (RPO ≤ 5m, RTO ≤ 30m), Production Readiness &amp; SSDLC — Eras 15–28
+            SOC 2 Type II, ISO 27001 &amp; GDPR Privacy Governance, PII Masking, Disaster Recovery &amp; SSDLC — Eras 15–29
           </p>
         </div>
 
@@ -65,7 +67,9 @@ export default function SecurityHardeningPage() {
         </div>
       </div>
 
-      {activeView === "dr" ? (
+      {activeView === "compliance" ? (
+        <ComplianceDashboard />
+      ) : activeView === "dr" ? (
         <DisasterRecoveryDashboard />
       ) : activeView === "deployment" ? (
         <ProductionDeploymentSecurityDashboard />

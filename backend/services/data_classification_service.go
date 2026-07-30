@@ -1,70 +1,166 @@
 package services
 
 import (
-	"strings"
+	"fmt"
+	"sync"
+	"time"
 
 	"netsentinel-x-backend/models"
 )
 
-// ClassifiedField represents a classified database field definition.
-type ClassifiedField struct {
-	Table       string                         `json:"table"`
-	Column      string                         `json:"column"`
-	Level       models.DataClassificationLevel `json:"level"`
-	Masked      bool                           `json:"masked"`
-	Encrypted   bool                           `json:"encrypted"`
-	Description string                         `json:"description"`
-}
-
-// DataClassificationService categorizes and masks database fields based on security policy.
+// DataClassificationService manages automated & manual data classification across resources.
 type DataClassificationService struct {
-	schema []ClassifiedField
+	mu      sync.RWMutex
+	records []models.DataClassificationRecord
 }
 
-// NewDataClassificationService creates a new DataClassificationService with default schema mapping.
+// NewDataClassificationService initializes DataClassificationService with pre-seeded data classifications.
 func NewDataClassificationService() *DataClassificationService {
-	s := &DataClassificationService{}
-	s.seedSchema()
+	s := &DataClassificationService{
+		records: make([]models.DataClassificationRecord, 0),
+	}
+	s.seedClassifications()
 	return s
 }
 
-func (s *DataClassificationService) seedSchema() {
-	s.schema = []ClassifiedField{
-		{Table: "users", Column: "username", Level: models.ClassificationPublic, Masked: false, Encrypted: false, Description: "Public analyst handle"},
-		{Table: "users", Column: "email", Level: models.ClassificationConfidential, Masked: true, Encrypted: false, Description: "Analyst email address"},
-		{Table: "users", Column: "password_hash", Level: models.ClassificationRestricted, Masked: true, Encrypted: true, Description: "Bcrypt password hash"},
-		{Table: "api_keys", Column: "key_hash", Level: models.ClassificationRestricted, Masked: true, Encrypted: true, Description: "SHA-256 API Key hash"},
-		{Table: "api_keys", Column: "prefix", Level: models.ClassificationInternal, Masked: false, Encrypted: false, Description: "Masked key prefix for identification"},
-		{Table: "incidents", Column: "title", Level: models.ClassificationInternal, Masked: false, Encrypted: false, Description: "Incident threat title"},
-		{Table: "incidents", Column: "attacker_ip", Level: models.ClassificationConfidential, Masked: true, Encrypted: false, Description: "Source IP of threat actor"},
-		{Table: "audit_logs", Column: "ip_address", Level: models.ClassificationConfidential, Masked: true, Encrypted: false, Description: "Client request IP address"},
-		{Table: "webhook_subscriptions", Column: "secret", Level: models.ClassificationRestricted, Masked: true, Encrypted: true, Description: "HMAC webhook signing key"},
+func (s *DataClassificationService) seedClassifications() {
+	now := time.Now()
+	s.records = append(s.records,
+		models.DataClassificationRecord{
+			ID:                   "CLS-1001",
+			ResourceID:           "docs/public_api.md",
+			ResourceType:         "DOCUMENTATION",
+			ClassificationLevel:  "PUBLIC",
+			ClassifiedBy:         "AUTOMATIC_ENGINE",
+			ClassificationReason: "Public developer API reference document",
+			CreatedAt:            now.Add(-30 * 24 * time.Hour),
+			UpdatedAt:            now,
+		},
+		models.DataClassificationRecord{
+			ID:                   "CLS-1002",
+			ResourceID:           "reports/monthly_metrics.json",
+			ResourceType:         "LOG_FILE",
+			ClassificationLevel:  "INTERNAL",
+			ClassifiedBy:         "AUTOMATIC_ENGINE",
+			ClassificationReason: "Internal operational performance summary",
+			CreatedAt:            now.Add(-15 * 24 * time.Hour),
+			UpdatedAt:            now,
+		},
+		models.DataClassificationRecord{
+			ID:                   "CLS-1003",
+			ResourceID:           "db.security_findings",
+			ResourceType:         "DATABASE_TABLE",
+			ClassificationLevel:  "CONFIDENTIAL",
+			ClassifiedBy:         "SECURITY_ADMIN",
+			ClassificationReason: "Vulnerability analysis and internal investigation reports",
+			CreatedAt:            now.Add(-7 * 24 * time.Hour),
+			UpdatedAt:            now,
+		},
+		models.DataClassificationRecord{
+			ID:                   "CLS-1004",
+			ResourceID:           "db.user_credentials",
+			ResourceType:         "DATABASE_TABLE",
+			ClassificationLevel:  "RESTRICTED",
+			ClassifiedBy:         "SECURITY_ADMIN",
+			ClassificationReason: "Authentication tokens, password hashes, and PII records",
+			CreatedAt:            now.Add(-2 * 24 * time.Hour),
+			UpdatedAt:            now,
+		},
+		models.DataClassificationRecord{
+			ID:                   "CLS-1005",
+			ResourceID:           "db.audit_logs",
+			ResourceType:         "DATABASE_TABLE",
+			ClassificationLevel:  "RESTRICTED",
+			ClassifiedBy:         "SECURITY_ADMIN",
+			ClassificationReason: "System audit trails and administrative actions",
+			CreatedAt:            now.Add(-1 * 24 * time.Hour),
+			UpdatedAt:            now,
+		},
+	)
+}
+
+// ClassifyResource assigns or updates a resource's classification level.
+func (s *DataClassificationService) ClassifyResource(resourceID, resourceType, level, classifiedBy, reason string) (*models.DataClassificationRecord, error) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	if level != "PUBLIC" && level != "INTERNAL" && level != "CONFIDENTIAL" && level != "RESTRICTED" {
+		return nil, fmt.Errorf("invalid classification level: %s", level)
 	}
+
+	now := time.Now()
+	// Update if exists
+	for i, r := range s.records {
+		if r.ResourceID == resourceID {
+			s.records[i].ClassificationLevel = level
+			s.records[i].ClassifiedBy = classifiedBy
+			s.records[i].ClassificationReason = reason
+			s.records[i].UpdatedAt = now
+			return &s.records[i], nil
+		}
+	}
+
+	record := models.DataClassificationRecord{
+		ID:                   fmt.Sprintf("CLS-%04d", len(s.records)+1001),
+		ResourceID:           resourceID,
+		ResourceType:         resourceType,
+		ClassificationLevel:  level,
+		ClassifiedBy:         classifiedBy,
+		ClassificationReason: reason,
+		CreatedAt:            now,
+		UpdatedAt:            now,
+	}
+
+	s.records = append(s.records, record)
+	return &record, nil
 }
 
-// GetClassifiedFields returns all classified fields.
-func (s *DataClassificationService) GetClassifiedFields() []ClassifiedField {
-	return s.schema
+// GetClassifiedFields returns recorded classified data fields (backwards compatibility with Era 23).
+func (s *DataClassificationService) GetClassifiedFields() []models.DataClassificationRecord {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	recordsCopy := make([]models.DataClassificationRecord, len(s.records))
+	copy(recordsCopy, s.records)
+	return recordsCopy
 }
 
-// MaskValue applies appropriate masking based on data classification level.
-func (s *DataClassificationService) MaskValue(level models.DataClassificationLevel, rawVal string) string {
-	switch level {
-	case models.ClassificationRestricted:
+// MaskValue masks values based on classification level (backwards compatibility with Era 23).
+func (s *DataClassificationService) MaskValue(level, value string) string {
+	if level == "RESTRICTED" || level == "CONFIDENTIAL" {
 		return "********"
-	case models.ClassificationConfidential:
-		if strings.Contains(rawVal, "@") {
-			parts := strings.Split(rawVal, "@")
-			if len(parts[0]) > 2 {
-				return parts[0][:2] + "****@" + parts[1]
-			}
-			return "*@*"
+	}
+	return value
+}
+
+// GetStats calculates distribution counts per classification level.
+func (s *DataClassificationService) GetStats() *models.DataClassificationStatsResponse {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	pub, intl, conf, rest := 0, 0, 0, 0
+	for _, r := range s.records {
+		switch r.ClassificationLevel {
+		case "PUBLIC":
+			pub++
+		case "INTERNAL":
+			intl++
+		case "CONFIDENTIAL":
+			conf++
+		case "RESTRICTED":
+			rest++
 		}
-		if len(rawVal) > 6 {
-			return rawVal[:3] + "..." + rawVal[len(rawVal)-3:]
-		}
-		return "***.***.***"
-	default:
-		return rawVal
+	}
+
+	recordsCopy := make([]models.DataClassificationRecord, len(s.records))
+	copy(recordsCopy, s.records)
+
+	return &models.DataClassificationStatsResponse{
+		PublicCount:       pub,
+		InternalCount:     intl,
+		ConfidentialCount: conf,
+		RestrictedCount:   rest,
+		TotalResources:    len(s.records),
+		Records:           recordsCopy,
 	}
 }
