@@ -77,6 +77,7 @@ func SetupRoutes(router *gin.Engine) {
 	secScoreService := services.NewSecurityScoreService()
 	secAuditReportService := services.NewSecurityAuditReportService()
 	aiAnalystService := services.NewAISecurityAnalystService(nil)
+	advancedDetectionService := services.NewAdvancedDetectionService()
 
 	router.Use(middleware.AdaptiveRateLimitMiddleware())
 
@@ -145,11 +146,22 @@ func SetupRoutes(router *gin.Engine) {
 	v2ValidationHandler := handlers.NewV2SecurityValidationHandler(secAuditCheckService, secVulnService, secOwaspService, secSimService, secScoreService)
 	v2AuditReportHandler := handlers.NewV2SecurityAuditReportHandler(secAuditReportService)
 	v2AIAnalystHandler := handlers.NewV2AIAnalystHandler(aiAnalystService)
+	v2DetectionEngHandler := handlers.NewV2DetectionEngineeringHandler(advancedDetectionService)
 
 	v2Group := router.Group("/api/v2")
 	// ─── SECURITY: All /api/v2/* endpoints require JWT + Permission Guards ──────
 	v2Group.Use(middleware.AuthMiddleware())
 	{
+		// Advanced Detection Engineering Routes (Era 34)
+		v2Group.GET("/detection/rules", v2DetectionEngHandler.ListRules)
+		v2Group.GET("/detection/rules/:id", v2DetectionEngHandler.GetRule)
+		v2Group.POST("/detection/rules", middleware.RequirePermission(models.PermSystemConfiguration), v2DetectionEngHandler.CreateRule)
+		v2Group.PUT("/detection/rules/:id", middleware.RequirePermission(models.PermSystemConfiguration), v2DetectionEngHandler.UpdateRule)
+		v2Group.DELETE("/detection/rules/:id", middleware.RequirePermission(models.PermSystemConfiguration), v2DetectionEngHandler.DeleteRule)
+		v2Group.POST("/detection/test", v2DetectionEngHandler.TestRule)
+		v2Group.POST("/detection/simulate", v2DetectionEngHandler.SimulateRule)
+		v2Group.GET("/detection/metrics", v2DetectionEngHandler.GetMetrics)
+
 		// AI Security Analyst Routes (Era 33)
 		v2Group.POST("/ai-analyst/explain-alert", v2AIAnalystHandler.ExplainAlert)
 		v2Group.POST("/ai-analyst/summarize-threat", v2AIAnalystHandler.SummarizeThreat)
