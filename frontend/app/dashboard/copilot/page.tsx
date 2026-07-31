@@ -1,11 +1,12 @@
 "use client";
 
+import AISecurityAnalystDashboard from "@/components/AISecurityAnalystDashboard";
 import AICopilot from "@/components/AICopilot";
 import { Bot, Sparkles } from "lucide-react";
 import { useState } from "react";
 
 export default function CopilotPage() {
-  const [copilotOpen, setCopilotOpen] = useState(true);
+  const [copilotOpen, setCopilotOpen] = useState(false);
   const [query, setQuery] = useState("");
 
   const suggestedQueries = [
@@ -17,6 +18,8 @@ export default function CopilotPage() {
 
   return (
     <div className="space-y-6 font-sans">
+      <AISecurityAnalystDashboard />
+
       <div className="p-6 rounded-2xl bg-white dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800 flex items-center justify-between shadow-xl">
         <div>
           <h1 className="text-2xl font-extrabold text-slate-900 dark:text-white flex items-center gap-2">

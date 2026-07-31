@@ -76,6 +76,7 @@ func SetupRoutes(router *gin.Engine) {
 	secSimService := services.NewSecuritySimulationService()
 	secScoreService := services.NewSecurityScoreService()
 	secAuditReportService := services.NewSecurityAuditReportService()
+	aiAnalystService := services.NewAISecurityAnalystService(nil)
 
 	router.Use(middleware.AdaptiveRateLimitMiddleware())
 
@@ -143,11 +144,22 @@ func SetupRoutes(router *gin.Engine) {
 	v2ComplianceHandler := handlers.NewV2ComplianceHandler(privacyClassService, privacyPIIService, privacyMaskService, privacyRetService)
 	v2ValidationHandler := handlers.NewV2SecurityValidationHandler(secAuditCheckService, secVulnService, secOwaspService, secSimService, secScoreService)
 	v2AuditReportHandler := handlers.NewV2SecurityAuditReportHandler(secAuditReportService)
+	v2AIAnalystHandler := handlers.NewV2AIAnalystHandler(aiAnalystService)
 
 	v2Group := router.Group("/api/v2")
 	// ─── SECURITY: All /api/v2/* endpoints require JWT + Permission Guards ──────
 	v2Group.Use(middleware.AuthMiddleware())
 	{
+		// AI Security Analyst Routes (Era 33)
+		v2Group.POST("/ai-analyst/explain-alert", v2AIAnalystHandler.ExplainAlert)
+		v2Group.POST("/ai-analyst/summarize-threat", v2AIAnalystHandler.SummarizeThreat)
+		v2Group.POST("/ai-analyst/summarize-incident", v2AIAnalystHandler.SummarizeIncident)
+		v2Group.POST("/ai-analyst/explain-timeline", v2AIAnalystHandler.ExplainTimeline)
+		v2Group.POST("/ai-analyst/explain-ioc", v2AIAnalystHandler.ExplainIOC)
+		v2Group.POST("/ai-analyst/explain-mitre", v2AIAnalystHandler.ExplainMITRE)
+		v2Group.POST("/ai-analyst/threat-hunting-query", v2AIAnalystHandler.ThreatHuntingQuery)
+		v2Group.POST("/ai-analyst/investigate-assistance", v2AIAnalystHandler.InvestigateAssistance)
+
 		// DevSecOps Security Audit & Zero Trust Report Routes (Era 31)
 		v2Group.GET("/security-audit/report", middleware.RequirePermission(models.PermViewAuditLogs), v2AuditReportHandler.GetReport)
 		v2Group.POST("/security-audit/run", middleware.RequirePermission(models.PermSystemConfiguration), v2AuditReportHandler.RunAudit)
