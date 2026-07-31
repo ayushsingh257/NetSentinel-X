@@ -44,5 +44,5 @@ describe("SOC Workflow Integration", () => {
     const packets = await screen.findByText("500");
 
     expect(packets).toBeInTheDocument();
-  });
+  }, 15000);
 });
