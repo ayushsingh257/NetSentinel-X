@@ -6,7 +6,6 @@ import {
   Radio,
   Search,
   Activity,
-  CheckCircle2,
   RefreshCw,
   Zap,
   Layers,

@@ -79,6 +79,7 @@ func SetupRoutes(router *gin.Engine) {
 	aiAnalystService := services.NewAISecurityAnalystService(nil)
 	advancedDetectionService := services.NewAdvancedDetectionService()
 	threatIntelFusionService := services.NewThreatIntelFusionEngineService()
+	enterpriseIntegrationsService := services.NewEnterpriseIntegrationsService()
 
 	router.Use(middleware.AdaptiveRateLimitMiddleware())
 
@@ -149,11 +150,22 @@ func SetupRoutes(router *gin.Engine) {
 	v2AIAnalystHandler := handlers.NewV2AIAnalystHandler(aiAnalystService)
 	v2DetectionEngHandler := handlers.NewV2DetectionEngineeringHandler(advancedDetectionService)
 	v2IntelFusionHandler := handlers.NewV2ThreatIntelFusionHandler(threatIntelFusionService)
+	v2IntegrationsHandler := handlers.NewV2EnterpriseIntegrationsHandler(enterpriseIntegrationsService)
 
 	v2Group := router.Group("/api/v2")
 	// ─── SECURITY: All /api/v2/* endpoints require JWT + Permission Guards ──────
 	v2Group.Use(middleware.AuthMiddleware())
 	{
+		// Enterprise Integrations & Ecosystem Routes (Era 36)
+		v2Group.GET("/integrations/targets", v2IntegrationsHandler.ListTargets)
+		v2Group.GET("/integrations/targets/:id", v2IntegrationsHandler.GetTarget)
+		v2Group.POST("/integrations/targets", middleware.RequirePermission(models.PermSystemConfiguration), v2IntegrationsHandler.CreateTarget)
+		v2Group.PUT("/integrations/targets/:id", middleware.RequirePermission(models.PermSystemConfiguration), v2IntegrationsHandler.UpdateTarget)
+		v2Group.DELETE("/integrations/targets/:id", middleware.RequirePermission(models.PermSystemConfiguration), v2IntegrationsHandler.DeleteTarget)
+		v2Group.POST("/integrations/test", v2IntegrationsHandler.TestTarget)
+		v2Group.GET("/integrations/pipelines", v2IntegrationsHandler.GetPipelines)
+		v2Group.GET("/integrations/metrics", v2IntegrationsHandler.GetMetrics)
+
 		// Threat Intelligence Fusion Routes (Era 35)
 		v2Group.GET("/threat-intel/feeds", v2IntelFusionHandler.ListFeeds)
 		v2Group.POST("/threat-intel/feeds/:id/sync", middleware.RequirePermission(models.PermSystemConfiguration), v2IntelFusionHandler.SyncFeed)
