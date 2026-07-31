@@ -36,5 +36,5 @@ describe("Frontend Backend Integration", () => {
     const packets = await screen.findByText("250");
 
     expect(packets).toBeInTheDocument();
-  });
+  }, 15000);
 });

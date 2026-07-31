@@ -5,14 +5,11 @@ import {
   FileCode,
   ShieldCheck,
   Play,
-  Activity,
   Plus,
   CheckCircle2,
-  AlertTriangle,
   Code,
   PieChart,
   Sliders,
-  Sparkles,
 } from "lucide-react";
 
 interface Rule {

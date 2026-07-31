@@ -78,6 +78,7 @@ func SetupRoutes(router *gin.Engine) {
 	secAuditReportService := services.NewSecurityAuditReportService()
 	aiAnalystService := services.NewAISecurityAnalystService(nil)
 	advancedDetectionService := services.NewAdvancedDetectionService()
+	threatIntelFusionService := services.NewThreatIntelFusionEngineService()
 
 	router.Use(middleware.AdaptiveRateLimitMiddleware())
 
@@ -147,11 +148,19 @@ func SetupRoutes(router *gin.Engine) {
 	v2AuditReportHandler := handlers.NewV2SecurityAuditReportHandler(secAuditReportService)
 	v2AIAnalystHandler := handlers.NewV2AIAnalystHandler(aiAnalystService)
 	v2DetectionEngHandler := handlers.NewV2DetectionEngineeringHandler(advancedDetectionService)
+	v2IntelFusionHandler := handlers.NewV2ThreatIntelFusionHandler(threatIntelFusionService)
 
 	v2Group := router.Group("/api/v2")
 	// ─── SECURITY: All /api/v2/* endpoints require JWT + Permission Guards ──────
 	v2Group.Use(middleware.AuthMiddleware())
 	{
+		// Threat Intelligence Fusion Routes (Era 35)
+		v2Group.GET("/threat-intel/feeds", v2IntelFusionHandler.ListFeeds)
+		v2Group.POST("/threat-intel/feeds/:id/sync", middleware.RequirePermission(models.PermSystemConfiguration), v2IntelFusionHandler.SyncFeed)
+		v2Group.GET("/threat-intel/iocs", v2IntelFusionHandler.GetIOCs)
+		v2Group.POST("/threat-intel/enrich", v2IntelFusionHandler.EnrichIOC)
+		v2Group.GET("/threat-intel/health", v2IntelFusionHandler.GetHealth)
+
 		// Advanced Detection Engineering Routes (Era 34)
 		v2Group.GET("/detection/rules", v2DetectionEngHandler.ListRules)
 		v2Group.GET("/detection/rules/:id", v2DetectionEngHandler.GetRule)
