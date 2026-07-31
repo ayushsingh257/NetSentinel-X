@@ -1,9 +1,14 @@
 # Enterprise Cloud Deployment Guide
 # NetSentinel-X V2 — Era 32 Enterprise Production Operations
 
-**Document Version**: 1.0.0  
+**Document Version**: 1.1.0  
 **Date**: July 31, 2026  
 **Target Platform**: Vercel (Frontend Client) + Docker VPS / Cloud VM (Go Backend API & Nginx Gateway) + Managed PostgreSQL & Managed Redis  
+
+> 📄 **Dedicated Deployment Manuals**:
+> - [VERCEL_DEPLOYMENT.md](file:///c:/Users/Ayush/OneDrive/Desktop/NetSentinel-X/VERCEL_DEPLOYMENT.md): Detailed Frontend Vercel deployment guide.
+> - [BACKEND_DEPLOYMENT.md](file:///c:/Users/Ayush/OneDrive/Desktop/NetSentinel-X/BACKEND_DEPLOYMENT.md): Detailed Backend Docker VPS deployment guide.
+> - [deployment_readiness_report.md](file:///c:/Users/Ayush/OneDrive/Desktop/NetSentinel-X/deployment_readiness_report.md): Production readiness audit & operational checklist.
 
 ---
 
