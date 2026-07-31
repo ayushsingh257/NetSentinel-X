@@ -9,28 +9,23 @@ import (
 )
 
 func TestHealthHandler(t *testing.T) {
-
 	gin.SetMode(gin.TestMode)
-
 	router := gin.Default()
 
 	router.GET("/health", HealthHandler)
+	router.GET("/liveness", LivenessHandler)
+	router.GET("/healthz", LivenessHandler)
+	router.GET("/readiness", ReadinessHandler)
 
-	req, _ := http.NewRequest(
-		"GET",
-		"/health",
-		nil,
-	)
+	endpoints := []string{"/health", "/liveness", "/healthz", "/readiness"}
 
-	response := httptest.NewRecorder()
+	for _, ep := range endpoints {
+		req, _ := http.NewRequest("GET", ep, nil)
+		resp := httptest.NewRecorder()
+		router.ServeHTTP(resp, req)
 
-	router.ServeHTTP(response, req)
-
-	if response.Code != http.StatusOK {
-
-		t.Errorf(
-			"Expected status 200 but got %d",
-			response.Code,
-		)
+		if resp.Code != http.StatusOK {
+			t.Errorf("Expected status 200 for %s but got %d", ep, resp.Code)
+		}
 	}
 }

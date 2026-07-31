@@ -1,6 +1,17 @@
 version: '3.8'
 
 services:
+  proxy:
+    build:
+      context: ./docker/nginx
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+
   backend:
     build:
       context: ./backend
@@ -11,45 +22,51 @@ services:
     environment:
       - GIN_MODE=release
       - PORT=8080
-      - DB_HOST=postgres
-      - DB_PORT=5432
-      - DB_USER=netsentinel
+      - DB_HOST=${DB_HOST:-postgres}
+      - DB_PORT=${DB_PORT:-5432}
+      - DB_USER=${DB_USER:-netsentinel}
       - DB_PASSWORD=${POSTGRES_PASSWORD:-netsentinel_secure_pass}
-      - DB_NAME=netsentinel_db
-      - REDIS_HOST=redis:6379
+      - DB_NAME=${DB_NAME:-netsentinel_db}
+      - REDIS_HOST=${REDIS_HOST:-redis:6379}
       - JWT_SECRET=${JWT_SECRET:-super_secret_jwt_key_netsentinel_2026}
+      - CORS_ALLOWED_ORIGINS=${CORS_ALLOWED_ORIGINS:-https://*.vercel.app}
     depends_on:
-      - postgres
-      - redis
-
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    restart: always
-    ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=production
-      - NEXT_PUBLIC_API_URL=http://localhost:8080
-    depends_on:
-      - backend
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8080/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
 
   postgres:
     image: postgres:16-alpine
     restart: always
     environment:
-      POSTGRES_USER: netsentinel
+      POSTGRES_USER: ${DB_USER:-netsentinel}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-netsentinel_secure_pass}
-      POSTGRES_DB: netsentinel_db
+      POSTGRES_DB: ${DB_NAME:-netsentinel_db}
     volumes:
       - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-netsentinel} -d ${DB_NAME:-netsentinel_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   redis:
     image: redis:7-alpine
     restart: always
     ports:
       - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   pgdata:
