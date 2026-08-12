@@ -99,16 +99,16 @@ export function SignupForm() {
                         <span>Security Analyst</span>
                       </div>
                     </SelectItem>
-                    <SelectItem value="admin">
-                      <div className="flex items-center gap-2">
-                        <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                        <span>SOC Administrator</span>
-                      </div>
-                    </SelectItem>
                     <SelectItem value="engineer">
                       <div className="flex items-center gap-2">
                         <Code className="w-4 h-4 text-teal-500" />
-                        <span>Detection Engineer</span>
+                        <span>Security Engineer</span>
+                      </div>
+                    </SelectItem>
+                    <SelectItem value="grc">
+                      <div className="flex items-center gap-2">
+                        <ShieldCheck className="w-4 h-4 text-purple-500" />
+                        <span>GRC Analyst</span>
                       </div>
                     </SelectItem>
                   </SelectContent>
@@ -170,7 +170,7 @@ export function SignupForm() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="pr-10 bg-slate-50 dark:bg-black border-slate-300 dark:border-zinc-800 text-xs"
-                    placeholder="••••••••••••"
+                    placeholder="Enter your password"
                   />
                   <Button
                     type="button"
@@ -219,11 +219,13 @@ export function SignupForm() {
 
 export function LoginForm() {
   const [isVisible, setIsVisible] = useState(false);
-  const [username, setUsername] = useState("admin");
-  const [password, setPassword] = useState("admin");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  const isDemoMode = process.env.NEXT_PUBLIC_DEMO_MODE === "true";
 
   const toggleVisibility = () => setIsVisible(!isVisible);
 
@@ -258,7 +260,7 @@ export function LoginForm() {
           localStorage.setItem("role", username);
           router.push("/dashboard");
         } else {
-          setError("Invalid credentials. Try admin/admin or analyst/analyst.");
+          setError("Invalid credentials. Please verify your username and password.");
         }
       }
     } catch {
@@ -270,7 +272,7 @@ export function LoginForm() {
         localStorage.setItem("role", username);
         router.push("/dashboard");
       } else {
-        setError("Invalid credentials. Try admin/admin or analyst/analyst.");
+        setError("Invalid credentials. Please verify your username and password.");
       }
     } finally {
       setLoading(false);
@@ -301,25 +303,28 @@ export function LoginForm() {
           </p>
         </div>
 
-        <div className="bg-slate-100 dark:bg-black/60 p-3 rounded-xl border border-slate-200 dark:border-zinc-800 text-[11px] font-mono space-y-1.5">
-          <span className="text-slate-500 dark:text-slate-400 text-[10px] uppercase font-bold block">Quick Demo Credentials:</span>
-          <div className="flex items-center justify-between gap-2">
-            <button
-              type="button"
-              onClick={() => { setUsername("admin"); setPassword("Admin@NetSentinel2026!"); }}
-              className="flex-1 px-2.5 py-1 rounded bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-400 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-200 text-center text-[10px] font-bold"
-            >
-              admin / Admin@NetSentinel2026!
-            </button>
-            <button
-              type="button"
-              onClick={() => { setUsername("analyst"); setPassword("Analyst@NetSentinel2026!"); }}
-              className="flex-1 px-2.5 py-1 rounded bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-400 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-200 text-center text-[10px] font-bold"
-            >
-              analyst / Analyst@NetSentinel2026!
-            </button>
+        {/* Optional Demo Credentials Section: Only shown when NEXT_PUBLIC_DEMO_MODE is true */}
+        {isDemoMode && (
+          <div className="bg-slate-100 dark:bg-black/60 p-3 rounded-xl border border-slate-200 dark:border-zinc-800 text-[11px] font-mono space-y-1.5">
+            <span className="text-slate-500 dark:text-slate-400 text-[10px] uppercase font-bold block">Quick Demo Credentials:</span>
+            <div className="flex items-center justify-between gap-2">
+              <button
+                type="button"
+                onClick={() => { setUsername("admin"); setPassword("Admin@NetSentinel2026!"); }}
+                className="flex-1 px-2.5 py-1 rounded bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-400 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-200 text-center text-[10px] font-bold"
+              >
+                admin
+              </button>
+              <button
+                type="button"
+                onClick={() => { setUsername("analyst"); setPassword("Analyst@NetSentinel2026!"); }}
+                className="flex-1 px-2.5 py-1 rounded bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-400 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-200 text-center text-[10px] font-bold"
+              >
+                analyst
+              </button>
+            </div>
           </div>
-        </div>
+        )}
 
         {error && (
           <div className="p-3 rounded-lg bg-rose-50 dark:bg-rose-950/80 border border-rose-300 dark:border-rose-500/50 text-rose-700 dark:text-rose-300 text-xs font-mono">
@@ -336,7 +341,7 @@ export function LoginForm() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className="ps-9 bg-slate-50 dark:bg-black border-slate-300 dark:border-zinc-800 text-xs"
-                placeholder="admin"
+                placeholder="you@example.com"
               />
               <div className="text-slate-400 pointer-events-none absolute inset-y-0 start-0 flex items-center justify-center ps-3">
                 <Mail size={16} />
@@ -352,7 +357,7 @@ export function LoginForm() {
               <Input
                 id="password"
                 className="ps-9 pe-9 bg-slate-50 dark:bg-black border-slate-300 dark:border-zinc-800 text-xs"
-                placeholder="Enter password"
+                placeholder="Enter your password"
                 type={isVisible ? "text" : "password"}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
