@@ -49,6 +49,7 @@ func GetWorkerManager() *WorkerManager {
 		globalWorkerManager.RegisterWorker(NewAIThreatAnalysisWorker())
 		globalWorkerManager.RegisterWorker(NewAIAlertTriageWorker())
 		globalWorkerManager.RegisterWorker(NewAIInvestigationWorker())
+		globalWorkerManager.RegisterWorker(NewSOARExecutionWorker())
 		globalWorkerManager.StartAll(ctx)
 	})
 	return globalWorkerManager

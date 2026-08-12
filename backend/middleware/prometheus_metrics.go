@@ -101,6 +101,41 @@ var (
 		Name: "netsentinel_ai_worker_queue_depth",
 		Help: "Pending task queue depth across AI analysis background workers.",
 	})
+
+	SOARPlaybookExecutionsTotal = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "netsentinel_soar_playbook_executions_total",
+			Help: "Total SOAR playbook executions partitioned by playbook ID and status.",
+		},
+		[]string{"playbook_id", "status"},
+	)
+
+	SOARSuccessfulActionsTotal = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "netsentinel_soar_successful_actions_total",
+			Help: "Total successful automated response actions partitioned by action_type.",
+		},
+		[]string{"action_type"},
+	)
+
+	SOARFailedActionsTotal = prometheus.NewCounterVec(
+		prometheus.CounterOpts{
+			Name: "netsentinel_soar_failed_actions_total",
+			Help: "Total failed automated response actions partitioned by action_type.",
+		},
+		[]string{"action_type"},
+	)
+
+	SOARPendingApprovalsTotal = prometheus.NewGauge(prometheus.GaugeOpts{
+		Name: "netsentinel_soar_pending_approvals_total",
+		Help: "Number of pending human approval requests in the SOAR approval queue.",
+	})
+
+	SOARExecutionLatencySeconds = prometheus.NewHistogram(prometheus.HistogramOpts{
+		Name:    "netsentinel_soar_execution_latency_seconds",
+		Help:    "Execution latency of SOAR playbook response runs in seconds.",
+		Buckets: prometheus.ExponentialBuckets(0.01, 2, 10),
+	})
 )
 
 func init() {
@@ -122,6 +157,12 @@ func init() {
 	prometheus.MustRegister(AIFalsePositiveReductionTotal)
 	prometheus.MustRegister(AIWorkerQueueDepth)
 
+	prometheus.MustRegister(SOARPlaybookExecutionsTotal)
+	prometheus.MustRegister(SOARSuccessfulActionsTotal)
+	prometheus.MustRegister(SOARFailedActionsTotal)
+	prometheus.MustRegister(SOARPendingApprovalsTotal)
+	prometheus.MustRegister(SOARExecutionLatencySeconds)
+
 	// Bind EventBus metric callbacks
 	services.OnEventPublished = RecordEventBusMessage
 	services.OnEventLatencyObserved = ObserveEventLatency
@@ -132,9 +173,10 @@ func init() {
 	PacketProcessingRateCPS.Set(4850)
 	WebSocketActiveClients.Set(12)
 	DBConnectionPoolActive.Set(8)
-	ActiveWorkers.Set(7)
+	ActiveWorkers.Set(8)
 	EventQueueDepth.Set(18)
 	AIWorkerQueueDepth.Set(3)
+	SOARPendingApprovalsTotal.Set(1)
 	AlertGenerationTotal.WithLabelValues("info").Add(1450)
 	AlertGenerationTotal.WithLabelValues("low").Add(820)
 	AlertGenerationTotal.WithLabelValues("medium").Add(310)
@@ -146,9 +188,12 @@ func init() {
 	AIAnalysisRequestsTotal.WithLabelValues("DeterministicSOCEngine", "SUCCESS").Add(420)
 	AIHighRiskFindingsTotal.WithLabelValues("Malware").Add(45)
 	AIFalsePositiveReductionTotal.Add(128)
+	SOARPlaybookExecutionsTotal.WithLabelValues("PB-BRUTE-FORCE-01", "COMPLETED").Add(28)
+	SOARSuccessfulActionsTotal.WithLabelValues("BLOCK_IP").Add(42)
 	ThreatEngineProcessingLatencySeconds.Observe(0.015)
 	EventProcessingLatencySeconds.Observe(0.003)
 	AIAnalysisLatencySeconds.Observe(0.024)
+	SOARExecutionLatencySeconds.Observe(0.120)
 }
 
 func PrometheusHandler() gin.HandlerFunc {

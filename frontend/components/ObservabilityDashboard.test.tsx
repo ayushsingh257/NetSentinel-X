@@ -5,6 +5,43 @@ import ObservabilityDashboard from "./ObservabilityDashboard";
 describe("ObservabilityDashboard Component", () => {
   beforeAll(() => {
     global.fetch = jest.fn((url: string) => {
+      if (url.includes("/soar")) {
+        return Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              playbooks: [
+                {
+                  id: "PB-BRUTE-FORCE-01",
+                  name: "Automated Brute Force Mitigation Playbook",
+                  description: "Autonomously blocks malicious source IPs",
+                  category: "CREDENTIAL_ABUSE",
+                  trigger_event: "threat.detected",
+                  severity_threshold: "HIGH",
+                  risk_threshold: 70.0,
+                  enabled: true,
+                  created_at: new Date().toISOString(),
+                },
+              ],
+              executions: [
+                {
+                  execution_id: "EXEC-1001",
+                  playbook_id: "PB-BRUTE-FORCE-01",
+                  playbook_name: "Automated Brute Force Mitigation Playbook",
+                  event_id: "EVT-1001",
+                  status: "COMPLETED",
+                  started_at: new Date().toISOString(),
+                  result: "Executed",
+                  logs: ["Step 1 completed"],
+                },
+              ],
+              approvals: [],
+              audit_logs: [],
+              total: 1,
+            }),
+        });
+      }
+
       if (url.includes("/ai/analysis") || url.includes("/ai/investigation")) {
         return Promise.resolve({
           ok: true,
@@ -192,6 +229,21 @@ describe("ObservabilityDashboard Component", () => {
 
     await waitFor(() => {
       expect(screen.getByText(/AI Security Analyst & Autonomous Copilot/i)).toBeInTheDocument();
+    });
+  });
+
+  test("switches to SOAR Automation tab", async () => {
+    render(<ObservabilityDashboard />);
+
+    await waitFor(() => {
+      expect(screen.getByText(/Enterprise Observability & Platform Health Studio/i)).toBeInTheDocument();
+    });
+
+    const soarTab = screen.getByRole("button", { name: /SOAR Automation/i });
+    fireEvent.click(soarTab);
+
+    await waitFor(() => {
+      expect(screen.getByText(/Autonomous Security Orchestration & Response \(SOAR\)/i)).toBeInTheDocument();
     });
   });
 

@@ -16,6 +16,7 @@ import {
 import SystemHealthObservabilityDashboard from "@/components/SystemHealthObservabilityDashboard";
 import EventStreamDashboard from "@/components/EventStreamDashboard";
 import AISecurityAnalystDashboard from "@/components/AISecurityAnalystDashboard";
+import SOARDashboard from "@/components/SOARDashboard";
 
 export interface ServiceHealth {
   name: string;
@@ -106,7 +107,7 @@ export default function ObservabilityDashboard() {
     security: { alerts_processed: 89240, incidents_created: 14, threat_hunts_executed: 42, rules_triggered: 156, workflows_executed: 28, reports_generated: 8, active_iocs_monitored: 1250, ueba_anomalies_flagged: 19, timestamp: "2026-07-27T00:00:00.000Z" },
   });
 
-  const [activeTab, setActiveTab] = useState<"health" | "eventstream" | "aianalyst" | "audit" | "metrics">("health");
+  const [activeTab, setActiveTab] = useState<"health" | "eventstream" | "aianalyst" | "soar" | "audit" | "metrics">("health");
   const [searchQuery, setSearchQuery] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
   const [severityFilter, setSeverityFilter] = useState("");
@@ -208,7 +209,7 @@ export default function ObservabilityDashboard() {
 
         {/* Tab Selector */}
         <div className="flex items-center p-1 bg-zinc-900 rounded-xl border border-zinc-800 font-mono text-xs">
-          {(["health", "eventstream", "aianalyst", "audit", "metrics"] as const).map((tab) => (
+          {(["health", "eventstream", "aianalyst", "soar", "audit", "metrics"] as const).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -221,9 +222,10 @@ export default function ObservabilityDashboard() {
               {tab === "health" && <Server className="w-3.5 h-3.5 text-emerald-400" />}
               {tab === "eventstream" && <Zap className="w-3.5 h-3.5 text-cyan-400" />}
               {tab === "aianalyst" && <BrainCircuit className="w-3.5 h-3.5 text-purple-400" />}
+              {tab === "soar" && <Zap className="w-3.5 h-3.5 text-amber-400" />}
               {tab === "audit" && <ShieldCheck className="w-3.5 h-3.5 text-purple-400" />}
               {tab === "metrics" && <BarChart3 className="w-3.5 h-3.5 text-amber-400" />}
-              <span>{tab === "health" ? "System Health" : tab === "eventstream" ? "Event Bus Stream" : tab === "aianalyst" ? "AI Security Analyst" : tab === "audit" ? "Audit Explorer" : "Platform Metrics"}</span>
+              <span>{tab === "health" ? "System Health" : tab === "eventstream" ? "Event Bus Stream" : tab === "aianalyst" ? "AI Security Analyst" : tab === "soar" ? "SOAR Automation" : tab === "audit" ? "Audit Explorer" : "Platform Metrics"}</span>
             </button>
           ))}
         </div>
@@ -262,6 +264,11 @@ export default function ObservabilityDashboard() {
       {/* Tab 3: AI Security Analyst */}
       {activeTab === "aianalyst" && (
         <AISecurityAnalystDashboard />
+      )}
+
+      {/* Tab 4: SOAR Automation */}
+      {activeTab === "soar" && (
+        <SOARDashboard />
       )}
 
       {/* Tab 2: Audit Explorer */}

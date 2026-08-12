@@ -422,6 +422,16 @@ func SetupRoutes(router *gin.Engine) {
 		v2Group.GET("/ai/analysis/latest", v2AIIntelHandler.GetLatestAnalysis)
 		v2Group.POST("/ai/copilot/chat", v2AIIntelHandler.CopilotChat)
 
+		// Phase 5 Autonomous SOAR & Security Response Automation Routes
+		v2SOARHandler := handlers.NewV2SOARHandler()
+		v2Group.GET("/soar/playbooks", v2SOARHandler.GetPlaybooks)
+		v2Group.POST("/soar/playbooks/:id/execute", v2SOARHandler.ExecutePlaybook)
+		v2Group.GET("/soar/executions", v2SOARHandler.GetExecutions)
+		v2Group.GET("/soar/approvals", v2SOARHandler.GetApprovals)
+		v2Group.POST("/soar/actions/:id/approve", v2SOARHandler.ApproveAction)
+		v2Group.POST("/soar/actions/:id/reject", v2SOARHandler.RejectAction)
+		v2Group.GET("/soar/audit", v2SOARHandler.GetAuditLogs)
+
 		// Enterprise Security Hardening & RBAC Routes
 		v2Group.GET("/security/posture", v2SecurityHandler.GetPosture)
 		v2Group.GET("/security/rbac", v2SecurityHandler.GetRBAC)
