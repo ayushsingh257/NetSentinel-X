@@ -69,6 +69,34 @@ func (h *V2ObservabilityHandler) GetMetrics(c *gin.Context) {
 	c.JSON(http.StatusOK, metrics)
 }
 
+// GetLivenessProbe handles GET /health/live for Kubernetes liveness probe
+func (h *V2ObservabilityHandler) GetLivenessProbe(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"status":    "ALIVE",
+		"component": "netsentinel-x-backend",
+		"probe":     "liveness",
+	})
+}
+
+// GetReadinessProbe handles GET /health/ready for Kubernetes readiness probe
+func (h *V2ObservabilityHandler) GetReadinessProbe(c *gin.Context) {
+	health := h.healthService.GetPlatformHealth()
+	if health.OverallStatus == "CRITICAL" {
+		c.JSON(http.StatusServiceUnavailable, gin.H{
+			"status":    "NOT_READY",
+			"component": "netsentinel-x-backend",
+			"probe":     "readiness",
+			"reason":    "Overall system status is CRITICAL",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"status":    "READY",
+		"component": "netsentinel-x-backend",
+		"probe":     "readiness",
+	})
+}
+
 func (h *V2ObservabilityHandler) GetSecurityMetrics(c *gin.Context) {
 	metrics := h.healthService.GetMetrics()
 	c.JSON(http.StatusOK, metrics.Security)

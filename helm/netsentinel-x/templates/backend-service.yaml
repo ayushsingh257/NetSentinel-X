@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "netsentinel-x.fullname" . }}-backend
+  labels:
+    app.kubernetes.io/name: {{ include "netsentinel-x.name" . }}
+    app.kubernetes.io/component: backend
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: {{ include "netsentinel-x.name" . }}
+    app.kubernetes.io/component: backend

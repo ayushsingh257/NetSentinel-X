@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "netsentinel-x.fullname" . }}-nats
+  labels:
+    app.kubernetes.io/name: {{ include "netsentinel-x.name" . }}
+    app.kubernetes.io/component: nats
+spec:
+  serviceName: {{ include "netsentinel-x.fullname" . }}-nats
+  replicas: {{ .Values.nats.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "netsentinel-x.name" . }}
+      app.kubernetes.io/component: nats
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "netsentinel-x.name" . }}
+        app.kubernetes.io/component: nats
+    spec:
+      containers:
+        - name: nats
+          image: "{{ .Values.nats.image }}"
+          args: ["-js", "-sd", "/data"]
+          ports:
+            - containerPort: 4222
+              name: client
+            - containerPort: 8222
+              name: monitor
+          volumeMounts:
+            - name: nats-data
+              mountPath: /data
+  volumeClaimTemplates:
+    - metadata:
+        name: nats-data
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: {{ .Values.nats.storage }}

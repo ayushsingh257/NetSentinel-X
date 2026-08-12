@@ -136,6 +136,26 @@ var (
 		Help:    "Execution latency of SOAR playbook response runs in seconds.",
 		Buckets: prometheus.ExponentialBuckets(0.01, 2, 10),
 	})
+
+	KubernetesPodRestartsTotal = prometheus.NewCounter(prometheus.CounterOpts{
+		Name: "netsentinel_kubernetes_pod_restarts_total",
+		Help: "Total number of pod restarts across backend deployment.",
+	})
+
+	BackendActiveReplicas = prometheus.NewGauge(prometheus.GaugeOpts{
+		Name: "netsentinel_backend_active_replicas",
+		Help: "Current number of active backend API pod replicas managed by HPA.",
+	})
+
+	EventProcessingCapacity = prometheus.NewGauge(prometheus.GaugeOpts{
+		Name: "netsentinel_event_processing_capacity",
+		Help: "Aggregate event processing throughput capacity across active cluster pods.",
+	})
+
+	CloudDeploymentHealth = prometheus.NewGauge(prometheus.GaugeOpts{
+		Name: "netsentinel_cloud_deployment_health",
+		Help: "Cloud deployment health score (1.0 = OPTIMAL, 0.0 = DEGRADED).",
+	})
 )
 
 func init() {
@@ -163,6 +183,11 @@ func init() {
 	prometheus.MustRegister(SOARPendingApprovalsTotal)
 	prometheus.MustRegister(SOARExecutionLatencySeconds)
 
+	prometheus.MustRegister(KubernetesPodRestartsTotal)
+	prometheus.MustRegister(BackendActiveReplicas)
+	prometheus.MustRegister(EventProcessingCapacity)
+	prometheus.MustRegister(CloudDeploymentHealth)
+
 	// Bind EventBus metric callbacks
 	services.OnEventPublished = RecordEventBusMessage
 	services.OnEventLatencyObserved = ObserveEventLatency
@@ -177,6 +202,9 @@ func init() {
 	EventQueueDepth.Set(18)
 	AIWorkerQueueDepth.Set(3)
 	SOARPendingApprovalsTotal.Set(1)
+	BackendActiveReplicas.Set(3)
+	EventProcessingCapacity.Set(150000)
+	CloudDeploymentHealth.Set(1.0)
 	AlertGenerationTotal.WithLabelValues("info").Add(1450)
 	AlertGenerationTotal.WithLabelValues("low").Add(820)
 	AlertGenerationTotal.WithLabelValues("medium").Add(310)

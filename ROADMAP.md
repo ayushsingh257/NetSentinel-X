@@ -385,5 +385,10 @@ See dedicated document: [ENTERPRISE_EVOLUTION_ROADMAP.md](file:///c:/Users/Ayush
    - Background SOAR execution worker (`soar_execution_worker.go`) listening to EventBus AI analysis events, triggering playbooks, enforcing human approval gates, and logging forensically signed audit trails via `soar_audit_service.go`.
    - Extended Prometheus metrics via `/metrics` (`netsentinel_soar_playbook_executions_total`, `netsentinel_soar_successful_actions_total`, `netsentinel_soar_failed_actions_total`, `netsentinel_soar_pending_approvals_total`, `netsentinel_soar_execution_latency_seconds`).
    - Interactive `SOARDashboard.tsx` component embedded into Observability Studio with playbook management grid, active execution timelines, human approval queue (Approve/Reject gates), and HMAC-SHA256 response audit trail.
-6. **Phase 6 — Cloud-Native Orchestration & Multi-Region Autoscaling**
-   - Kubernetes (GKE) Helm charts, HPA, and multi-region 99.99% availability architecture.
+6. **Phase 6 — Cloud-Native Orchestration & Multi-Region Autoscaling** ✅ (Completed)
+   - Graceful HTTP server lifecycle handling (`backend/server/graceful_shutdown.go`) with `SIGINT`/`SIGTERM` signal trap and 30-second connection draining.
+   - Kubernetes health probe endpoints (`/health/live` & `/health/ready`) in `v2_observability_handler.go` & `routes.go`.
+   - Helm 3 Chart Repository (`helm/netsentinel-x/`) containing `Chart.yaml`, `values.yaml`, and 11 manifest templates (`backend-deployment.yaml`, `backend-service.yaml`, `frontend-ingress.yaml`, `nats-statefulset.yaml`, `redis-deployment.yaml`, `clickhouse-statefulset.yaml`, `postgres-statefulset.yaml`, `hpa.yaml`, `configmap.yaml`, `secrets.yaml`, `ingress.yaml`).
+   - Horizontal Pod Autoscaler (HPA) manifest scaling backend pods from 3 to 20 replicas based on 70% CPU and 80% Memory thresholds.
+   - Prometheus Cloud Observability metrics (`backend/middleware/prometheus_metrics.go`): `netsentinel_kubernetes_pod_restarts_total`, `netsentinel_backend_active_replicas`, `netsentinel_event_processing_capacity`, `netsentinel_cloud_deployment_health`.
+   - Comprehensive cloud deployment documentation in `docs/GCP_DEPLOYMENT.md` covering GKE/EKS/AKS, Helm 3 commands, HPA verification, zero-downtime rolling upgrades, and disaster recovery.

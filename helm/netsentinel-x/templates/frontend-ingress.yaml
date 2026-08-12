@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ include "netsentinel-x.fullname" . }}-frontend-ingress
+  annotations:
+    kubernetes.io/ingress.class: gce
+spec:
+  rules:
+    - host: app.netsentinel.example.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ include "netsentinel-x.fullname" . }}-backend
+                port:
+                  number: 8080

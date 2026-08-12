@@ -1,0 +1,16 @@
+apiVersion: v2
+name: netsentinel-x
+description: Helm 3 Chart for NetSentinel-X V2 Enterprise Security Platform (GKE / EKS / AKS)
+type: application
+version: 2.0.0
+appVersion: "2.0.0-Enterprise"
+maintainers:
+  - name: NetSentinel-X Security Engineering
+    email: devsecops@netsentinel.io
+keywords:
+  - ndr
+  - siem
+  - soar
+  - kubernetes
+  - gke
+  - threat-detection

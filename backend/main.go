@@ -1,12 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"strings"
 
 	"netsentinel-x-backend/config"
 	"netsentinel-x-backend/packetcapture"
 	"netsentinel-x-backend/routes"
+	"netsentinel-x-backend/server"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -91,6 +91,5 @@ func main() {
 		port = "8080"
 	}
 
-	fmt.Println("NetSentinel-X Enterprise Engine Running On Port:", port)
-	router.Run(":" + port)
+	server.StartWithGracefulShutdown(router, port)
 }

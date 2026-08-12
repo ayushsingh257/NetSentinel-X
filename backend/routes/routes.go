@@ -86,6 +86,8 @@ func SetupRoutes(router *gin.Engine) {
 	// ─── Public Routes (no authentication required) ────────────────────────────
 	router.GET("/", handlers.HomeHandler)
 	router.GET("/health", handlers.HealthHandler)
+	router.GET("/health/live", handlers.LivenessHandler)
+	router.GET("/health/ready", handlers.ReadinessHandler)
 	router.GET("/liveness", handlers.LivenessHandler)
 	router.GET("/healthz", handlers.LivenessHandler)
 	router.GET("/readiness", handlers.ReadinessHandler)

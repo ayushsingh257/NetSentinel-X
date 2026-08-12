@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "netsentinel-x.fullname" . }}-config
+  labels:
+    app.kubernetes.io/name: {{ include "netsentinel-x.name" . }}
+data:
+  PORT: "8080"
+  ENV: "{{ .Values.global.environment }}"
+  LOG_LEVEL: "INFO"
+  NATS_URL: "nats://{{ include "netsentinel-x.fullname" . }}-nats:4222"
+  REDIS_URL: "{{ include "netsentinel-x.fullname" . }}-redis:6379"
+  CLICKHOUSE_HOST: "{{ include "netsentinel-x.fullname" . }}-clickhouse:9000"
