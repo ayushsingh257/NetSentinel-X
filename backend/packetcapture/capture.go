@@ -479,6 +479,17 @@ func StartPacketCapture() {
 
 					websocket.BroadcastTraffic(message)
 
+					// Phase 3 Event Bus Extension (extends DPI, preserving existing websocket & alert pipeline)
+					go func(src, dst, proto string, p int) {
+						pub := services.NewEventPublisherService()
+						_ = pub.PublishNetworkTelemetry("dpi-engine", map[string]interface{}{
+							"source_ip":      src,
+							"destination_ip": dst,
+							"protocol":       proto,
+							"port":           p,
+						}, "")
+					}(sourceIP, destinationIP, serviceType, port)
+
 					go func(key string) {
 
 						<-time.After(500 * time.Millisecond)

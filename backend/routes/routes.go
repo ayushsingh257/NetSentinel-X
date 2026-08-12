@@ -408,6 +408,13 @@ func SetupRoutes(router *gin.Engine) {
 		v2Group.GET("/metrics", v2ObservabilityHandler.GetMetrics)
 		v2Group.GET("/metrics/security", v2ObservabilityHandler.GetSecurityMetrics)
 
+		// Phase 3 Event-Driven Bus & Worker Routes
+		v2EventBusHandler := handlers.NewV2EventBusHandler()
+		v2Group.GET("/events/stream", v2EventBusHandler.GetStream)
+		v2Group.GET("/events/history", v2EventBusHandler.GetHistory)
+		v2Group.GET("/events/workers/status", v2EventBusHandler.GetWorkerStatus)
+		v2Group.GET("/events/dlq", v2EventBusHandler.GetDLQ)
+
 		// Enterprise Security Hardening & RBAC Routes
 		v2Group.GET("/security/posture", v2SecurityHandler.GetPosture)
 		v2Group.GET("/security/rbac", v2SecurityHandler.GetRBAC)

@@ -361,9 +361,15 @@ See dedicated document: [ENTERPRISE_EVOLUTION_ROADMAP.md](file:///c:/Users/Ayush
    - Comprehensive System Health API endpoint at `/api/v2/system/health`.
    - Dynamic real-time `SystemHealthObservabilityDashboard.tsx` component with CPU/RAM telemetry, active client counts, event throughput rates, and subsystem health matrix.
    - Prometheus scraper (`docker/prometheus.yml`) & Grafana overview dashboard provisioning (`netsentinel_overview.json`) integrated in `docker-compose.production.yml`.
-3. **Phase 3 — Event Pipeline Architecture (NATS JetStream)**
-   - Decouple packet capture from threat engine via NATS JetStream event bus.
-   - Event Pipeline Monitoring Dashboard.
+3. **Phase 3 — Event Pipeline Architecture & Distributed Processing Foundation** ✅ (Completed)
+   - Enterprise EventBus engine (`backend/services/event_bus.go`) supporting topic subscriptions, consumer groups, worker pools, retry policy, and Dead Letter Queue (DLQ) routing.
+   - Standardized Event Schemas (`backend/models/events/`) with UUID v4 event IDs, correlation tracking, and payloads.
+   - Event Publisher (`event_publisher_service.go`) and Consumer Framework (`event_consumer_service.go`).
+   - PostgreSQL event persistence (`event_persistence_service.go`) storing indexed metadata with truncated payload summary protection (max 4KB) to avoid memory bloat.
+   - Background Worker pool (`backend/workers/`): `AlertEnrichmentWorker`, `ThreatIntelWorker`, and `MetricsAggregationWorker`.
+   - DPI packet capture extended to publish `NetworkTelemetryEvent` & `ThreatDetectionEvent` while preserving 100% existing flow.
+   - Extended Prometheus metrics via `/metrics` (`netsentinel_event_bus_messages_total`, `netsentinel_event_processing_latency_seconds`, `netsentinel_event_consumer_failures_total`, `netsentinel_active_workers`, `netsentinel_event_queue_depth`).
+   - Interactive `EventStreamDashboard.tsx` component integrated into Observability Studio with live event table, type/severity filters, worker statuses, and raw JSON payload modal.
 4. **Phase 4 — Columnar Security Analytics Storage (ClickHouse)**
    - Implement ClickHouse columnar log storage for sub-second analytical queries across billions of security records.
    - Sub-second Threat Hunting Analytics Dashboard.

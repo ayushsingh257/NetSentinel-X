@@ -5,6 +5,32 @@ import ObservabilityDashboard from "./ObservabilityDashboard";
 describe("ObservabilityDashboard Component", () => {
   beforeAll(() => {
     global.fetch = jest.fn((url: string) => {
+      if (url.includes("/events")) {
+        return Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              events: [
+                {
+                  event_id: "EVT-1001-TEST",
+                  type: "threat.detected",
+                  severity: "critical",
+                  source: "dpi-engine",
+                  timestamp: new Date().toISOString(),
+                  payload: { protocol: "TCP", dst_port: 445 },
+                  metadata: { schema_version: "2.0" },
+                  correlation_id: "CORR-9901",
+                  status: "PROCESSED",
+                },
+              ],
+              workers: [
+                { name: "AlertEnrichmentWorker", status: "RUNNING", last_active: new Date().toISOString(), processed: 100, errors: 0 },
+              ],
+              total: 1,
+            }),
+        });
+      }
+
       if (url.includes("/health")) {
         return Promise.resolve({
           ok: true,
@@ -98,6 +124,21 @@ describe("ObservabilityDashboard Component", () => {
     await waitFor(() => {
       expect(screen.getByText(/Enterprise Observability & Platform Health Studio/i)).toBeInTheDocument();
       expect(screen.getAllByText(/Backend API/i).length).toBeGreaterThan(0);
+    });
+  });
+
+  test("switches to Event Bus Stream tab", async () => {
+    render(<ObservabilityDashboard />);
+
+    await waitFor(() => {
+      expect(screen.getByText(/Enterprise Observability & Platform Health Studio/i)).toBeInTheDocument();
+    });
+
+    const streamTab = screen.getByRole("button", { name: /Event Bus Stream/i });
+    fireEvent.click(streamTab);
+
+    await waitFor(() => {
+      expect(screen.getByText(/Distributed Event-Driven Architecture Engine/i)).toBeInTheDocument();
     });
   });
 
