@@ -123,7 +123,7 @@ export function SignupForm() {
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     className="bg-slate-50 dark:bg-black border-slate-300 dark:border-zinc-800 text-xs"
-                    placeholder="Ayush"
+                    placeholder="First Name"
                   />
                 </div>
                 <div className="space-y-1.5">
@@ -133,7 +133,7 @@ export function SignupForm() {
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                     className="bg-slate-50 dark:bg-black border-slate-300 dark:border-zinc-800 text-xs"
-                    placeholder="Singh"
+                    placeholder="Last Name"
                   />
                 </div>
               </div>
@@ -145,7 +145,7 @@ export function SignupForm() {
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   className="bg-slate-50 dark:bg-black border-slate-300 dark:border-zinc-800 text-xs"
-                  placeholder="ayush_soc"
+                  placeholder="Username"
                 />
               </div>
 
@@ -157,7 +157,7 @@ export function SignupForm() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="bg-slate-50 dark:bg-black border-slate-300 dark:border-zinc-800 text-xs"
-                  placeholder="ayush@netsentinel.io"
+                  placeholder="you@example.com"
                 />
               </div>
 
