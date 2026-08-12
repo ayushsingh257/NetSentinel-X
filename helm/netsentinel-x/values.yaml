@@ -54,3 +54,12 @@ ingress:
     - secretName: netsentinel-tls-cert
       hosts:
         - netsentinel.example.com
+
+# Production Secret Placeholders
+# Do not commit real secrets here. Inject at runtime via:
+# - GCP Secret Manager / External Secrets Operator
+# - Helm CLI flags: --set secrets.jwtSecret=<value> --set secrets.dbPassword=<value>
+secrets:
+  jwtSecret: ""
+  dbPassword: ""
+
