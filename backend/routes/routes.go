@@ -92,6 +92,7 @@ func SetupRoutes(router *gin.Engine) {
 	router.GET("/analytics", handlers.GetAnalytics)
 	router.POST("/login", handlers.LoginHandler)
 	router.POST("/logout", handlers.LogoutHandler)
+	router.GET("/metrics", middleware.PrometheusHandler())
 	router.GET("/traffic", handlers.GetTrafficLogs)
 	router.GET("/alerts", handlers.GetAlerts)
 	router.GET("/export/traffic", handlers.ExportTrafficReport)
@@ -403,6 +404,7 @@ func SetupRoutes(router *gin.Engine) {
 		v2Group.GET("/audit/export", middleware.RequirePermission(models.PermExportReports), v2ObservabilityHandler.ExportAuditLogs)
 		v2Group.GET("/health", v2ObservabilityHandler.GetHealth)
 		v2Group.GET("/health/services", v2ObservabilityHandler.GetHealthServices)
+		v2Group.GET("/system/health", v2ObservabilityHandler.GetSystemHealth)
 		v2Group.GET("/metrics", v2ObservabilityHandler.GetMetrics)
 		v2Group.GET("/metrics/security", v2ObservabilityHandler.GetSecurityMetrics)
 

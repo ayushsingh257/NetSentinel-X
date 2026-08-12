@@ -21,6 +21,7 @@ func TestV2ObservabilityHandler(t *testing.T) {
 		v2.GET("/audit/export", handler.ExportAuditLogs)
 		v2.GET("/health", handler.GetHealth)
 		v2.GET("/health/services", handler.GetHealthServices)
+		v2.GET("/system/health", handler.GetSystemHealth)
 		v2.GET("/metrics", handler.GetMetrics)
 		v2.GET("/metrics/security", handler.GetSecurityMetrics)
 	}
@@ -63,6 +64,15 @@ func TestV2ObservabilityHandler(t *testing.T) {
 
 	t.Run("Get Health Services Endpoint", func(t *testing.T) {
 		req := httptest.NewRequest("GET", "/api/v2/health/services", nil)
+		resp := httptest.NewRecorder()
+		router.ServeHTTP(resp, req)
+		if resp.Code != http.StatusOK {
+			t.Fatalf("Expected 200, got %d", resp.Code)
+		}
+	})
+
+	t.Run("Get System Health Details Endpoint", func(t *testing.T) {
+		req := httptest.NewRequest("GET", "/api/v2/system/health", nil)
 		resp := httptest.NewRecorder()
 		router.ServeHTTP(resp, req)
 		if resp.Code != http.StatusOK {

@@ -73,3 +73,9 @@ func (h *V2ObservabilityHandler) GetSecurityMetrics(c *gin.Context) {
 	metrics := h.healthService.GetMetrics()
 	c.JSON(http.StatusOK, metrics.Security)
 }
+
+// GetSystemHealth handles GET /api/v2/system/health returning complete infrastructure runtime metrics.
+func (h *V2ObservabilityHandler) GetSystemHealth(c *gin.Context) {
+	details := h.healthService.GetSystemHealthDetails()
+	c.JSON(http.StatusOK, details)
+}

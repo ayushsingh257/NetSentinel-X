@@ -11,6 +11,7 @@ import {
   Layers,
   Cpu
 } from "lucide-react";
+import SystemHealthObservabilityDashboard from "@/components/SystemHealthObservabilityDashboard";
 
 export interface ServiceHealth {
   name: string;
@@ -169,20 +170,6 @@ export default function ObservabilityDashboard() {
     void fetchAudits(searchQuery, categoryFilter, severityFilter);
   };
 
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "HEALTHY":
-      case "OPTIMAL":
-        return <span className="text-[10px] px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800 font-mono font-bold">🟢 HEALTHY</span>;
-      case "WARNING":
-        return <span className="text-[10px] px-2 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800 font-mono font-bold">⚠️ WARNING</span>;
-      case "DEGRADED":
-        return <span className="text-[10px] px-2 py-0.5 rounded bg-rose-950 text-rose-400 border border-rose-800 font-mono font-bold">🔴 DEGRADED</span>;
-      default:
-        return <span className="text-[10px] px-2 py-0.5 rounded bg-zinc-900 text-zinc-400 border border-zinc-800 font-mono">UNKNOWN</span>;
-    }
-  };
-
   const getSeverityBadge = (sev: string) => {
     switch (sev) {
       case "CRITICAL": return <span className="text-[9px] px-2 py-0.5 rounded bg-rose-950 text-rose-400 border border-rose-800 font-mono font-bold">CRITICAL</span>;
@@ -258,32 +245,7 @@ export default function ObservabilityDashboard() {
 
       {/* Tab 1: System Health */}
       {activeTab === "health" && (
-        <div className="space-y-4 font-sans text-xs">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {servicesList.map((svc) => (
-              <div key={svc.name} className="bg-zinc-900/80 border border-zinc-800 rounded-xl p-4 space-y-3 hover:border-cyan-500/50 transition-all">
-                <div className="flex items-center justify-between">
-                  <span className="font-bold text-white text-xs">{svc.name}</span>
-                  {getStatusBadge(svc.status)}
-                </div>
-                <div className="grid grid-cols-2 gap-2 text-[10px] font-mono text-zinc-400 pt-2 border-t border-zinc-800/60">
-                  <div>
-                    <span className="block text-zinc-500">Uptime</span>
-                    <span className="text-emerald-400 font-bold">{svc.uptime}%</span>
-                  </div>
-                  <div>
-                    <span className="block text-zinc-500">Latency</span>
-                    <span className="text-cyan-400 font-bold">{svc.latency_ms} ms</span>
-                  </div>
-                </div>
-                <div className="text-[9px] font-mono text-zinc-500 flex items-center justify-between pt-1">
-                  <span>Version: {svc.version}</span>
-                  <span>Errors: {svc.error_count}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        <SystemHealthObservabilityDashboard />
       )}
 
       {/* Tab 2: Audit Explorer */}

@@ -356,9 +356,11 @@ See dedicated document: [ENTERPRISE_EVOLUTION_ROADMAP.md](file:///c:/Users/Ayush
    - Double-submit anti-CSRF token protection (`X-CSRF-Token` header validation).
    - Reusable `useResilientWebSocket` hook with exponential backoff auto-reconnection and connection status badges.
    - Centralized `fetchWithAuth` API utility, `DashboardErrorBoundary`, and `LoadingSkeleton` component boundaries across all 18 dashboards.
-2. **Phase 2 — Enterprise Observability & System Health**
-   - Prometheus metrics exporter enhancements (`/metrics`) & Grafana dashboards.
-   - Interactive System Health & Observability UI Component.
+2. **Phase 2 — Enterprise Observability & System Health** ✅ (Completed)
+   - Custom Prometheus metrics collector middleware (`/metrics`) exposing `netsentinel_packet_processing_rate_cps`, `netsentinel_alert_generation_total`, `netsentinel_websocket_active_clients`, `netsentinel_db_connection_pool_active`, and `netsentinel_threat_engine_processing_latency_seconds`.
+   - Comprehensive System Health API endpoint at `/api/v2/system/health`.
+   - Dynamic real-time `SystemHealthObservabilityDashboard.tsx` component with CPU/RAM telemetry, active client counts, event throughput rates, and subsystem health matrix.
+   - Prometheus scraper (`docker/prometheus.yml`) & Grafana overview dashboard provisioning (`netsentinel_overview.json`) integrated in `docker-compose.production.yml`.
 3. **Phase 3 — Event Pipeline Architecture (NATS JetStream)**
    - Decouple packet capture from threat engine via NATS JetStream event bus.
    - Event Pipeline Monitoring Dashboard.

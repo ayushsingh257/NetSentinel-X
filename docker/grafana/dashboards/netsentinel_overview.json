@@ -1,0 +1,63 @@
+{
+  "annotations": { "list": [] },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 1,
+  "links": [],
+  "liveNow": true,
+  "panels": [
+    {
+      "gridPos": { "h": 6, "w": 6, "x": 0, "y": 0 },
+      "id": 1,
+      "title": "Ingestion Rate (Packets/Sec)",
+      "type": "stat",
+      "targets": [{ "expr": "netsentinel_packet_processing_rate_cps", "refId": "A" }]
+    },
+    {
+      "gridPos": { "h": 6, "w": 6, "x": 6, "y": 0 },
+      "id": 2,
+      "title": "Active WebSocket Clients",
+      "type": "stat",
+      "targets": [{ "expr": "netsentinel_websocket_active_clients", "refId": "A" }]
+    },
+    {
+      "gridPos": { "h": 6, "w": 6, "x": 12, "y": 0 },
+      "id": 3,
+      "title": "DB Active Connection Pool",
+      "type": "stat",
+      "targets": [{ "expr": "netsentinel_db_connection_pool_active", "refId": "A" }]
+    },
+    {
+      "gridPos": { "h": 6, "w": 6, "x": 18, "y": 0 },
+      "id": 4,
+      "title": "Alert Volume by Severity",
+      "type": "stat",
+      "targets": [{ "expr": "sum(netsentinel_alert_generation_total) by (severity)", "refId": "A" }]
+    },
+    {
+      "gridPos": { "h": 10, "w": 12, "x": 0, "y": 6 },
+      "id": 5,
+      "title": "Ingestion Throughput Over Time",
+      "type": "timeseries",
+      "targets": [{ "expr": "netsentinel_packet_processing_rate_cps", "refId": "A" }]
+    },
+    {
+      "gridPos": { "h": 10, "w": 12, "x": 12, "y": 6 },
+      "id": 6,
+      "title": "Threat Detection Processing Latency",
+      "type": "timeseries",
+      "targets": [{ "expr": "netsentinel_threat_engine_processing_latency_seconds", "refId": "A" }]
+    }
+  ],
+  "refresh": "5s",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": ["netsentinel", "observability", "metrics"],
+  "time": { "from": "now-15m", "to": "now" },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "NetSentinel-X V2 Platform Infrastructure Overview",
+  "uid": "netsentinel-overview",
+  "version": 1
+}

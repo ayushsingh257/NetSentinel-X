@@ -12,6 +12,18 @@ describe("ObservabilityDashboard Component", () => {
             Promise.resolve({
               overall_score: 98,
               overall_status: "OPTIMAL",
+              cpu_usage_percent: 14.2,
+              memory_usage_mb: 245.5,
+              memory_usage_percent: 28.6,
+              database_status: "HEALTHY",
+              db_connection_pool_active: 8,
+              redis_status: "HEALTHY",
+              websocket_connected_clients: 12,
+              event_processing_rate_cps: 4850,
+              threat_engine_status: "OPTIMAL",
+              threat_engine_latency_ms: 15,
+              service_uptime_seconds: 86400,
+              system_version: "2.0.0-Enterprise",
               services: [
                 {
                   name: "Backend API",
