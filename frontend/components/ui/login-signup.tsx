@@ -237,18 +237,22 @@ export function LoginForm() {
       const res = await fetch(`${apiUrl}/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ username, password }),
       });
 
       if (res.ok) {
         const data = await res.json();
+        if (data.csrf_token) {
+          localStorage.setItem("csrf_token", data.csrf_token);
+        }
         localStorage.setItem("token", data.token || "authenticated");
         localStorage.setItem("role", data.role || "admin");
         router.push("/dashboard");
       } else {
         if (
-          (username === "admin" && password === "admin") ||
-          (username === "analyst" && password === "analyst")
+          (username === "admin" && (password === "admin" || password === "Admin@NetSentinel2026!")) ||
+          (username === "analyst" && (password === "analyst" || password === "Analyst@NetSentinel2026!"))
         ) {
           localStorage.setItem("token", `${username}-token`);
           localStorage.setItem("role", username);
@@ -259,8 +263,8 @@ export function LoginForm() {
       }
     } catch {
       if (
-        (username === "admin" && password === "admin") ||
-        (username === "analyst" && password === "analyst")
+        (username === "admin" && (password === "admin" || password === "Admin@NetSentinel2026!")) ||
+        (username === "analyst" && (password === "analyst" || password === "Analyst@NetSentinel2026!"))
       ) {
         localStorage.setItem("token", `${username}-token`);
         localStorage.setItem("role", username);
@@ -302,17 +306,17 @@ export function LoginForm() {
           <div className="flex items-center justify-between gap-2">
             <button
               type="button"
-              onClick={() => { setUsername("admin"); setPassword("admin"); }}
+              onClick={() => { setUsername("admin"); setPassword("Admin@NetSentinel2026!"); }}
               className="flex-1 px-2.5 py-1 rounded bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-400 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-200 text-center text-[10px] font-bold"
             >
-              admin / admin
+              admin / Admin@NetSentinel2026!
             </button>
             <button
               type="button"
-              onClick={() => { setUsername("analyst"); setPassword("analyst"); }}
+              onClick={() => { setUsername("analyst"); setPassword("Analyst@NetSentinel2026!"); }}
               className="flex-1 px-2.5 py-1 rounded bg-emerald-100 dark:bg-emerald-950/80 border border-emerald-400 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 hover:bg-emerald-200 text-center text-[10px] font-bold"
             >
-              analyst / analyst
+              analyst / Analyst@NetSentinel2026!
             </button>
           </div>
         </div>

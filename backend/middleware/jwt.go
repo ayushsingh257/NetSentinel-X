@@ -10,7 +10,6 @@ import (
 )
 
 // JWTSecretKey is the HS256 signing key.
-// In Era 19 (Infrastructure Security) this will be moved to an environment variable + Vault.
 const JWTSecretKey = "netsentinel-x-dev-secret-key-2026-enterprise"
 
 // NetSentinelClaims defines the JWT payload for all platform tokens.
@@ -65,30 +64,43 @@ func ParseToken(tokenString string) (*NetSentinelClaims, error) {
 	return claims, nil
 }
 
-// AuthMiddleware validates the JWT Bearer token on every protected request.
+// AuthMiddleware validates the JWT token from HttpOnly cookie or Authorization header.
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		authHeader := c.GetHeader("Authorization")
-		if authHeader == "" {
+		var tokenStr string
+
+		// 1. Primary: Extract token from HttpOnly cookie "auth_token"
+		if cookieToken, err := c.Cookie("auth_token"); err == nil && cookieToken != "" {
+			tokenStr = cookieToken
+		}
+
+		// 2. Secondary: Extract token from Authorization Bearer header
+		if tokenStr == "" {
+			authHeader := c.GetHeader("Authorization")
+			if authHeader != "" {
+				parts := strings.SplitN(authHeader, " ", 2)
+				if len(parts) == 2 && strings.EqualFold(parts[0], "Bearer") {
+					tokenStr = parts[1]
+				}
+			}
+		}
+
+		// 3. Fallback: Query parameter for WebSocket upgrades
+		if tokenStr == "" {
+			tokenStr = c.Query("token")
+		}
+
+		// Fail if token missing in all places
+		if tokenStr == "" {
 			c.JSON(http.StatusUnauthorized, gin.H{
-				"error": "Authorization header missing",
-				"code":  "AUTH_HEADER_MISSING",
+				"error": "Authentication token missing from cookie or header",
+				"code":  "AUTH_TOKEN_MISSING",
 			})
 			c.Abort()
 			return
 		}
 
-		parts := strings.SplitN(authHeader, " ", 2)
-		if len(parts) != 2 || !strings.EqualFold(parts[0], "Bearer") {
-			c.JSON(http.StatusUnauthorized, gin.H{
-				"error": "Invalid Authorization header format. Expected: Bearer <token>",
-				"code":  "AUTH_HEADER_INVALID",
-			})
-			c.Abort()
-			return
-		}
-
-		claims, err := ParseToken(parts[1])
+		claims, err := ParseToken(tokenStr)
 		if err != nil {
 			code := "AUTH_TOKEN_INVALID"
 			msg := "Invalid or malformed token"

@@ -91,6 +91,7 @@ func SetupRoutes(router *gin.Engine) {
 	router.GET("/readiness", handlers.ReadinessHandler)
 	router.GET("/analytics", handlers.GetAnalytics)
 	router.POST("/login", handlers.LoginHandler)
+	router.POST("/logout", handlers.LogoutHandler)
 	router.GET("/traffic", handlers.GetTrafficLogs)
 	router.GET("/alerts", handlers.GetAlerts)
 	router.GET("/export/traffic", handlers.ExportTrafficReport)

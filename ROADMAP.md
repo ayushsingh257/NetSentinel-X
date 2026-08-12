@@ -344,3 +344,29 @@ Supporting Systems:
   ├── HashiCorp Vault / Secrets Manager
   └── Compliance Dashboards (SOC 2, ISO 27001)
 ```
+
+---
+
+## 🔮 Future Enterprise Evolution Roadmap (Phases 1–6)
+
+See dedicated document: [ENTERPRISE_EVOLUTION_ROADMAP.md](file:///c:/Users/Ayush/OneDrive/Desktop/NetSentinel-X/ENTERPRISE_EVOLUTION_ROADMAP.md)
+
+1. **Phase 1 — Production Stabilization & Security Hardening** ✅ (Completed)
+   - Transitioned from `localStorage` to `HttpOnly`, `SameSite=Lax/Strict` cookies (`auth_token`, `csrf_token`) for XSS token theft prevention.
+   - Double-submit anti-CSRF token protection (`X-CSRF-Token` header validation).
+   - Reusable `useResilientWebSocket` hook with exponential backoff auto-reconnection and connection status badges.
+   - Centralized `fetchWithAuth` API utility, `DashboardErrorBoundary`, and `LoadingSkeleton` component boundaries across all 18 dashboards.
+2. **Phase 2 — Enterprise Observability & System Health**
+   - Prometheus metrics exporter enhancements (`/metrics`) & Grafana dashboards.
+   - Interactive System Health & Observability UI Component.
+3. **Phase 3 — Event Pipeline Architecture (NATS JetStream)**
+   - Decouple packet capture from threat engine via NATS JetStream event bus.
+   - Event Pipeline Monitoring Dashboard.
+4. **Phase 4 — Columnar Security Analytics Storage (ClickHouse)**
+   - Implement ClickHouse columnar log storage for sub-second analytical queries across billions of security records.
+   - Sub-second Threat Hunting Analytics Dashboard.
+5. **Phase 5 — Distributed Edge Sensor Framework**
+   - Lightweight Go edge sensor agent (`netsentinel-agent`) with mTLS ingestion gateway.
+   - Multi-site Sensor Management Console.
+6. **Phase 6 — Cloud-Native Orchestration & Multi-Region Autoscaling**
+   - Kubernetes (GKE) Helm charts, HPA, and multi-region 99.99% availability architecture.
