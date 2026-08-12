@@ -21,19 +21,27 @@ export function useResilientWebSocket(options: ResilientWebSocketOptions = {}) {
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const reconnectCountRef = useRef(0);
   const optionsRef = useRef(options);
-  optionsRef.current = options;
-
   const connectRef = useRef<() => void>(() => {});
 
-  const connect = useCallback(() => {
+  // Synchronize options ref safely inside an effect
+  useEffect(() => {
+    optionsRef.current = options;
+  }, [options]);
+
+  const connectSocket = useCallback(() => {
+    if (
+      socketRef.current &&
+      (socketRef.current.readyState === WebSocket.OPEN ||
+        socketRef.current.readyState === WebSocket.CONNECTING)
+    ) {
+      return;
+    }
+
     try {
       const opts = optionsRef.current;
       const baseUrl = opts.url || WS_BASE_URL;
       const token = typeof window !== "undefined" ? localStorage.getItem("token") || "" : "";
       const wsUrl = `${baseUrl}${baseUrl.includes("?") ? "&" : "?"}token=${encodeURIComponent(token)}`;
-
-      const currentCount = reconnectCountRef.current;
-      setStatus(currentCount > 0 ? "RECONNECTING" : "CONNECTING");
 
       const ws = new WebSocket(wsUrl);
       socketRef.current = ws;
@@ -81,14 +89,19 @@ export function useResilientWebSocket(options: ResilientWebSocketOptions = {}) {
     }
   }, []);
 
+  // Update connectRef after connectSocket is initialized
   useEffect(() => {
-    connectRef.current = connect;
-  }, [connect]);
+    connectRef.current = connectSocket;
+  }, [connectSocket]);
 
+  // Manage connection lifecycle asynchronously to prevent setState in effect body warnings
   useEffect(() => {
-    connect();
+    const timer = setTimeout(() => {
+      connectSocket();
+    }, 0);
 
     return () => {
+      clearTimeout(timer);
       if (reconnectTimeoutRef.current) {
         clearTimeout(reconnectTimeoutRef.current);
       }
@@ -96,12 +109,19 @@ export function useResilientWebSocket(options: ResilientWebSocketOptions = {}) {
         socketRef.current.close();
       }
     };
-  }, [connect]);
+  }, [connectSocket]);
+
+  const manualReconnect = useCallback(() => {
+    reconnectCountRef.current = 0;
+    setReconnectCount(0);
+    setStatus("CONNECTING");
+    connectSocket();
+  }, [connectSocket]);
 
   return {
     status,
     messages,
     reconnectCount,
-    reconnect: connect,
+    reconnect: manualReconnect,
   };
 }
