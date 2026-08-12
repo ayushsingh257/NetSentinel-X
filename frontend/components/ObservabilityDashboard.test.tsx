@@ -5,6 +5,44 @@ import ObservabilityDashboard from "./ObservabilityDashboard";
 describe("ObservabilityDashboard Component", () => {
   beforeAll(() => {
     global.fetch = jest.fn((url: string) => {
+      if (url.includes("/ai/analysis") || url.includes("/ai/investigation")) {
+        return Promise.resolve({
+          ok: true,
+          json: () =>
+            Promise.resolve({
+              results: [
+                {
+                  id: "AI-1001",
+                  event_id: "EVT-1001",
+                  confidence_score: 0.94,
+                  classification: "Malware",
+                  category: "Malware",
+                  risk_score: 92.5,
+                  false_positive_prob: 0.05,
+                  mitre_mapping: {
+                    tactic: "Initial Access",
+                    technique: "Exploit Public-Facing Application",
+                    technique_id: "T1190",
+                    description: "SQLi Exploit Payload",
+                    mitigations: ["Deploy WAF"],
+                  },
+                  recommendations: ["Isolate host"],
+                  created_at: new Date().toISOString(),
+                  provider_name: "DeterministicSOCEngine",
+                },
+              ],
+              incident_id: "INC-2026-9901",
+              incident_summary: "Autonomous Incident Reconstruction Summary",
+              attack_timeline: [
+                { timestamp: new Date().toISOString(), stage: "Initial Access", description: "SQLi Payload", source: "DPI" },
+              ],
+              affected_assets: ["192.168.1.100"],
+              related_events: ["EVT-1001"],
+              recommended_actions: ["Isolate Web-Server-01"],
+            }),
+        });
+      }
+
       if (url.includes("/events")) {
         return Promise.resolve({
           ok: true,
@@ -139,6 +177,21 @@ describe("ObservabilityDashboard Component", () => {
 
     await waitFor(() => {
       expect(screen.getByText(/Distributed Event-Driven Architecture Engine/i)).toBeInTheDocument();
+    });
+  });
+
+  test("switches to AI Security Analyst tab", async () => {
+    render(<ObservabilityDashboard />);
+
+    await waitFor(() => {
+      expect(screen.getByText(/Enterprise Observability & Platform Health Studio/i)).toBeInTheDocument();
+    });
+
+    const aiTab = screen.getByRole("button", { name: /AI Security Analyst/i });
+    fireEvent.click(aiTab);
+
+    await waitFor(() => {
+      expect(screen.getByText(/AI Security Analyst & Autonomous Copilot/i)).toBeInTheDocument();
     });
   });
 

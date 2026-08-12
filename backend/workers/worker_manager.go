@@ -46,6 +46,9 @@ func GetWorkerManager() *WorkerManager {
 		globalWorkerManager.RegisterWorker(NewAlertEnrichmentWorker())
 		globalWorkerManager.RegisterWorker(NewThreatIntelWorker())
 		globalWorkerManager.RegisterWorker(NewMetricsAggregationWorker())
+		globalWorkerManager.RegisterWorker(NewAIThreatAnalysisWorker())
+		globalWorkerManager.RegisterWorker(NewAIAlertTriageWorker())
+		globalWorkerManager.RegisterWorker(NewAIInvestigationWorker())
 		globalWorkerManager.StartAll(ctx)
 	})
 	return globalWorkerManager

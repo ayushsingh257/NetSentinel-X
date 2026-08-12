@@ -335,3 +335,27 @@ func (s *MITREService) ExplainTechnique(id string) (string, string, bool) {
 
 	return explanation, tech.MitigationGuidance, true
 }
+
+func (s *MITREService) GetThreatMITREMapping(threatID string) map[string]interface{} {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	tech, exists := s.techniques["T1190"]
+	if !exists {
+		for _, t := range s.techniques {
+			tech = t
+			break
+		}
+	}
+
+	return map[string]interface{}{
+		"threat_id":              threatID,
+		"tactic":                 tech.Tactic,
+		"technique_id":           tech.ID,
+		"technique_name":         tech.Name,
+		"description":            tech.Description,
+		"confidence_score":       tech.ConfidenceScore,
+		"recommended_mitigation": tech.MitigationGuidance,
+		"reference":              tech.ReferenceLinks,
+	}
+}

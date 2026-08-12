@@ -415,6 +415,13 @@ func SetupRoutes(router *gin.Engine) {
 		v2Group.GET("/events/workers/status", v2EventBusHandler.GetWorkerStatus)
 		v2Group.GET("/events/dlq", v2EventBusHandler.GetDLQ)
 
+		// Phase 4 AI-Powered Security Intelligence & SOC Copilot Routes
+		v2AIIntelHandler := handlers.NewV2AIIntelligenceHandler()
+		v2Group.GET("/ai/investigation/:incident_id", v2AIIntelHandler.GetInvestigation)
+		v2Group.GET("/threats/:id/mitre", v2AIIntelHandler.GetThreatMITRE)
+		v2Group.GET("/ai/analysis/latest", v2AIIntelHandler.GetLatestAnalysis)
+		v2Group.POST("/ai/copilot/chat", v2AIIntelHandler.CopilotChat)
+
 		// Enterprise Security Hardening & RBAC Routes
 		v2Group.GET("/security/posture", v2SecurityHandler.GetPosture)
 		v2Group.GET("/security/rbac", v2SecurityHandler.GetRBAC)

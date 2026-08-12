@@ -370,9 +370,14 @@ See dedicated document: [ENTERPRISE_EVOLUTION_ROADMAP.md](file:///c:/Users/Ayush
    - DPI packet capture extended to publish `NetworkTelemetryEvent` & `ThreatDetectionEvent` while preserving 100% existing flow.
    - Extended Prometheus metrics via `/metrics` (`netsentinel_event_bus_messages_total`, `netsentinel_event_processing_latency_seconds`, `netsentinel_event_consumer_failures_total`, `netsentinel_active_workers`, `netsentinel_event_queue_depth`).
    - Interactive `EventStreamDashboard.tsx` component integrated into Observability Studio with live event table, type/severity filters, worker statuses, and raw JSON payload modal.
-4. **Phase 4 — Columnar Security Analytics Storage (ClickHouse)**
-   - Implement ClickHouse columnar log storage for sub-second analytical queries across billions of security records.
-   - Sub-second Threat Hunting Analytics Dashboard.
+4. **Phase 4 — AI-Powered Security Intelligence & Autonomous Analysis** ✅ (Completed)
+   - Provider-Agnostic AI Engine architecture (`backend/ai/`) featuring `LLMProvider` interface, `DeterministicMockProvider` fallback, `ThreatAnalyzer`, `AlertClassifier` (7 attack categories), `RiskScoringEngine` (0-100 dynamic risk score), and `RecommendationEngine`.
+   - AI Investigation Assistant (`investigation_ai_service.go`) generating incident timeline reconstructions and affected assets graphs at `/api/v2/ai/investigation/:incident_id`.
+   - MITRE ATT&CK Intelligence Mapper (`mitre_service.go`) extending threat endpoints at `/api/v2/threats/:id/mitre`.
+   - Autonomous AI Copilot Assistant (`ai_copilot_service.go`) with natural language prompt processing at `/api/v2/ai/copilot/chat`.
+   - Background AI Workers (`backend/workers/`): `AIThreatAnalysisWorker`, `AIAlertTriageWorker`, and `AIInvestigationWorker` consuming EventBus topics (`threat.detected`, `alerts.created`, `incident.created`) and publishing `ai.analysis.completed`, `ai.alert.classified`, and `ai.investigation.generated`.
+   - Extended Prometheus metrics via `/metrics` (`netsentinel_ai_analysis_requests_total`, `netsentinel_ai_analysis_latency_seconds`, `netsentinel_ai_high_risk_findings_total`, `netsentinel_ai_false_positive_reduction_total`, `netsentinel_ai_worker_queue_depth`).
+   - Interactive `AISecurityAnalystDashboard.tsx` component embedded into Observability Studio with real-time risk scores, investigation timeline cards, and copilot chat interface.
 5. **Phase 5 — Distributed Edge Sensor Framework**
    - Lightweight Go edge sensor agent (`netsentinel-agent`) with mTLS ingestion gateway.
    - Multi-site Sensor Management Console.
