@@ -19,29 +19,35 @@ export function useResilientWebSocket(options: ResilientWebSocketOptions = {}) {
 
   const socketRef = useRef<WebSocket | null>(null);
   const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const reconnectCountRef = useRef(0);
+  const optionsRef = useRef(options);
+  optionsRef.current = options;
 
-  const initialDelay = options.initialReconnectDelayMs || 1000;
-  const maxAttempts = options.maxReconnectAttempts || 10;
+  const connectRef = useRef<() => void>(() => {});
 
   const connect = useCallback(() => {
     try {
-      const baseUrl = options.url || WS_BASE_URL;
+      const opts = optionsRef.current;
+      const baseUrl = opts.url || WS_BASE_URL;
       const token = typeof window !== "undefined" ? localStorage.getItem("token") || "" : "";
       const wsUrl = `${baseUrl}${baseUrl.includes("?") ? "&" : "?"}token=${encodeURIComponent(token)}`;
 
-      setStatus(reconnectCount > 0 ? "RECONNECTING" : "CONNECTING");
+      const currentCount = reconnectCountRef.current;
+      setStatus(currentCount > 0 ? "RECONNECTING" : "CONNECTING");
+
       const ws = new WebSocket(wsUrl);
       socketRef.current = ws;
 
       ws.onopen = () => {
         setStatus("CONNECTED");
+        reconnectCountRef.current = 0;
         setReconnectCount(0);
       };
 
       ws.onmessage = (event) => {
-        setMessages((prev) => [event.data, ...prev.slice(0, 499)]); // Keep last 500 messages
-        if (options.onMessage) {
-          options.onMessage(event.data);
+        setMessages((prev) => [event.data, ...prev.slice(0, 499)]);
+        if (optionsRef.current.onMessage) {
+          optionsRef.current.onMessage(event.data);
         }
       };
 
@@ -53,13 +59,19 @@ export function useResilientWebSocket(options: ResilientWebSocketOptions = {}) {
         setStatus("DISCONNECTED");
         if (event.wasClean) return;
 
-        // Exponential backoff reconnect
-        if (reconnectCount < maxAttempts) {
-          const delay = Math.min(initialDelay * Math.pow(2, reconnectCount), 30000);
-          setReconnectCount((prev) => prev + 1);
+        const maxAttempts = optionsRef.current.maxReconnectAttempts || 10;
+        const initialDelay = optionsRef.current.initialReconnectDelayMs || 1000;
+
+        if (reconnectCountRef.current < maxAttempts) {
+          const delay = Math.min(initialDelay * Math.pow(2, reconnectCountRef.current), 30000);
+          reconnectCountRef.current += 1;
+          setReconnectCount(reconnectCountRef.current);
           setStatus("RECONNECTING");
+
           reconnectTimeoutRef.current = setTimeout(() => {
-            connect();
+            if (connectRef.current) {
+              connectRef.current();
+            }
           }, delay);
         }
       };
@@ -67,7 +79,11 @@ export function useResilientWebSocket(options: ResilientWebSocketOptions = {}) {
       console.error("Failed to establish WebSocket connection:", err);
       setStatus("DISCONNECTED");
     }
-  }, [options, reconnectCount, initialDelay, maxAttempts]);
+  }, []);
+
+  useEffect(() => {
+    connectRef.current = connect;
+  }, [connect]);
 
   useEffect(() => {
     connect();
