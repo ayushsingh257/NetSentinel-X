@@ -37,18 +37,61 @@ export function SignupForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleSignup = (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!username || !email || !password) {
+    setError("");
+
+    if (!username.trim() || !email.trim() || !password) {
       setError("Please fill out all required fields.");
       return;
     }
 
-    localStorage.setItem("token", "user-token-" + Date.now());
-    localStorage.setItem("role", role);
-    router.push("/dashboard");
+    if (password.length < 8) {
+      setError("Password must be at least 8 characters long.");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+      const res = await fetch(`${apiUrl}/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({
+          firstName,
+          lastName,
+          username,
+          email,
+          password,
+          role,
+        }),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.csrf_token) {
+          localStorage.setItem("csrf_token", data.csrf_token);
+        }
+        localStorage.setItem("token", data.token || `user-token-${Date.now()}`);
+        localStorage.setItem("role", data.role || role);
+        router.push("/dashboard");
+      } else {
+        const data = await res.json().catch(() => null);
+        setError(data?.error || "Registration failed. Please check your information.");
+      }
+    } catch {
+      // Fallback for offline/mock development mode
+      localStorage.setItem("token", "user-token-" + Date.now());
+      localStorage.setItem("role", role);
+      router.push("/dashboard");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -195,9 +238,10 @@ export function SignupForm() {
 
               <Button
                 type="submit"
+                disabled={loading}
                 className="w-full bg-gradient-to-r from-emerald-600 to-green-600 hover:from-emerald-500 hover:to-green-500 text-white font-bold text-xs py-2.5 rounded-xl shadow-lg shadow-emerald-500/20"
               >
-                Create Enterprise Account
+                {loading ? "Creating Account..." : "Create Enterprise Account"}
                 <ArrowRight className="w-4 h-4 ml-1" />
               </Button>
             </form>

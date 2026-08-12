@@ -1,41 +1,64 @@
-# NetSentinel-X Enterprise Deployment & Architecture Guide
+# NetSentinel-X V2 — Production Deployment Guide 🚀
 
-## Production Architecture Overview
+## Overview
 
-```
-                          [ Internet / Enterprise Clients ]
-                                          |
-                                   ( HTTPS / WSS )
-                                          v
-                               [ NGINX Reverse Proxy ]
-                                   (TLS Termination)
-                                          |
-                 +------------------------+------------------------+
-                 |                                                 |
-                 v                                                 v
-      [ Frontend Application ]                           [ Backend API Engine ]
-     (Next.js 16 Static/SSR)                             (Go 1.22 REST & WebSockets)
-                 |                                                 |
-                 +------------------------+------------------------+
-                                          |
-                        +-----------------+-----------------+
-                        |                                   |
-                        v                                   v
-             [ PostgreSQL Database ]                 [ Redis Memory Store ]
-             (Telemetry & Audit Data)                 (Rate Limits & PubSub)
+NetSentinel-X V2 supports deployment across:
+1. **Google Kubernetes Engine (GKE) / AWS EKS / Azure AKS** via Helm 3.
+2. **Enterprise Docker Compose** for dedicated Linux server environments.
+3. **Hybrid Edge CDN & API Cluster** (Vercel Frontend + Cloud Backend).
+
+---
+
+## 1. Kubernetes / GKE Production Deployment (Recommended)
+
+### Step 1: Initialize Namespace & Secrets
+```bash
+kubectl create namespace netsentinel-system
+
+# Inject production secrets securely via Kubernetes Secrets or GCP Secret Manager
+kubectl create secret generic netsentinel-x-secret \
+  --namespace netsentinel-system \
+  --from-literal=JWT_SECRET="YOUR_ENTERPRISE_SECURE_JWT_SECRET" \
+  --from-literal=DB_PASSWORD="YOUR_ENTERPRISE_POSTGRES_PASSWORD"
 ```
 
-## Security & Hardening Features
+### Step 2: Deploy with Helm 3
+```bash
+helm install netsentinel-x ./helm/netsentinel-x \
+  --namespace netsentinel-system \
+  --values ./helm/netsentinel-x/values.yaml \
+  --set secrets.jwtSecret="YOUR_ENTERPRISE_SECURE_JWT_SECRET" \
+  --set secrets.dbPassword="YOUR_ENTERPRISE_POSTGRES_PASSWORD"
+```
 
-- **RBAC Engine**: 7 Roles (`SUPER_ADMIN`, `SOC_ADMIN`, `SECURITY_ANALYST`, `THREAT_HUNTER`, `DETECTION_ENGINEER`, `AUDITOR`, `VIEW_ONLY`) mapped to 10 granular permissions.
-- **Authentication**: JWT token expiration, refresh tokens, active session management, and instant session revocation.
-- **API Protection**: Global 100 req/min rate limiter, payload sanitization, and security headers (`CSP`, `HSTS`, `X-Frame-Options`, `X-Content-Type-Options`).
-- **Secrets Management**: 100% environment variable based configuration. No secrets stored in codebase.
-- **Audit Logging**: Immutable event audit logging with full-text search and CSV export.
+### Step 3: Verify HPA & Probes
+```bash
+kubectl get hpa -n netsentinel-system
+kubectl get pods -n netsentinel-system -o wide
+```
 
-## Deployment Checklist
+---
 
-1. Set `.env` variables (`JWT_SECRET`, `POSTGRES_PASSWORD`, `REDIS_PASSWORD`).
-2. Build and launch container stack: `docker-compose -f docker-compose.production.yml up -d --build`.
-3. Verify health endpoint: `curl http://localhost:8080/health`.
-4. Verify V2 Observability health API: `curl http://localhost:8080/api/v2/health`.
+## 2. Docker Compose Production Deployment
+
+```bash
+# Clone repository and copy environment configuration
+cp .env.production.example .env.production
+
+# Start production stack in detached mode
+docker compose -f docker-compose.production.yml --env-file .env.production up -d
+```
+
+---
+
+## 3. Environment Variables Reference
+
+| Variable | Description | Required | Example |
+| :--- | :--- | :---: | :--- |
+| `PORT` | Backend HTTP API listening port | Yes | `8080` |
+| `JWT_SECRET` | 256-bit cryptographically random secret | Yes | `hex_or_base64_string` |
+| `DB_PASSWORD` | PostgreSQL master password | Yes | `ComplexP@ssword2026!` |
+| `NATS_URL` | NATS JetStream cluster connection URI | Yes | `nats://nats:4222` |
+| `REDIS_URL` | Redis instance connection host:port | Yes | `redis:6379` |
+| `NEXT_PUBLIC_API_URL` | Frontend API gateway target | Yes | `https://api.netsentinel.io` |
+| `NEXT_PUBLIC_DEMO_MODE` | Enable dev demo credentials UI | No | `false` |
