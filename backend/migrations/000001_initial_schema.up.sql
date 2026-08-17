@@ -1,5 +1,5 @@
--- NetSentinel-X V2: Supabase Managed PostgreSQL Database Schema Baseline
--- Description: Core schema definition for traffic telemetry and security alerts with indexing.
+-- NetSentinel-X V2: Initial Schema Migration (Up)
+-- Description: Creates core traffic_logs and alerts tables with B-Tree indexes for fast querying.
 
 CREATE TABLE IF NOT EXISTS traffic_logs (
     id SERIAL PRIMARY KEY,

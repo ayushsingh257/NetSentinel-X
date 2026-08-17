@@ -1,6 +1,6 @@
-# NetSentinel-X V2 — Backend VPS Docker Deployment Guide
+# NetSentinel-X V2 — Backend VPS & Supabase Managed Database Deployment Guide
 
-This guide provides step-by-step instructions for deploying the **NetSentinel-X V2** Go API engine, PostgreSQL database, Redis in-memory cache, and Nginx reverse proxy to a Linux VPS (Ubuntu/Debian) using Docker Compose.
+This guide provides step-by-step instructions for deploying the **NetSentinel-X V2** Go API engine, connected to **Supabase-Managed PostgreSQL**, Redis in-memory cache, and Nginx reverse proxy to a Linux VPS (Ubuntu/Debian) or containerized platform using Docker Compose.
 
 ---
 
@@ -11,44 +11,98 @@ This guide provides step-by-step instructions for deploying the **NetSentinel-X 
 - **RAM**: 4 GB minimum (8 GB recommended)
 - **Disk Space**: 20 GB SSD storage
 - **Docker Engine**: Docker 24.0+ & Docker Compose v2.20+
-- **Host Dependencies**: `libpcap-dev` (if capturing live packets outside container)
+- **Managed Database**: Supabase PostgreSQL 15+ instance
 
 ---
 
-## 2. Environment Configuration File (`.env.production`)
+## 2. Supabase Managed Database Configuration
 
-Create a `.env` file in the project root directory before launching containers:
+NetSentinel-X connects to **Supabase-managed PostgreSQL** as a persistent Go backend.
+
+### Supabase Connection Modes
+
+1. **Direct Connection (Recommended for Persistent Go Server)**:
+   - **Port**: `5432`
+   - **Host**: `db.[YOUR-PROJECT-REF].supabase.co`
+   - **Protocol**: `postgresql://postgres:[PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:5432/postgres?sslmode=require`
+   - **Features**: Direct TCP, low latency, full named prepared statement support.
+
+2. **Supavisor Session Pooling (Alternative for IPv4-only networks)**:
+   - **Port**: `5432`
+   - **Host**: `aws-0-[REGION].pooler.supabase.com`
+   - **Protocol**: `postgresql://postgres.[YOUR-PROJECT-REF]:[PASSWORD]@aws-0-[REGION].pooler.supabase.com:5432/postgres?sslmode=require`
+   - **Features**: Session-level pooling, IPv4 compatibility, full prepared statement support.
+
+> [!WARNING]
+> Do **NOT** use Transaction Mode (Port 6543) for the NetSentinel-X persistent server, as transaction-mode pooling does not support named prepared statements issued by Go's `database/sql` / `lib/pq`.
+
+---
+
+## 3. Production Environment Configuration (`.env.production`)
+
+Create a `.env` file from `.env.production.example`:
 
 ```env
-# Application Settings
+# ─── Application Settings ──────────────────────────────────────────────────
 GIN_MODE=release
 PORT=8080
+FRONTEND_URL=https://netsentinel-x.vercel.app
+CORS_ALLOWED_ORIGINS=https://*.vercel.app,https://netsentinel-x.vercel.app
 
-# PostgreSQL Database Settings
-DB_HOST=postgres
-DB_PORT=5432
-DB_USER=netsentinel_admin
-POSTGRES_PASSWORD=SECURE_RANDOM_POSTGRES_PASSWORD_2026
-DB_NAME=netsentinel_production_db
+# ─── Supabase Managed Database ─────────────────────────────────────────────
+# Option A: Full Connection String URL (Recommended)
+SUPABASE_DATABASE_URL=postgresql://postgres:YOUR_STRONG_PASSWORD@db.YOUR_PROJECT_REF.supabase.co:5432/postgres?sslmode=require
 
-# Redis Settings
+# Option B: Discrete Variables
+# DB_HOST=db.YOUR_PROJECT_REF.supabase.co
+# DB_PORT=5432
+# DB_USER=postgres
+# DB_PASSWORD=YOUR_STRONG_PASSWORD
+# DB_NAME=postgres
+# DB_SSLMODE=require
+
+# ─── Migration Control ─────────────────────────────────────────────────────
+# In production, keep AUTO_MIGRATE=false to prevent unexpected schema mutation on boot.
+AUTO_MIGRATE=false
+
+# ─── Connection Pool Tuning ────────────────────────────────────────────────
+DB_MAX_OPEN_CONNS=25
+DB_MAX_IDLE_CONNS=10
+DB_CONN_MAX_LIFETIME=5m
+DB_CONN_MAX_IDLE_TIME=2m
+
+# ─── Redis Cache ───────────────────────────────────────────────────────────
 REDIS_HOST=redis:6379
+REDIS_PASSWORD=YOUR_SECURE_REDIS_PASSWORD_HERE
 
-# Cryptographic & Auth Secrets
+# ─── Auth & Secrets ────────────────────────────────────────────────────────
 JWT_SECRET=SECURE_256BIT_RANDOM_JWT_SECRET_KEY_NETSENTINEL_2026
-CORS_ALLOWED_ORIGINS=https://*.vercel.app,https://your-custom-frontend-domain.com
-
-# External AI & Threat Intelligence Keys (Optional)
-GEMINI_API_KEY=your_gemini_api_key_here
-OPENAI_API_KEY=your_openai_api_key_here
-VIRUSTOTAL_API_KEY=your_virustotal_api_key_here
-ABUSEIPDB_API_KEY=your_abuseipdb_api_key_here
-OTX_API_KEY=your_otx_api_key_here
 ```
 
 ---
 
-## 3. Docker Compose Deployment Steps
+## 4. Executing Database Migrations
+
+NetSentinel-X uses deterministic, version-controlled PostgreSQL migrations tracked in `schema_migrations`.
+
+```bash
+# 1. Apply all pending migrations to Supabase
+cd backend
+go run ./cmd/migrate --up
+
+# 2. Check migration status
+go run ./cmd/migrate --status
+
+# 3. Verify schema compatibility without modifying database
+go run ./cmd/migrate --verify
+
+# 4. Rollback (if necessary)
+go run ./cmd/migrate --down
+```
+
+---
+
+## 5. Docker Compose Deployment Steps
 
 ```bash
 # 1. Clone the repository on your VPS
@@ -59,16 +113,19 @@ cd NetSentinel-X
 cp .env.production.example .env
 nano .env
 
-# 3. Build and launch production services in detached mode
+# 3. Run database migrations
+cd backend && go run ./cmd/migrate --up && cd ..
+
+# 4. Build and launch production services in detached mode
 docker compose -f docker-compose.production.yml up -d --build
 
-# 4. Verify container health status
+# 5. Verify container health status
 docker compose -f docker-compose.production.yml ps
 ```
 
 ---
 
-## 4. Reverse Proxy & Nginx Routing Architecture
+## 6. Reverse Proxy & Nginx Routing Architecture
 
 The Nginx proxy container listens on ports 80/443 and routes incoming traffic:
 
@@ -78,23 +135,9 @@ The Nginx proxy container listens on ports 80/443 and routes incoming traffic:
 
 ---
 
-## 5. Security & Container Hardening Controls
+## 7. Security & Container Hardening Controls
 
 1. **Non-Root Execution**: The backend container runs as dedicated non-root user `netsentinel:netsentinel` (UID 10001).
-2. **Network Isolation**: All services communicate over an isolated Docker bridge network (`netsentinel-network`). Database and Redis ports are not exposed to the public internet.
-3. **Health Probes**: Automated health checks continuously monitor container status:
-   - Backend: `GET http://localhost:8080/health` (10s interval, 3 retries)
-   - PostgreSQL: `pg_isready -U netsentinel -d netsentinel_db`
-   - Redis: `redis-cli ping`
-
----
-
-## 6. Backup & Recovery Operations
-
-```bash
-# Manual Database Backup
-docker compose -f docker-compose.production.yml exec -T postgres pg_dump -U netsentinel_admin netsentinel_production_db | gzip > backup_$(date +%Y%m%d_%H%M%S).sql.gz
-
-# Manual Database Restore
-gunzip -c backup_YYYYMMDD_HHMMSS.sql.gz | docker compose -f docker-compose.production.yml exec -T postgres psql -U netsentinel_admin -d netsentinel_production_db
-```
+2. **Network Isolation**: All services communicate over an isolated Docker bridge network (`netsentinel-network`).
+3. **Automated Health Probes**: Continuous liveness and readiness monitoring on `/health`.
+4. **Transport Encryption**: Enforced TLS 1.3 / SSL connection (`sslmode=require`) to Supabase.

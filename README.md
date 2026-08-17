@@ -249,13 +249,31 @@ NetSentinel-X V2 has completed a 31-Era Enterprise Production Engineering Lifecy
 
 ---
 
-## 9. Deployment Architecture
+## 9. Deployment Architecture & Managed Database
 
 ```
 ┌───────────────────────────┐         ┌───────────────────────────┐         ┌───────────────────────────┐
-│     Vercel / Cloud CDN    │  HTTPS  │    Docker VPS / K8s Node  │  mTLS   │ Managed PostgreSQL & Redis│
-│    (Next.js Web Client)   ├────────>│    (Go API Engine Container)├────────>│ (Encrypted Managed DBs)   │
+│     Vercel / Cloud CDN    │  HTTPS  │    Docker VPS / K8s Node  │  TLS    │   Supabase PostgreSQL     │
+│    (Next.js Web Client)   ├────────>│  (Go API Engine Container)├────────>│ (Direct / Session Pooler) │
 └───────────────────────────┘         └───────────────────────────┘         └───────────────────────────┘
+```
+
+### Managed Database: Supabase PostgreSQL
+NetSentinel-X uses **Supabase-managed PostgreSQL** as its production database provider:
+- **Connection Mode**: Direct Connection (Port 5432) or Session Pooler (Port 5432), supporting long-lived Go servers, connection pooling, and prepared statements.
+- **Deterministic Migrations**: Managed via version-controlled SQL files in `database/migrations/` and tracked in `schema_migrations`.
+- **Zero-Touch Startup**: Application verifies database compatibility on boot without unprompted schema mutation (`AUTO_MIGRATE=false` in production).
+
+### Database Migration Commands
+```bash
+# Apply version-controlled migrations
+cd backend && go run ./cmd/migrate --up
+
+# View migration status
+go run ./cmd/migrate --status
+
+# Verify schema compatibility
+go run ./cmd/migrate --verify
 ```
 
 ### Production Stack Deployment via Docker Compose
@@ -264,8 +282,11 @@ NetSentinel-X V2 has completed a 31-Era Enterprise Production Engineering Lifecy
 git clone https://github.com/ayushsingh257/NetSentinel-X.git
 cd NetSentinel-X
 
+# Copy production environment template and configure SUPABASE_DATABASE_URL
+cp .env.production.example .env
+
 # Launch production multi-container stack
-docker-compose -f docker-compose.production.yml up -d --build
+docker compose -f docker-compose.production.yml up -d --build
 ```
 - **Web Dashboard**: `http://localhost:3000`
 - **API Gateway**: `http://localhost:8080`

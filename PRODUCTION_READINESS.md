@@ -84,11 +84,15 @@
 
 ---
 
-### Phase 5 — Database Security Review
-- ✅ Password hashing & storage security verified.
-- ✅ Sensitive secrets encrypted at rest via AES-256-GCM.
-- ✅ Normalized indexes across high-volume log and event tables.
-- ✅ Disaster recovery backup and restore verification service active.
+### Phase 5 — Supabase Managed Database Architecture & Migrations
+- ✅ **Supabase Managed PostgreSQL**: Native connection resolution supporting Direct Connection (Port 5432) and Supavisor Session Pooler (Port 5432) for persistent Go backend.
+- ✅ **Connection Pool Tuning**: Long-lived connection pool configured with `MaxOpenConns(25)`, `MaxIdleConns(10)`, `ConnMaxLifetime(5m)`, and `ConnMaxIdleTime(2m)`.
+- ✅ **Deterministic Version-Controlled Migrations**: `000001_initial_schema.up.sql` and `000001_initial_schema.down.sql` tracked in `schema_migrations`.
+- ✅ **Safe Startup Protocol**: Production mode (`AUTO_MIGRATE=false`) verifies schema compatibility on boot without unprompted database mutation.
+- ✅ **Password Hashing & Storage Security**: Multi-tenant isolation verified, in-application JWT/RBAC preserved.
+- ✅ **Field Encryption**: Sensitive secrets encrypted at rest via AES-256-GCM.
+- ✅ **Indexing**: B-Tree indexes on `created_at`, `source_ip`, `destination_ip`, `status`, and `severity`.
+- ✅ **Disaster Recovery**: Automated backup and restore verification service active.
 
 ---
 

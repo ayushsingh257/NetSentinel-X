@@ -104,11 +104,11 @@ PORT=8080
 FRONTEND_URL=https://netsentinel-x.vercel.app
 CORS_ALLOWED_ORIGINS=https://*.vercel.app,https://netsentinel-x.vercel.app
 
-DB_HOST=<YOUR_MANAGED_POSTGRES_HOST>
-DB_PORT=5432
-DB_USER=<YOUR_DB_USER>
-DB_PASSWORD=<YOUR_DB_PASSWORD>
-DB_NAME=netsentinel_production
+# Supabase Managed PostgreSQL (Direct Port 5432 or Session Pooler Port 5432)
+SUPABASE_DATABASE_URL=postgresql://postgres:YOUR_STRONG_PASSWORD@db.YOUR_PROJECT_REF.supabase.co:5432/postgres?sslmode=require
+
+# Explicit Migration Mode in Production
+AUTO_MIGRATE=false
 
 REDIS_HOST=<YOUR_MANAGED_REDIS_HOST>:6379
 REDIS_PASSWORD=<YOUR_REDIS_PASSWORD>
@@ -116,12 +116,20 @@ REDIS_PASSWORD=<YOUR_REDIS_PASSWORD>
 JWT_SECRET=<64_CHARACTER_CRYPTOGRAPHIC_HEX_KEY>
 ```
 
-### Step 3.3 — Launch Production Stack
+### Step 3.3 — Apply Version-Controlled Database Migrations
+Before starting the application, apply the version-controlled migrations:
+```bash
+cd backend
+go run ./cmd/migrate --up
+cd ..
+```
+
+### Step 3.4 — Launch Production Stack
 ```bash
 docker compose -f docker-compose.production.yml --env-file .env.production up -d --build
 ```
 
-### Step 3.4 — Verify Container Probes
+### Step 3.5 — Verify Container Probes
 Verify container health probes:
 ```bash
 # Check running container health status
@@ -139,12 +147,13 @@ curl -i http://localhost/health
 
 ---
 
-## 4. Managed PostgreSQL & Managed Redis Configuration
+## 4. Supabase Managed PostgreSQL & Managed Redis Configuration
 
-### Managed PostgreSQL Checklist
-1. Enable **SSL/TLS connections** (`sslmode=verify-full`).
-2. Create isolated database user `netsentinel_prod` with least-privilege permissions.
-3. Configure automated daily snapshots with 30-day point-in-time retention.
+### Supabase Managed PostgreSQL Configuration
+1. **Connection**: Use Direct Connection on Port 5432 (`db.[PROJECT-REF].supabase.co`) or Session Pooler on Port 5432 (`aws-0-[REGION].pooler.supabase.com`).
+2. **TLS/SSL**: Enforce SSL encryption (`sslmode=require`).
+3. **Prepared Statements**: Supported natively on Direct and Session Pooler modes.
+4. **Migrations**: Version-controlled migrations tracked in `schema_migrations` table via `cmd/migrate`.
 
 ### Managed Redis Checklist
 1. Enable `AUTH` password authentication.
