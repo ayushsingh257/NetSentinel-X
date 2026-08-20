@@ -207,9 +207,9 @@ NetSentinel-X V2 automates the complete SOC lifecycle through a 5-stage closed-l
 
 ### Frontend Architecture
 - **Framework**: Next.js 16.2.6 (App Router, Turbopack)
-- **UI & Logic**: React 19, TypeScript, Vanilla CSS & Tailwind CSS
+- **UI & Logic**: React 19, TypeScript, Framer Motion (SVG Animated Theme Toggler & micro-animations), Vanilla CSS & Tailwind CSS
 - **Iconography**: Lucide React
-- **Test Suite**: Jest, React Testing Library (34 Test Suites, 138 Tests)
+- **Test Suite**: Jest, React Testing Library (40 Test Suites, 164 Tests, 100% Pass)
 
 ### Backend Architecture
 - **Language & Runtime**: Go 1.26
